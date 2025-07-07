@@ -3,3 +3,9 @@ venv_linux
 __pycache__
 .ruff_cache
 .pytest_cache
+# Android build
+/build/
+/app/build/
+.gradle/
+local.properties
+gradle/wrapper/gradle-wrapper.jar
