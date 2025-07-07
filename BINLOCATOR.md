@@ -24,4 +24,6 @@ https://developer.android.com/ - a very high quality resource for all things and
 
 ## OTHER CONSIDERATIONS:
 
+Ensure tests pass
+Download Android SDK when needed. If possible, add the SDK to the repo.
 User will help when asked. Work with the user if something cannot be handled bu Codex alone.
