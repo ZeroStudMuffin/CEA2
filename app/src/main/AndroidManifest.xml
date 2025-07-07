@@ -4,6 +4,7 @@
     <application
         android:label="BasicAndroidApp"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity android:name=".BinLocatorActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
