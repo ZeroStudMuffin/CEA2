@@ -33,8 +33,10 @@ command-line tools archive stored in Git LFS:
    ```bash
    python scripts/decode_gradle_wrapper.py
    ```
-2. Pull the LFS files to retrieve `commandlinetools-linux-13114758_latest.zip`:
+2. Pull the LFS files to retrieve `commandlinetools-linux-13114758_latest.zip`.
+   If no Git remote is set (some environments clone without one), add it before pulling:
    ```bash
+   git remote add origin https://github.com/ZeroStudMuffin/CEA2.git
    git lfs pull
    ```
 3. Run the SDK installer script:
