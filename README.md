@@ -21,6 +21,14 @@ git remote add origin https://github.com/ZeroStudMuffin/CEA2.git
 git lfs pull
 ```
 
+Extract the command line tools so the `sdkmanager` tool is available before
+running the installer:
+
+```bash
+unzip commandlinetools-linux-13114758_latest.zip -d android-tools
+export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
+```
+
 Next, install the Android SDK:
 
 ```bash
@@ -61,3 +69,10 @@ Instrumentation tests require an Android emulator or device configured with the 
 - JDK 17 or newer
 - Android SDK and platform tools
 - Android Studio (recommended) for emulator and IDE support
+
+## Features
+
+- Camera-based **Bin Locator** with a bounding box overlay guiding where to place
+  text for OCR.
+- Captured images are cropped to this box and processed with ML Kit text
+  recognition.

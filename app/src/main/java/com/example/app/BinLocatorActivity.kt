@@ -2,6 +2,7 @@ package com.example.app
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.Surface
@@ -15,6 +16,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import com.example.app.BoundingBoxOverlay
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.common.InputImage
@@ -27,6 +29,7 @@ import java.util.concurrent.Executors
 
 class BinLocatorActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
+    private lateinit var overlay: BoundingBoxOverlay
     private lateinit var captureButton: Button
     private lateinit var rotateButton: ImageButton
     private lateinit var cameraExecutor: ExecutorService
@@ -41,6 +44,7 @@ class BinLocatorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bin_locator)
         previewView = findViewById(R.id.viewFinder)
+        overlay = findViewById(R.id.boundingBox)
         captureButton = findViewById(R.id.captureButton)
         rotateButton = findViewById(R.id.rotateButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -92,7 +96,15 @@ class BinLocatorActivity : AppCompatActivity() {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
                 val rotated = ImageUtils.rotateBitmap(bitmap, rotation)
-                val inputImage = InputImage.fromBitmap(rotated, 0)
+                val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
+                val cropped = Bitmap.createBitmap(
+                    rotated,
+                    crop.left,
+                    crop.top,
+                    crop.width(),
+                    crop.height()
+                )
+                val inputImage = InputImage.fromBitmap(cropped, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result -> showResult(result.text) }
