@@ -15,6 +15,7 @@ This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for r
 Next, install the Android SDK:
 
 ```bash
+chmod +x scripts/install_android_sdk.sh  # ensures the script can run if cloned without executable permissions
 ./scripts/install_android_sdk.sh
 ```
 
