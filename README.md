@@ -12,9 +12,12 @@ python scripts/decode_gradle_wrapper.py
 
 This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for running Gradle tasks.
 
-Fetch the Git LFS files to obtain the bundled Android command line tools (`commandlinetools-linux-13114758_latest.zip`):
+Fetch the Git LFS files to obtain the bundled Android command line tools (`commandlinetools-linux-13114758_latest.zip`).
+If the repository was cloned without a remote configured, add one before
+pulling:
 
 ```bash
+git remote add origin https://github.com/ZeroStudMuffin/CEA2.git
 git lfs pull
 ```
 
