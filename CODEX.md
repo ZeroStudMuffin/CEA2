@@ -50,6 +50,7 @@
 
 ### 📚 Documentation & Explainability
 - **Update `README.md`** when new features are added, dependencies change, or setup steps are modified.
+- **Record each feature in `AppFeatures.txt`** with a short explanation of how it works and any limitations whenever new functionality is introduced.
 - **Comment non-obvious code** and ensure everything is understandable to a mid-level developer.
 - When writing complex logic, **add an inline `# Reason:` comment** explaining the why, not just the what.
 
