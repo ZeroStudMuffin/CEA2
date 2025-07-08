@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Verify required commands are available
+for cmd in curl unzip sdkmanager; do
+  if ! command -v "$cmd" >/dev/null 2>&1; then
+    echo "Error: $cmd is required but not installed." >&2
+    exit 1
+  fi
+done
+
 ANDROID_HOME="${ANDROID_HOME:-$HOME/android-sdk}"
 TOOLS_DIR="$ANDROID_HOME/cmdline-tools"
 LATEST_DIR="$TOOLS_DIR/latest"
