@@ -25,6 +25,31 @@
     - 1 edge case
     - 1 failure case
 
+### 📱 Android SDK Setup
+To run Gradle tasks or tests, install the Android SDK using the bundled
+command-line tools archive stored in Git LFS:
+
+1. Decode the Gradle wrapper:
+   ```bash
+   python scripts/decode_gradle_wrapper.py
+   ```
+2. Pull the LFS files to retrieve `commandlinetools-linux-13114758_latest.zip`:
+   ```bash
+   git lfs pull
+   ```
+3. Run the SDK installer script:
+   ```bash
+   chmod +x scripts/install_android_sdk.sh
+   ./scripts/install_android_sdk.sh
+   ```
+4. Create `local.properties` in the project root with the path to the installed
+   SDK, for example:
+   ```
+   sdk.dir=/opt/android-sdk
+   ```
+5. Set `ANDROID_HOME` and ensure `$ANDROID_HOME/platform-tools` is on your
+   `PATH` if not added automatically.
+
 ### ✅ Task Completion
 - **Mark completed tasks in `TASK.md`** immediately after finishing them.
 - Add new sub-tasks or TODOs discovered during development to `TASK.md` under a “Discovered During Work” section.
