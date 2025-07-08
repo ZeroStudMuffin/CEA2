@@ -28,6 +28,6 @@ The project is a minimal Android application written in Kotlin. Below are all of
 
 ## 5. Helper Scripts
 * `decode_gradle_wrapper.py` restores the Gradle wrapper JAR from a base64 encoded file.
-* `install_android_sdk.sh` downloads the Android SDK command‑line tools, installs required packages and prints instructions for setting `ANDROID_HOME`.
-* Limitations: scripts assume a Unix-like environment and require network access to fetch dependencies.
+* `install_android_sdk.sh` installs the Android SDK command‑line tools. It uses the bundled archive in the repository when available and prints instructions for setting `ANDROID_HOME`.
+* Limitations: a network connection is still required for additional packages if they are not cached locally.
 

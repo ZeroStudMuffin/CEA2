@@ -13,20 +13,28 @@ ANDROID_HOME="${ANDROID_HOME:-$HOME/android-sdk}"
 TOOLS_DIR="$ANDROID_HOME/cmdline-tools"
 LATEST_DIR="$TOOLS_DIR/latest"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+LOCAL_ZIP="$ROOT_DIR/commandlinetools-linux-13114758_latest.zip"
+
 mkdir -p "$LATEST_DIR"
 
-# Fetch latest command line tools download URL
-REPO_XML_URL="https://dl.google.com/android/repository/repository2-1.xml"
-DOWNLOAD_URL=$(curl -s "$REPO_XML_URL" | grep -o 'https://dl.google.com/android/repository/commandlinetools-linux-[0-9]*_latest.zip' | head -n 1)
+TMP_DIR="/tmp/android-tools"
+rm -rf "$TMP_DIR" && mkdir -p "$TMP_DIR"
 
-echo "Downloading Android command line tools..."
-mkdir -p /tmp/android-tools
-cd /tmp/android-tools
-curl -L "$DOWNLOAD_URL" -o tools.zip
-unzip -q tools.zip
-mv cmdline-tools/* "$LATEST_DIR/"
-cd - >/dev/null
-rm -rf /tmp/android-tools
+if [[ -f "$LOCAL_ZIP" ]]; then
+  echo "Using local Android command line tools archive..."
+  unzip -q "$LOCAL_ZIP" -d "$TMP_DIR"
+else
+  echo "Downloading Android command line tools..."
+  REPO_XML_URL="https://dl.google.com/android/repository/repository2-1.xml"
+  DOWNLOAD_URL=$(curl -s "$REPO_XML_URL" | grep -o 'https://dl.google.com/android/repository/commandlinetools-linux-[0-9]*_latest.zip' | head -n 1)
+  curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/tools.zip"
+  unzip -q "$TMP_DIR/tools.zip" -d "$TMP_DIR"
+fi
+
+mv "$TMP_DIR"/cmdline-tools/* "$LATEST_DIR/"
+rm -rf "$TMP_DIR"
 
 export ANDROID_HOME
 export PATH="$LATEST_DIR/bin:$PATH"
