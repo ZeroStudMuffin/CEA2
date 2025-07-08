@@ -5,16 +5,16 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.view.Surface
 import android.widget.Button
 import android.widget.ImageButton
+import com.google.android.material.slider.Slider
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import com.example.app.BoundingBoxOverlay
 import androidx.core.app.ActivityCompat
@@ -23,6 +23,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.example.app.ImageUtils
+import com.example.app.ZoomUtils
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -32,8 +33,10 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var overlay: BoundingBoxOverlay
     private lateinit var captureButton: Button
     private lateinit var rotateButton: ImageButton
+    private lateinit var zoomSlider: Slider
+    private lateinit var zoomResetButton: Button
     private lateinit var cameraExecutor: ExecutorService
-    private lateinit var imageCapture: ImageCapture
+    private lateinit var controller: LifecycleCameraController
     private var rotation: Int = 0
     private var cameraProvider: ProcessCameraProvider? = null
 
@@ -47,14 +50,12 @@ class BinLocatorActivity : AppCompatActivity() {
         overlay = findViewById(R.id.boundingBox)
         captureButton = findViewById(R.id.captureButton)
         rotateButton = findViewById(R.id.rotateButton)
+        zoomSlider = findViewById(R.id.zoomSlider)
+        zoomResetButton = findViewById(R.id.zoomResetButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        rotateButton.setOnClickListener {
-            rotation = (rotation + 90) % 360
-        }
-        captureButton.setOnClickListener {
-            takePhoto()
-        }
+        rotateButton.setOnClickListener { rotation = (rotation + 90) % 360 }
+        captureButton.setOnClickListener { takePhoto() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -67,19 +68,28 @@ class BinLocatorActivity : AppCompatActivity() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
         cameraProviderFuture.addListener({
             cameraProvider = cameraProviderFuture.get()
-            val preview = Preview.Builder().build().also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+            controller = LifecycleCameraController(this).apply {
+                setEnabledUseCases(LifecycleCameraController.IMAGE_CAPTURE)
+                bindToLifecycle(this@BinLocatorActivity)
             }
-            imageCapture = ImageCapture.Builder()
-                .setTargetRotation(Surface.ROTATION_0)
-                .build()
-            try {
-                cameraProvider?.unbindAll()
-                cameraProvider?.bindToLifecycle(
-                    this, CameraSelector.DEFAULT_BACK_CAMERA, preview, imageCapture
-                )
-            } catch (exc: Exception) {
-                exc.printStackTrace()
+            previewView.controller = controller
+
+            zoomSlider.addOnChangeListener { _, value, _ ->
+                controller.setLinearZoom(value)
+            }
+
+            zoomResetButton.setOnClickListener {
+                controller.setZoomRatio(1f)
+            }
+
+            controller.zoomState.observe(this) { state ->
+                val clamped = ZoomUtils.clampZoomRatio(state.zoomRatio)
+                if (clamped != state.zoomRatio) {
+                    controller.setZoomRatio(clamped)
+                }
+                if (zoomSlider.value != state.linearZoom) {
+                    zoomSlider.value = state.linearZoom
+                }
             }
         }, ContextCompat.getMainExecutor(this))
     }
@@ -88,7 +98,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private fun takePhoto() {
         val photoFile = File.createTempFile("temp", ".jpg", cacheDir)
         val options = ImageCapture.OutputFileOptions.Builder(photoFile).build()
-        imageCapture.takePicture(options, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+        controller.takePicture(options, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
             override fun onError(exception: ImageCaptureException) {
                 showError(exception)
             }

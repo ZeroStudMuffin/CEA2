@@ -2,6 +2,8 @@
     package="com.example.app">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <!-- Allow install on devices without a camera such as Chromebooks -->
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:label="BasicAndroidApp"
