@@ -75,7 +75,8 @@ class BinLocatorActivity : AppCompatActivity() {
             previewView.controller = controller
 
             zoomSlider.addOnChangeListener { _, value, _ ->
-                controller.setLinearZoom(value)
+                val clamped = ZoomUtils.clampLinearZoom(value)
+                controller.setLinearZoom(clamped)
             }
 
             zoomResetButton.setOnClickListener {
