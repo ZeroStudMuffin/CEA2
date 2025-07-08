@@ -12,12 +12,22 @@ python scripts/decode_gradle_wrapper.py
 
 This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for running Gradle tasks.
 
+If Git LFS is used, fetch the large files (including the bundled Android command line tools) with:
+
+```bash
+git lfs pull
+```
+
 Next, install the Android SDK:
 
 ```bash
 chmod +x scripts/install_android_sdk.sh  # ensures the script can run if cloned without executable permissions
 ./scripts/install_android_sdk.sh
 ```
+
+The script detects the `commandlinetools` archive stored in Git LFS and uses it
+to install the SDK without a network connection. If the archive is missing, it
+falls back to downloading the tools from Google.
 
 Set the `ANDROID_HOME` environment variable to the SDK path (default is `~/android-sdk`) and add `$ANDROID_HOME/platform-tools` to your `PATH`.  Gradle looks for the SDK via `local.properties`, so create this file in the project root containing:
 
