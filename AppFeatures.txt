@@ -1,0 +1,33 @@
+# App Features
+
+The project is a minimal Android application written in Kotlin. Below are all of the current features and how they operate.
+
+## 1. Main Activity
+* Displays a "Hello World" text view on launch.
+* Contains a **Bin Locator** button. When pressed, this launches the `BinLocatorActivity` using an explicit intent.
+* Limitations: the main screen only provides navigation to the bin locator and does not contain additional functionality.
+
+## 2. Bin Locator Activity
+* Provides a camera preview using **CameraX**. When the screen loads it requests the camera permission if needed and starts the camera.
+* Offers a **Rotate** button that cycles the capture rotation by 90 degrees each time it is pressed. This rotation is applied to the next captured image.
+* Includes a **Capture** button. When tapped it captures a photo to a temporary file, rotates the image based on the current setting and runs **ML Kit Text Recognition**.
+* The recognised text is displayed to the user in a simple alert dialog. Errors are printed to logcat.
+* Limitations:
+  * No visual bounding box overlay or cropping of the preview; the entire image is processed.
+  * Orientation changes only affect the captured image, not the preview transformation.
+  * Error handling is basic and does not present failures to the user beyond printing stack traces.
+
+## 3. Image Utilities
+* `ImageUtils.rotateBitmap()` rotates a bitmap by a specified angle using a `Matrix`. If the angle is a multiple of 360 the input bitmap is returned unmodified.
+* Limitations: performs a full bitmap copy which may consume memory for large images.
+
+## 4. Unit and Instrumentation Tests
+* Unit tests verify package naming and a rotation helper using **Robolectric** (currently ignored due to missing dependencies in CI).
+* Instrumentation tests run on an emulator or device to ensure the Hello World text is shown and the Bin Locator screen launches correctly.
+* Limitations: test coverage is minimal and the image rotation test is skipped.
+
+## 5. Helper Scripts
+* `decode_gradle_wrapper.py` restores the Gradle wrapper JAR from a base64 encoded file.
+* `install_android_sdk.sh` downloads the Android SDK command‑line tools, installs required packages and prints instructions for setting `ANDROID_HOME`.
+* Limitations: scripts assume a Unix-like environment and require network access to fetch dependencies.
+
