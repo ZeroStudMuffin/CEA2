@@ -12,6 +12,24 @@ python scripts/decode_gradle_wrapper.py
 
 This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for running Gradle tasks.
 
+Next, install the Android SDK:
+
+```bash
+./scripts/install_android_sdk.sh
+```
+
+Set the `ANDROID_HOME` environment variable to the SDK path (default is `~/android-sdk`) and add `$ANDROID_HOME/platform-tools` to your `PATH`.  Gradle looks for the SDK via `local.properties`, so create this file in the project root containing:
+
+```
+sdk.dir=/path/to/android-sdk
+```
+
+Instrumentation tests require an emulator package, for example:
+
+```bash
+sdkmanager "system-images;android-34;google_apis;x86_64" "emulator"
+```
+
 ## Build and Test
 
 Run the following commands from the project root:
