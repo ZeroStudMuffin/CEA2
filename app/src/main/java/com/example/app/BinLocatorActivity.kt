@@ -9,8 +9,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import com.google.android.material.slider.Slider
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.widget.TextView
+import com.google.android.material.snackbar.Snackbar
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -23,6 +25,8 @@ import androidx.core.content.ContextCompat
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
 import java.io.File
@@ -36,9 +40,13 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var rotateButton: ImageButton
     private lateinit var zoomSlider: Slider
     private lateinit var zoomResetButton: Button
+    private lateinit var ocrTextView: TextView
+    private lateinit var getReleaseButton: Button
+    private lateinit var setBinButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
+    private var lastBitmap: Bitmap? = null
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
     private val REQUEST_CAMERA_PERMISSION = 1001
@@ -52,10 +60,15 @@ class BinLocatorActivity : AppCompatActivity() {
         rotateButton = findViewById(R.id.rotateButton)
         zoomSlider = findViewById(R.id.zoomSlider)
         zoomResetButton = findViewById(R.id.zoomResetButton)
+        ocrTextView = findViewById(R.id.ocrTextView)
+        getReleaseButton = findViewById(R.id.getReleaseButton)
+        setBinButton = findViewById(R.id.setBinButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
+        getReleaseButton.setOnClickListener { scanRelease() }
+        setBinButton.setOnClickListener { scanBin() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -114,6 +127,7 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.width(),
                     crop.height()
                 )
+                lastBitmap = cropped
                 val inputImage = InputImage.fromBitmap(cropped, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
@@ -125,15 +139,47 @@ class BinLocatorActivity : AppCompatActivity() {
 
     private fun showResult(text: String) {
         runOnUiThread {
-            AlertDialog.Builder(this)
-                .setMessage(text)
-                .setPositiveButton(android.R.string.ok, null)
-                .show()
+            ocrTextView.text = text
+            getReleaseButton.visibility = View.VISIBLE
+            setBinButton.visibility = View.VISIBLE
         }
+    }
+
+    private fun scanRelease() {
+        val bitmap = lastBitmap ?: return
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val client = BarcodeScanning.getClient()
+        client.process(image)
+            .addOnSuccessListener { barcodes ->
+                val release = BarcodeUtils.extractRelease(barcodes)
+                if (release != null) {
+                    Snackbar.make(previewView, "Release: $release", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(previewView, "no release found", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { showError(it) }
+    }
+
+    private fun scanBin() {
+        val bitmap = lastBitmap ?: return
+        val image = InputImage.fromBitmap(bitmap, 0)
+        val client = BarcodeScanning.getClient()
+        client.process(image)
+            .addOnSuccessListener { barcodes ->
+                val bin = BarcodeUtils.extractBin(barcodes)
+                if (bin != null) {
+                    Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(previewView, "no bin found", Snackbar.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener { showError(it) }
     }
 
     private fun showError(e: Exception) {
         e.printStackTrace()
+        Snackbar.make(previewView, e.message ?: "Error", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun toggleOrientation() {

@@ -81,3 +81,5 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
   finer control when capturing text.
 - A rotate button switches the app between portrait and landscape modes, ensuring captured images match the screen orientation.
+- Recognised text is shown in a TextView with **Get Release** and **Set Bin**
+  buttons that scan barcodes using ML Kit.
