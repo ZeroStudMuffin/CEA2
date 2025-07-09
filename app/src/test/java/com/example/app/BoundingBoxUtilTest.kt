@@ -27,4 +27,12 @@ class BoundingBoxUtilTest {
         assertEquals(1000, result.right)
         assertEquals(500, result.bottom)
     }
+
+    @Test
+    @org.junit.Ignore("Robolectric dependencies not available in CI")
+    fun calculateRect_usesEightyFivePercentSize() {
+        val rect = BoundingBoxOverlay.calculateBoxRect(1000, 800)
+        val expectedWidth = 0.85f * 800f
+        assertEquals(expectedWidth, rect.width(), 0.01f)
+    }
 }

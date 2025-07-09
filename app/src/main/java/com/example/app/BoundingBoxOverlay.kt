@@ -63,7 +63,7 @@ class BoundingBoxOverlay @JvmOverloads constructor(
          * Calculates the bounding box rectangle for the given view size.
          */
         fun calculateBoxRect(viewWidth: Int, viewHeight: Int): RectF {
-            val boxSize = 0.7f * min(viewWidth, viewHeight)
+            val boxSize = 0.85f * min(viewWidth, viewHeight)
             val boxWidth = boxSize
             val boxHeight = boxSize * 15f / 34f
             val left = (viewWidth - boxWidth) / 2f
