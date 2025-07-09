@@ -13,6 +13,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Includes a **Capture** button. When tapped it captures a photo to a temporary file, rotates the image based on the current setting and runs **ML Kit Text Recognition**.
 * Shows a green **TOP** label with a bounding box overlay so users align text correctly. The captured image is cropped to this region before processing.
 * Supports pinch-to-zoom on the preview with a slider and 1x reset button for precise adjustments.
+  The slider becomes vertical and moves to the right side above the 1x button in landscape mode.
 * The recognised text is displayed to the user in a simple alert dialog. Errors are printed to logcat.
 * Limitations:
   * Error handling is basic and does not present failures to the user beyond printing stack traces.

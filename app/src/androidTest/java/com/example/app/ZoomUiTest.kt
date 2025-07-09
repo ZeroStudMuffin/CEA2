@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import android.content.res.Configuration
 import com.google.android.material.slider.Slider
 import org.hamcrest.Matcher
 import org.junit.Assert.assertEquals
@@ -57,6 +58,18 @@ class ZoomUiTest {
             val controller = field.get(activity) as LifecycleCameraController
             val ratio = controller.zoomState.value?.zoomRatio ?: 0f
             assertEquals(1f, ratio, 0.01f)
+        }
+    }
+
+    @Test
+    fun rotateButton_changesOrientation() {
+        val scenario = ActivityScenario.launch(BinLocatorActivity::class.java)
+        onView(withId(R.id.rotateButton)).perform(click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+
+        scenario.onActivity { activity ->
+            val orientation = activity.resources.configuration.orientation
+            assertEquals(Configuration.ORIENTATION_LANDSCAPE, orientation)
         }
     }
 
