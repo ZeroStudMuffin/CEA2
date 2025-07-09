@@ -7,7 +7,7 @@
 
     <application
         android:label="BasicAndroidApp"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.BasicAndroidApp">
         <activity android:name=".BinLocatorActivity" />
         <activity
             android:name=".MainActivity"

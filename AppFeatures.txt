@@ -32,3 +32,4 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * `install_android_sdk.sh` installs the Android SDK command‑line tools. It uses the bundled archive in the repository when available and prints instructions for setting `ANDROID_HOME`.
 * Limitations: a network connection is still required for additional packages if they are not cached locally.
 
+- Uses a MaterialComponents theme defined in styles.xml
