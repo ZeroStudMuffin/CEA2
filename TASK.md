@@ -1,0 +1,1 @@
+- [x] Implement vertical zoom slider in landscape mode (2025-08-25)
