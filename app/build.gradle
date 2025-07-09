@@ -51,4 +51,5 @@ dependencies {
     implementation "androidx.camera:camera-view:$camerax_version"
     implementation "androidx.camera:camera-mlkit-vision:$camerax_version"
     implementation 'com.google.mlkit:text-recognition:16.0.1'
+    implementation 'androidx.exifinterface:exifinterface:1.4.1'
 }
