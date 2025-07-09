@@ -64,6 +64,7 @@ Run the following commands from the project root:
 ```
 
 Instrumentation tests require an Android emulator or device configured with the Android SDK.
+This app relies on Material Components. A custom theme extending `Theme.MaterialComponents.DayNight.NoActionBar` is defined in `app/src/main/res/values/styles.xml` and referenced from the manifest.
 
 ## Requirements
 
