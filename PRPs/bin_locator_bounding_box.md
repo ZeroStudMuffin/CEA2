@@ -15,7 +15,7 @@ description: |
 ---
 
 ## Goal
-Add a 34:15 aspect ratio bounding box overlay covering 70% of the screen and
+Add a 34:15 aspect ratio bounding box overlay covering 85% of the screen and
 show green "TOP" text to indicate orientation. Crop the captured image to this
 box before passing it to ML Kit.
 
@@ -28,7 +28,7 @@ box before passing it to ML Kit.
 ## What
 - Fixed landscape-style bounding box overlay (34:15 ratio) regardless of device
   orientation.
-- Overlay occupies ~70% of the screen's width/height while preserving ratio.
+ - Overlay occupies ~85% of the screen's width/height while preserving ratio.
 - Green "TOP" label at the top edge of the overlay.
 - Crop bitmap to overlay bounds before creating `InputImage` for ML Kit.
 
@@ -82,7 +82,7 @@ coordinates and exposes helper to map to bitmap coordinates.
 Task 1:
   CREATE app/src/main/java/com/example/app/BoundingBoxOverlay.kt:
     - Custom view extending View.
-    - Draw a static rectangular outline with 34:15 aspect ratio occupying 70% of
+    - Draw a static rectangular outline with 34:15 aspect ratio occupying 85% of
       min(width, height).
     - Render green "TOP" text centered on the top edge.
     - Provide `getCropRect()` returning the rect in view coordinates.

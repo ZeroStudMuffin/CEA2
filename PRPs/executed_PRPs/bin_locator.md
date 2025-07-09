@@ -22,7 +22,7 @@ Create a screen accessible from the main activity with a button to launch the Bi
 
 ## What
 - Add navigation from MainActivity to new BinLocatorActivity.
-- Camera preview with manual rotation toggle and 70% landscape crop box.
+ - Camera preview with manual rotation toggle and 85% landscape crop box.
 - Capture button performs ML Kit text recognition and displays result.
 
 ### Success Criteria
@@ -83,7 +83,7 @@ Task 1:
 Task 2:
   CREATE app/src/main/java/com/example/app/BinLocatorActivity.kt:
     - Set up CameraX preview with manual rotation toggle.
-    - Overlay bounding box covering ~70% in landscape.
+    - Overlay bounding box covering ~85% in landscape.
     - Capture button obtains image, rotates as needed, runs TextRecognizer.
     - Show results in AlertDialog.
 

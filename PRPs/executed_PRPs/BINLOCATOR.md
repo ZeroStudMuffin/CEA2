@@ -2,7 +2,7 @@
 
 - App home screen with a button to go into "bin locator" which will house this FEATURE
 - Takes a picture, rotates image so text is correctly oriented, preprocesses image for MLkit OCR
-- Bounding box shows where the image will be cropped. Bounding box in landscape orientation and cover about 70% of the full size image.
+- Bounding box shows where the image will be cropped. Bounding box in landscape orientation and cover about 85% of the full size image.
 - Button captures the image for use with MLkit.
 - Text from the image is OCR'd and shown to the user in a popup window
 - Indicate the "top" of the screen so users know what orientation to hold the device.
@@ -25,5 +25,4 @@ https://developer.android.com/ - a very high quality resource for all things and
 ## OTHER CONSIDERATIONS:
 
 Ensure tests pass
-Download Android SDK when needed. If possible, add the SDK to the repo.
-User will help when asked. Work with the user if something cannot be handled bu Codex alone.
+Download Android SDK when needed. If possible, add the SDK to the repo.User will help when asked. Work with the user if something cannot be handled bu Codex alone.
