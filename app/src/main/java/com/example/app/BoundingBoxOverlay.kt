@@ -42,6 +42,9 @@ class BoundingBoxOverlay @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        // Reason: avoid drawing outside the view bounds which triggered
+        // "out of bounds transparent region" messages in logcat
+        canvas.clipRect(0f, 0f, width.toFloat(), height.toFloat())
         canvas.drawRect(rect, boxPaint)
         canvas.drawText("TOP", rect.centerX(), rect.top - 10f, textPaint)
     }
