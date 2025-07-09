@@ -2,6 +2,7 @@ package com.example.app
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.content.pm.ActivityInfo
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -24,6 +25,8 @@ import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
+import com.example.app.OrientationUtils
+import android.view.Surface
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -40,6 +43,17 @@ class BinLocatorActivity : AppCompatActivity() {
     private var rotation: Int = 0
     private var cameraProvider: ProcessCameraProvider? = null
 
+    private fun currentRotation(): Int {
+        val rot = if (android.os.Build.VERSION.SDK_INT >= 30) display?.rotation else windowManager.defaultDisplay.rotation
+        return when (rot) {
+            Surface.ROTATION_0 -> 0
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
+            else -> 0
+        }
+    }
+
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
     private val REQUEST_CAMERA_PERMISSION = 1001
 
@@ -54,7 +68,13 @@ class BinLocatorActivity : AppCompatActivity() {
         zoomResetButton = findViewById(R.id.zoomResetButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        rotateButton.setOnClickListener { rotation = (rotation + 90) % 360 }
+        rotation = currentRotation()
+        overlay.applyRotation(rotation)
+        rotateButton.setOnClickListener {
+            rotation = (rotation + 90) % 360
+            requestedOrientation = OrientationUtils.degreesToScreenOrientation(rotation)
+            overlay.applyRotation(rotation)
+        }
         captureButton.setOnClickListener { takePhoto() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
@@ -156,5 +176,11 @@ class BinLocatorActivity : AppCompatActivity() {
         super.onDestroy()
         cameraProvider?.unbindAll()
         cameraExecutor.shutdown()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        rotation = currentRotation()
+        overlay.applyRotation(rotation)
     }
 }
