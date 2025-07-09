@@ -19,6 +19,7 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.UiController
 import android.view.View
+import android.content.pm.ActivityInfo
 
 @RunWith(AndroidJUnit4::class)
 class ZoomUiTest {
@@ -58,6 +59,18 @@ class ZoomUiTest {
             val ratio = controller.zoomState.value?.zoomRatio ?: 0f
             assertEquals(1f, ratio, 0.01f)
         }
+    }
+
+    @Test
+    fun landscape_showsVerticalSlider() {
+        val scenario = ActivityScenario.launch(BinLocatorActivity::class.java)
+        scenario.onActivity { it.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE }
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        onView(withId(R.id.zoomSlider)).check(hasRotation(-90f))
+    }
+
+    private fun hasRotation(expected: Float): ViewAssertion = ViewAssertion { view, _ ->
+        assertEquals(expected, view.rotation, 0.1f)
     }
 
     private fun setSliderValue(value: Float): ViewAction = object : ViewAction {
