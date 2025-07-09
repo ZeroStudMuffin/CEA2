@@ -12,8 +12,7 @@ import android.widget.LinearLayout
 import android.view.View
 import com.google.android.material.slider.Slider
 import androidx.appcompat.app.AppCompatActivity
-import android.view.View
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -43,6 +42,8 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var zoomSlider: Slider
     private lateinit var zoomResetButton: Button
     private lateinit var actionButtons: LinearLayout
+    private lateinit var getReleaseButton: Button
+    private lateinit var setBinButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
@@ -61,6 +62,8 @@ class BinLocatorActivity : AppCompatActivity() {
         zoomSlider = findViewById(R.id.zoomSlider)
         zoomResetButton = findViewById(R.id.zoomResetButton)
         actionButtons = findViewById(R.id.actionButtons)
+        getReleaseButton = findViewById(R.id.getReleaseButton)
+        setBinButton = findViewById(R.id.setBinButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         rotateButton.setOnClickListener { toggleOrientation() }
