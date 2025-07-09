@@ -1,7 +1,9 @@
 package com.example.app
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -19,6 +21,8 @@ import androidx.camera.view.PreviewView
 import com.example.app.BoundingBoxOverlay
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.os.Build
+import android.view.Surface
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
@@ -37,7 +41,6 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var zoomResetButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
-    private var rotation: Int = 0
     private var cameraProvider: ProcessCameraProvider? = null
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
@@ -54,7 +57,7 @@ class BinLocatorActivity : AppCompatActivity() {
         zoomResetButton = findViewById(R.id.zoomResetButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
-        rotateButton.setOnClickListener { rotation = (rotation + 90) % 360 }
+        rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
@@ -106,7 +109,7 @@ class BinLocatorActivity : AppCompatActivity() {
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val bitmap = BitmapFactory.decodeFile(photoFile.absolutePath)
-                val rotated = ImageUtils.rotateBitmap(bitmap, rotation)
+                val rotated = ImageUtils.rotateBitmap(bitmap, getRotationDegrees())
                 val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
                 val cropped = Bitmap.createBitmap(
                     rotated,
@@ -135,6 +138,30 @@ class BinLocatorActivity : AppCompatActivity() {
 
     private fun showError(e: Exception) {
         e.printStackTrace()
+    }
+
+    private fun toggleOrientation() {
+        requestedOrientation = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        } else {
+            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
+    private fun getRotationDegrees(): Int {
+        val rotation = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            display?.rotation ?: Surface.ROTATION_0
+        } else {
+            @Suppress("DEPRECATION")
+            windowManager.defaultDisplay.rotation
+        }
+        return when (rotation) {
+            Surface.ROTATION_0 -> 0
+            Surface.ROTATION_90 -> 90
+            Surface.ROTATION_180 -> 180
+            Surface.ROTATION_270 -> 270
+            else -> 0
+        }
     }
 
     override fun onRequestPermissionsResult(
