@@ -30,11 +30,13 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
+import android.util.Log
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class BinLocatorActivity : AppCompatActivity() {
+    private val TAG = "BinLocator"
     private lateinit var previewView: PreviewView
     private lateinit var overlay: BoundingBoxOverlay
     private lateinit var captureButton: Button
@@ -132,7 +134,15 @@ class BinLocatorActivity : AppCompatActivity() {
                 val inputImage = InputImage.fromBitmap(cropped, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
-                    .addOnSuccessListener { result -> showResult(result.text) }
+                    .addOnSuccessListener { result ->
+                        for (block in result.textBlocks) {
+                            for (line in block.lines) {
+                                val height = line.boundingBox?.height() ?: -1
+                                Log.d(TAG, "OCR line: '${line.text}' height=$height")
+                            }
+                        }
+                        showResult(result.text)
+                    }
                     .addOnFailureListener { showError(it) }
             }
         })
