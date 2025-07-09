@@ -8,6 +8,8 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.view.View
 import com.google.android.material.slider.Slider
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +38,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var rotateButton: ImageButton
     private lateinit var zoomSlider: Slider
     private lateinit var zoomResetButton: Button
+    private lateinit var actionButtons: LinearLayout
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
@@ -52,6 +55,7 @@ class BinLocatorActivity : AppCompatActivity() {
         rotateButton = findViewById(R.id.rotateButton)
         zoomSlider = findViewById(R.id.zoomSlider)
         zoomResetButton = findViewById(R.id.zoomResetButton)
+        actionButtons = findViewById(R.id.actionButtons)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         rotateButton.setOnClickListener { toggleOrientation() }
@@ -125,6 +129,7 @@ class BinLocatorActivity : AppCompatActivity() {
 
     private fun showResult(text: String) {
         runOnUiThread {
+            actionButtons.visibility = View.VISIBLE
             AlertDialog.Builder(this)
                 .setMessage(text)
                 .setPositiveButton(android.R.string.ok, null)

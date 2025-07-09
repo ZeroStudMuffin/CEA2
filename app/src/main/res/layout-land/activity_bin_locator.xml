@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:text="1x"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/boundingBox"
+        app:layout_constraintTop_toBottomOf="@id/previewContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.5"
         android:layout_marginStart="16dp" />
@@ -64,9 +64,21 @@
         android:valueTo="1"
         app:layout_constraintStart_toEndOf="@id/zoomResetButton"
         app:layout_constraintEnd_toStartOf="@id/captureButton"
-        app:layout_constraintTop_toBottomOf="@id/boundingBox"
+        app:layout_constraintTop_toBottomOf="@id/previewContainer"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.5"
         android:layout_marginEnd="16dp" />
+
+    <LinearLayout
+        android:id="@+id/actionButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/zoomSlider"
+        app:layout_constraintEnd_toStartOf="@id/captureButton"
+        app:layout_constraintTop_toBottomOf="@id/previewContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
