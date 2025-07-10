@@ -85,3 +85,5 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   buttons that scan barcodes using ML Kit.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
+- The parser now outputs only a roll number and customer name, displayed on two
+  lines in the Bin Locator screen.
