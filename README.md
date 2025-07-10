@@ -83,3 +83,4 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - A rotate button switches the app between portrait and landscape modes, ensuring captured images match the screen orientation.
 - Recognised text is shown in a TextView with **Get Release** and **Set Bin**
   buttons that scan barcodes using ML Kit.
+- Each OCR line's bounding box height is printed to logcat alongside the text.

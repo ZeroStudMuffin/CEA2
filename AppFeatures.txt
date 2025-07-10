@@ -15,6 +15,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Supports pinch-to-zoom on the preview with a slider and 1x reset button for precise adjustments.
 * In landscape orientation the **Capture** button is vertical on the right edge and the zoom controls center between the bounding box and the screen bottom.
 * Recognised text appears in a persistent text view at the top of the screen.
+* Each OCR line and its bounding box height are printed to logcat for debugging.
 * **Get Release** and **Set Bin** buttons use ML Kit barcode scanning to extract a 7-digit release number or a `BIN:<#> UNTIED EXPRESS` value.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
