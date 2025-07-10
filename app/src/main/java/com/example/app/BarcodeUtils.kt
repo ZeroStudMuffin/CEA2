@@ -16,7 +16,7 @@ object BarcodeUtils {
             ?.let { releaseRegex.find(it)?.value }
 
     /**
-     * Returns the bin code from a QR pattern `BIN:<#> UNTIED EXPRESS`.
+     * Returns the bin code from a QR pattern `BIN:<#> UNITED EXPRESS`.
      */
     fun extractBin(list: List<Barcode>): String? =
         list.mapNotNull { it.rawValue }
