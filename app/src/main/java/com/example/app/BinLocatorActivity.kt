@@ -149,16 +149,16 @@ class BinLocatorActivity : AppCompatActivity() {
                         for (clean in parsed) {
                             Log.d(TAG, "Parsed line: '$clean'")
                         }
-                        showResult(parsed.joinToString("\n"))
+                        showResult(parsed)
                     }
                     .addOnFailureListener { showError(it) }
             }
         })
     }
 
-    private fun showResult(text: String) {
+    private fun showResult(lines: List<String>) {
         runOnUiThread {
-            ocrTextView.text = text
+            ocrTextView.text = lines.joinToString("\n")
             actionButtons.visibility = View.VISIBLE
         }
     }

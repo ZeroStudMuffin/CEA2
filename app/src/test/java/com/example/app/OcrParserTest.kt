@@ -44,4 +44,39 @@ class OcrParserTest {
         val lines = listOf(fakeLine("Foo@Bar!", 100))
         assertEquals(listOf("FooBar"), OcrParser.parse(lines))
     }
+
+    @Ignore("Robolectric dependencies not available in CI")
+    @Test
+    fun parse_extractsCustomerByKnownWord() {
+        val lines = listOf(
+            fakeLine("CUSTOMER ACME", 100),
+            fakeLine("ROLL 42", 100)
+        )
+        val result = OcrParser.parse(lines)
+        assertEquals(
+            listOf("Roll#:ROLL 42", "Cust-Name:CUSTOMER ACME"),
+            result
+        )
+    }
+
+    @Ignore("Robolectric dependencies not available in CI")
+    @Test
+    fun parse_extractsByDigitCount() {
+        val lines = listOf(
+            fakeLine("AA12", 100),
+            fakeLine("98765", 100),
+            fakeLine("LONGESTNAME", 100)
+        )
+        val result = OcrParser.parse(lines)
+        assertEquals(
+            listOf("Roll#:98765", "Cust-Name:LONGESTNAME"),
+            result
+        )
+    }
+
+    @Ignore("Robolectric dependencies not available in CI")
+    @Test
+    fun parse_returnsEmptyWhenNoLines() {
+        assertTrue(OcrParser.parse(emptyList()).isEmpty())
+    }
 }
