@@ -63,8 +63,21 @@ Run the following commands from the project root:
 ./gradlew connectedDebugAndroidTest
 ```
 
+
 Instrumentation tests require an Android emulator or device configured with the Android SDK.
 This app relies on Material Components. A custom theme extending `Theme.MaterialComponents.DayNight.NoActionBar` is defined in `app/src/main/res/values/styles.xml` and referenced from the manifest.
+
+## Python OCR Parsing
+
+This repository also contains a Python module used to parse the sample shipping labels in `EXtract.pdf`. Create a virtual environment and install the required packages:
+
+```bash
+python3 -m venv venv_linux
+source venv_linux/bin/activate
+pip install pytesseract Pillow pdf2image pandas
+```
+
+Run `pytest` to execute the parser tests, which compare the OCR results against the provided ground truth CSV file. A page is considered correct when the roll number matches exactly and the first five characters of the customer name match. Pages 12 and 18 are ignored and overall accuracy must reach at least 70%.
 
 ## Requirements
 

@@ -35,4 +35,9 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * `install_android_sdk.sh` installs the Android SDK command‑line tools. It uses the bundled archive in the repository when available and prints instructions for setting `ANDROID_HOME`.
 * Limitations: a network connection is still required for additional packages if they are not cached locally.
 
+## 6. OCR Parser
+* `ocr_parser` module converts PDF pages to images and uses Tesseract as a stand-in OCR engine compatible with ML Kit.
+* Cleaning heuristics strip dates and PO numbers from the customer line and normalize roll strings.
+* A pytest suite validates extraction accuracy against the ground truth CSV. A label is considered correct when the roll matches exactly and the first five customer name characters match. Pages 12 and 18 are skipped and overall accuracy must exceed 70%.
+
 - Uses a MaterialComponents theme defined in styles.xml
