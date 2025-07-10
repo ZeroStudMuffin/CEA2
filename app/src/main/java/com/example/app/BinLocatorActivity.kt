@@ -6,13 +6,13 @@ import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.view.View
 import com.google.android.material.slider.Slider
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -37,6 +37,7 @@ import java.util.concurrent.Executors
 class BinLocatorActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var overlay: BoundingBoxOverlay
+    private lateinit var ocrTextView: TextView
     private lateinit var captureButton: Button
     private lateinit var rotateButton: ImageButton
     private lateinit var zoomSlider: Slider
@@ -57,6 +58,7 @@ class BinLocatorActivity : AppCompatActivity() {
         setContentView(R.layout.activity_bin_locator)
         previewView = findViewById(R.id.viewFinder)
         overlay = findViewById(R.id.boundingBox)
+        ocrTextView = findViewById(R.id.ocrTextView)
         captureButton = findViewById(R.id.captureButton)
         rotateButton = findViewById(R.id.rotateButton)
         zoomSlider = findViewById(R.id.zoomSlider)
@@ -140,11 +142,8 @@ class BinLocatorActivity : AppCompatActivity() {
 
     private fun showResult(text: String) {
         runOnUiThread {
+            ocrTextView.text = text
             actionButtons.visibility = View.VISIBLE
-            AlertDialog.Builder(this)
-                .setMessage(text)
-                .setPositiveButton(android.R.string.ok, null)
-                .show()
         }
     }
 
