@@ -1,0 +1,7 @@
+OcrParser processes lines from ML Kit OCR results:
+1. Find the tallest line's bounding box height.
+2. Ignore any line shorter than 75% of that height.
+3. Replace underscores with spaces.
+4. Remove quoted text and content inside brackets.
+5. Strip characters except letters, digits, spaces, '-' and '%'.
+6. Trim whitespace and return the cleaned strings.

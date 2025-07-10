@@ -30,6 +30,7 @@ import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
+import com.example.app.OcrParser
 import android.util.Log
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -143,7 +144,12 @@ class BinLocatorActivity : AppCompatActivity() {
                                 Log.d(TAG, "OCR line: '${line.text}' height=$height")
                             }
                         }
-                        showResult(result.text)
+
+                        val parsed = OcrParser.parse(result.textBlocks.flatMap { it.lines })
+                        for (clean in parsed) {
+                            Log.d(TAG, "Parsed line: '$clean'")
+                        }
+                        showResult(parsed.joinToString("\n"))
                     }
                     .addOnFailureListener { showError(it) }
             }
