@@ -84,3 +84,4 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Recognised text is shown in a TextView with **Get Release** and **Set Bin**
   buttons that scan barcodes using ML Kit.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
+- OCR results are cleaned with `OcrParser` before barcode scanning.
