@@ -2,7 +2,7 @@
 
 - [ ] Goal: End up with only Roll#s and Customer names after parsing
 - [ ] add to or modify the currect parser, do no create a new one. The additions will happen after the current parsing logic. (this is for further parsing)
-- [ ] Rules: 1. strings with known words become the customer name, then line with the most characters (excluding the newly set customer name line) becomes the roll#. 2. If no known words ar edetected, the line with the most numbers becomes the roll#, then the next line with the most characters becomes the customer name. 
+- [ ] Rules: 1. strings with known words become the customer name, then line with the most characters (excluding the newly set customer name line) becomes the roll#. 2. If no known words are detected, the line with the most numbers becomes the roll#, then the next line with the most characters becomes the customer name. 
 - [ ] The final result is what is shown in the text box on screen. Previosuly it was showing the full OCR text, now It will show only the parsed (final) ocr text. Roll#s will be the first line structered as "Roll#:<extracted roll#>" and the customer name will be "Cust-Name:<extracted customer name>"
 ## EXAMPLES:
 
