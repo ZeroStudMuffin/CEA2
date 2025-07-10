@@ -1,9 +1,11 @@
 ## FEATURE:
 
-- Instead of a popup window, the text is written in a text box on the top of the screen.
-- 2 buttons on the screen after OCR with OCR results. 1 button called "Get Release" and the other button called "Set Bin".
-- Get release button adds a "release number" to the OCRd record. The button searches for a barcode yeilding 7 digits. The 7 digit string is the release number. if not found, write a temporary message that fades away saying "no release found".
-- Set Bin button adds a "bin location" to the OCRd record. The button searches for a QR code that yields "BIN:<#> UNTIED EXPRESS". The # is the bin location. If not found, write a temporary message that fades away saying "no bin found".
+- [ ] Make a parser file that houses all the parsing logic for easy modification in the future
+- [ ] Remove all OCR lines with bounding box heights less than 75% of the tallest line
+- [ ] Remove all special characters except for _, -, and %
+- [ ] Treat all _ as spaces
+- [ ] Remove all strings that are inside brackets and quotations
+- [ ] Create a parser-explained.txt file where agents will explain the parser logic. The explanation must include the order of operations and any preprocessing that happens.
 
 ## EXAMPLES:
 
@@ -17,7 +19,6 @@ https://developer.android.com/topic/architecture -app architecture. use this as 
 https://github.com/android/nowinandroid/blob/main/docs/ArchitectureLearningJourney.md
 https://developer.android.com/ - a very high quality resource for all things android development focused. Search the subdomains for more relevant topics to your task.
 
-
 ## OTHER CONSIDERATIONS:
-Instructions already exist but the order of operations might be causing failures. Asses the order in which operations should be executed for proper setup.
+
 User will help when asked. Work with the user if something cannot be handled bu Codex alone.
