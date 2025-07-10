@@ -5,4 +5,5 @@
 ## [2025-07-10] Implement roll and customer extraction - DONE
 ## [2025-07-10] Generate PRP for roll and customer extraction - DONE
 ## [2025-07-10] Add detailed logging for barcode scanning buttons
+## [2025-07-10] Return raw barcode value without regex filtering - DONE
 

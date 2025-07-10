@@ -82,7 +82,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   finer control when capturing text.
 - A rotate button switches the app between portrait and landscape modes, ensuring captured images match the screen orientation.
 - Recognised text is shown in a TextView with **Get Release** and **Set Bin**
-  buttons that scan barcodes using ML Kit.
+  buttons that scan barcodes using ML Kit. The raw value of the first detected
+  code is shown directly without regex filtering.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - The parser now outputs only a roll number and customer name, displayed on two

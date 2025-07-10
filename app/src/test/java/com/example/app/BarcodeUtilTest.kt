@@ -14,20 +14,19 @@ class BarcodeUtilTest {
     }
 
     @Test
-    fun extractRelease_findsSevenDigits() {
-        val codes = listOf(fakeBarcode("foo"), fakeBarcode("1234567"))
-        assertEquals("1234567", BarcodeUtils.extractRelease(codes))
+    fun extractRelease_returnsFirstRawValue() {
+        val codes = listOf(fakeBarcode("abc"), fakeBarcode("def"))
+        assertEquals("abc", BarcodeUtils.extractRelease(codes))
     }
 
     @Test
-    fun extractRelease_returnsNullWhenMissing() {
-        val codes = listOf(fakeBarcode("foo"))
-        assertNull(BarcodeUtils.extractRelease(codes))
+    fun extractRelease_returnsNullWhenEmpty() {
+        assertNull(BarcodeUtils.extractRelease(emptyList()))
     }
 
     @Test
-    fun extractBin_parsesBinPattern() {
-        val codes = listOf(fakeBarcode("BIN:42 UNTIED EXPRESS"))
-        assertEquals("42", BarcodeUtils.extractBin(codes))
+    fun extractBin_returnsFirstRawValue() {
+        val codes = listOf(fakeBarcode("BIN:42"))
+        assertEquals("BIN:42", BarcodeUtils.extractBin(codes))
     }
 }

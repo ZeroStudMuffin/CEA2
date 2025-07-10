@@ -2,24 +2,17 @@ package com.example.app
 
 import com.google.mlkit.vision.barcode.common.Barcode
 
-/** Utility functions for extracting release numbers and bin codes from barcodes. */
+/** Utility functions for returning raw barcode values. */
 object BarcodeUtils {
-    private val releaseRegex = Regex("\\b\\d{7}\\b")
-    private val binRegex = Regex("BIN:(\\d+) UNITED EXPRESS")
-
     /**
-     * Returns the first 7-digit release number from the barcode list.
+     * Returns the raw value of the first barcode, or `null` if none exist.
      */
     fun extractRelease(list: List<Barcode>): String? =
-        list.mapNotNull { it.rawValue }
-            .firstOrNull { releaseRegex.containsMatchIn(it) }
-            ?.let { releaseRegex.find(it)?.value }
+        list.firstOrNull()?.rawValue
 
     /**
-     * Returns the bin code from a QR pattern `BIN:<#> UNITED EXPRESS`.
+     * Returns the raw value of the first barcode, or `null` if none exist.
      */
     fun extractBin(list: List<Barcode>): String? =
-        list.mapNotNull { it.rawValue }
-            .firstOrNull { binRegex.containsMatchIn(it) }
-            ?.let { binRegex.find(it)?.groupValues?.get(1) }
+        list.firstOrNull()?.rawValue
 }
