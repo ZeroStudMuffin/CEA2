@@ -7,4 +7,5 @@
 ## [2025-07-10] Add detailed logging for barcode scanning buttons
 ## [2025-07-10] Return raw barcode value without regex filtering - DONE
 ## [2025-07-10] Trim roll prefix after extraction - DONE
+## [2025-07-10] Replace bin QR scanning with manual selection popup
 
