@@ -126,6 +126,7 @@ class BinLocatorActivity : AppCompatActivity() {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val rotated = ImageUtils.decodeRotatedBitmap(photoFile)
                 val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
+                Log.d(TAG, "Crop rect: $crop bitmap=${rotated.width}x${rotated.height}")
                 val cropped = Bitmap.createBitmap(
                     rotated,
                     crop.left,
@@ -164,11 +165,23 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun scanRelease() {
-        val bitmap = lastBitmap ?: return
+        val bitmap = lastBitmap
+        if (bitmap == null) {
+            Log.d(TAG, "scanRelease called with no bitmap")
+            return
+        }
+        Log.d(TAG, "Starting release scan with bitmap ${bitmap.width}x${bitmap.height}")
         val image = InputImage.fromBitmap(bitmap, 0)
         val client = BarcodeScanning.getClient()
         client.process(image)
             .addOnSuccessListener { barcodes ->
+                Log.d(TAG, "Barcode scan success: ${barcodes.size} codes")
+                for ((index, code) in barcodes.withIndex()) {
+                    Log.d(
+                        TAG,
+                        "code[$index] format=${code.format} value=${code.rawValue} bounds=${code.boundingBox}"
+                    )
+                }
                 val release = BarcodeUtils.extractRelease(barcodes)
                 if (release != null) {
                     Snackbar.make(previewView, "Release: $release", Snackbar.LENGTH_SHORT).show()
@@ -176,15 +189,30 @@ class BinLocatorActivity : AppCompatActivity() {
                     Snackbar.make(previewView, "no release found", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener { showError(it) }
+            .addOnFailureListener {
+                Log.e(TAG, "Barcode scan failed", it)
+                showError(it)
+            }
     }
 
     private fun scanBin() {
-        val bitmap = lastBitmap ?: return
+        val bitmap = lastBitmap
+        if (bitmap == null) {
+            Log.d(TAG, "scanBin called with no bitmap")
+            return
+        }
+        Log.d(TAG, "Starting bin scan with bitmap ${bitmap.width}x${bitmap.height}")
         val image = InputImage.fromBitmap(bitmap, 0)
         val client = BarcodeScanning.getClient()
         client.process(image)
             .addOnSuccessListener { barcodes ->
+                Log.d(TAG, "Barcode scan success: ${barcodes.size} codes")
+                for ((index, code) in barcodes.withIndex()) {
+                    Log.d(
+                        TAG,
+                        "code[$index] format=${code.format} value=${code.rawValue} bounds=${code.boundingBox}"
+                    )
+                }
                 val bin = BarcodeUtils.extractBin(barcodes)
                 if (bin != null) {
                     Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
@@ -192,7 +220,10 @@ class BinLocatorActivity : AppCompatActivity() {
                     Snackbar.make(previewView, "no bin found", Snackbar.LENGTH_SHORT).show()
                 }
             }
-            .addOnFailureListener { showError(it) }
+            .addOnFailureListener {
+                Log.e(TAG, "Barcode scan failed", it)
+                showError(it)
+            }
     }
 
     private fun showError(e: Exception) {
