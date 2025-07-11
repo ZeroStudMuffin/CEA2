@@ -46,6 +46,22 @@
             android:layout_weight="1"
             android:visibility="gone"
             android:text="Send Record" />
+
+        <Button
+            android:id="@+id/showOcrButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="Show OCR" />
+
+        <Button
+            android:id="@+id/showCropButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:text="Show Crop" />
     </LinearLayout>
 
     <FrameLayout
@@ -66,6 +82,13 @@
             android:id="@+id/boundingBox"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <ImageView
+            android:id="@+id/cropPreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:scaleType="fitCenter" />
     </FrameLayout>
 
     <ImageButton

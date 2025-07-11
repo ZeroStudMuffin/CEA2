@@ -50,10 +50,15 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var getReleaseButton: Button
     private lateinit var setBinButton: Button
     private lateinit var sendRecordButton: Button
+    private lateinit var showOcrButton: Button
+    private lateinit var showCropButton: Button
+    private lateinit var cropPreview: android.widget.ImageView
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
     private var lastBitmap: Bitmap? = null
+    private var debugMode: Boolean = false
+    private var rawLines: List<String> = emptyList()
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
     private val REQUEST_CAMERA_PERMISSION = 1001
@@ -72,13 +77,25 @@ class BinLocatorActivity : AppCompatActivity() {
         getReleaseButton = findViewById(R.id.getReleaseButton)
         setBinButton = findViewById(R.id.setBinButton)
         sendRecordButton = findViewById(R.id.sendRecordButton)
+        showOcrButton = findViewById(R.id.showOcrButton)
+        showCropButton = findViewById(R.id.showCropButton)
+        cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
+
+        debugMode = intent.getBooleanExtra("debug", false)
+        if (debugMode) {
+            sendRecordButton.visibility = View.GONE
+            showOcrButton.visibility = View.VISIBLE
+            showCropButton.visibility = View.VISIBLE
+        }
 
         rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
         setBinButton.setOnClickListener { showBinMenu() }
         sendRecordButton.setOnClickListener { sendRecord() }
+        showOcrButton.setOnClickListener { showRawOcr() }
+        showCropButton.setOnClickListener { toggleCropPreview() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -143,10 +160,11 @@ class BinLocatorActivity : AppCompatActivity() {
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->
-                        for (block in result.textBlocks) {
-                            for (line in block.lines) {
+                        rawLines = result.textBlocks.flatMap { block ->
+                            block.lines.map { line ->
                                 val height = line.boundingBox?.height() ?: -1
                                 Log.d(TAG, "OCR line: '${line.text}' height=$height")
+                                "${line.text} (h=$height)"
                             }
                         }
 
@@ -237,6 +255,10 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun updateSendRecordVisibility() {
+        if (debugMode) {
+            sendRecordButton.visibility = View.GONE
+            return
+        }
         val textLines = ocrTextView.text.split("\n")
         val hasRoll = textLines.any { it.startsWith("Roll#:") }
         val hasCust = textLines.any { it.startsWith("Cust:") }
@@ -245,6 +267,10 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun sendRecord() {
+        if (debugMode) {
+            Snackbar.make(previewView, "Debug mode - record not sent", Snackbar.LENGTH_SHORT).show()
+            return
+        }
         val lines = ocrTextView.text.split("\n")
         val rollLine = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
         val roll = rollLine?.replace(Regex("\\s*BIN=.*"), "")?.trim()
@@ -261,6 +287,32 @@ class BinLocatorActivity : AppCompatActivity() {
                 } else {
                     Snackbar.make(previewView, message ?: "Send failed", Snackbar.LENGTH_SHORT).show()
                 }
+            }
+        }
+    }
+
+    private fun showRawOcr() {
+        if (rawLines.isEmpty()) return
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Raw OCR")
+                .setMessage(rawLines.joinToString("\n"))
+                .setPositiveButton("OK", null)
+                .show()
+        }
+    }
+
+    private fun toggleCropPreview() {
+        val bitmap = lastBitmap ?: return
+        runOnUiThread {
+            if (cropPreview.visibility == View.GONE) {
+                cropPreview.setImageBitmap(bitmap)
+                cropPreview.setColorFilter(android.graphics.Color.BLUE)
+                cropPreview.visibility = View.VISIBLE
+                overlay.visibility = View.GONE
+            } else {
+                cropPreview.visibility = View.GONE
+                overlay.visibility = View.VISIBLE
             }
         }
     }
