@@ -24,9 +24,10 @@ The project is a minimal Android application written in Kotlin. Below are all of
   roll number line, replacing any previous value.
 * When roll, customer and bin are all present a **Send Record** button appears
   allowing upload to the warehouse database. On success the text view clears.
+  If the server responds with an error, its message is displayed to the user.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
-  * Error handling is basic and does not present failures to the user beyond printing stack traces.
+  * Error handling for other parts of the app is still minimal.
 
 ## 3. Image Utilities
 * `ImageUtils.rotateBitmap()` rotates a bitmap by a specified angle using a `Matrix`. If the angle is a multiple of 360 the input bitmap is returned unmodified.

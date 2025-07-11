@@ -92,4 +92,5 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   lines in the Bin Locator screen. Any prefix before the first space in the
   roll number is removed so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears.
-  Tapping uploads the data to the server and clears the text view.
+  Tapping uploads the data to the server and clears the text view. If the server
+  returns an error, the provided message is shown instead of a generic failure.

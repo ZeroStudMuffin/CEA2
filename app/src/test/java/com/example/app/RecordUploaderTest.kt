@@ -4,6 +4,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.assertTrue
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertEquals
 import org.robolectric.RobolectricTestRunner
 import org.junit.Ignore
 import java.net.HttpURLConnection
@@ -16,7 +17,7 @@ class RecordUploaderTest {
     fun sendRecord_successReturnsTrue() {
         val conn = object : HttpURLConnection(URL("http://test")) {
             override fun getResponseCode(): Int = 200
-            override fun getInputStream() = "{\"status\":\"success\"}".byteInputStream()
+            override fun getInputStream() = "{\"status\":\"inserted\",\"message\":\"ok\"}".byteInputStream()
             override fun connect() {}
             override fun disconnect() {}
             override fun usingProxy() = false
@@ -24,9 +25,14 @@ class RecordUploaderTest {
         }
         RecordUploader.connectionFactory = { conn }
         var result = false
-        RecordUploader.sendRecord("1", "Cust", "B") { success -> result = success }
+        var msg: String? = null
+        RecordUploader.sendRecord("1", "Cust", "B") { success, message ->
+            result = success
+            msg = message
+        }
         Thread.sleep(100)
         assertTrue(result)
+        assertEquals("ok", msg)
     }
 
     @Ignore("Robolectric dependencies not available in CI")
@@ -34,7 +40,8 @@ class RecordUploaderTest {
     fun sendRecord_failureReturnsFalse() {
         val conn = object : HttpURLConnection(URL("http://test")) {
             override fun getResponseCode(): Int = 500
-            override fun getInputStream() = "fail".byteInputStream()
+            override fun getErrorStream() = "{\"status\":\"error\",\"message\":\"bad\"}".byteInputStream()
+            override fun getInputStream() = getErrorStream()
             override fun connect() {}
             override fun disconnect() {}
             override fun usingProxy() = false
@@ -42,8 +49,13 @@ class RecordUploaderTest {
         }
         RecordUploader.connectionFactory = { conn }
         var result = true
-        RecordUploader.sendRecord("1", "Cust", "B") { success -> result = success }
+        var msg: String? = null
+        RecordUploader.sendRecord("1", "Cust", "B") { success, message ->
+            result = success
+            msg = message
+        }
         Thread.sleep(100)
         assertFalse(result)
+        assertEquals("bad", msg)
     }
 }

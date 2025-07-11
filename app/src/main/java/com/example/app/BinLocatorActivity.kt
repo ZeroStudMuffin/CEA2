@@ -251,15 +251,15 @@ class BinLocatorActivity : AppCompatActivity() {
         val customer = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
         val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
         if (roll == null || customer == null || bin == null) return
-        RecordUploader.sendRecord(roll, customer, bin) { success ->
+        RecordUploader.sendRecord(roll, customer, bin) { success, message ->
             runOnUiThread {
                 if (success) {
                     ocrTextView.text = ""
                     actionButtons.visibility = View.GONE
                     sendRecordButton.visibility = View.GONE
-                    Snackbar.make(previewView, "Record sent", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(previewView, message ?: "Record sent", Snackbar.LENGTH_SHORT).show()
                 } else {
-                    Snackbar.make(previewView, "Send failed", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(previewView, message ?: "Send failed", Snackbar.LENGTH_SHORT).show()
                 }
             }
         }
