@@ -50,6 +50,6 @@ object OcrParser {
 
         val rollStr = roll?.substringAfter(' ', roll) ?: ""
         val nameStr = name ?: ""
-        return listOf("Roll#:$rollStr", "Cust-Name:$nameStr")
+        return listOf("Roll#:$rollStr", "Cust:$nameStr")
     }
 }
