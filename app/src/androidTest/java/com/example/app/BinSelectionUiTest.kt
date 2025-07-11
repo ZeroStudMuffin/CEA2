@@ -25,6 +25,9 @@ class BinSelectionUiTest {
         onView(withId(R.id.setBinButton)).perform(click())
         onView(withText("19")).perform(click())
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-        onView(withId(R.id.ocrTextView)).check(matches(withText("Roll#:123 BIN=19")))
+        onView(withId(R.id.setBinButton)).perform(click())
+        onView(withText("20")).perform(click())
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        onView(withId(R.id.ocrTextView)).check(matches(withText("Roll#:123 BIN=20")))
     }
 }

@@ -210,12 +210,21 @@ class BinLocatorActivity : AppCompatActivity() {
     private fun applyBin(bin: String) {
         runOnUiThread {
             val lines = ocrTextView.text.split("\n").toMutableList()
-            val index = lines.indexOfFirst { it.startsWith("Roll#:") }
-            if (index >= 0) {
-                lines[index] = lines[index] + " BIN=$bin"
+            val rollIndex = lines.indexOfFirst { it.startsWith("Roll#:") }
+
+            if (rollIndex >= 0) {
+                val withoutBin = lines[rollIndex].replace(Regex("\\s+BIN=.*"), "")
+                lines[rollIndex] = "$withoutBin BIN=$bin"
+                lines.removeAll { it.trim().startsWith("BIN=") && lines.indexOf(it) != rollIndex }
             } else {
-                lines.add("BIN=$bin")
+                val existing = lines.indexOfFirst { it.trim().startsWith("BIN=") }
+                if (existing >= 0) {
+                    lines[existing] = "BIN=$bin"
+                } else {
+                    lines.add("BIN=$bin")
+                }
             }
+
             ocrTextView.text = lines.joinToString("\n")
             Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
         }

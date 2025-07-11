@@ -83,8 +83,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - A rotate button switches the app between portrait and landscape modes, ensuring captured images match the screen orientation.
  - Recognised text is shown in a TextView with a **Get Release** button that
    scans barcodes using ML Kit. The **Set Bin** button now opens a pop-up menu
-   listing bins 19-65 plus "Floor BR" and "Floor BL". Selecting a value appends
-   `BIN=<bin>` to the roll number line. Barcode scanning for bins is disabled.
+  listing bins 19-65 plus "Floor BR" and "Floor BL". Selecting a value sets
+  `BIN=<bin>` on the roll number line, replacing any previous value. Barcode
+  scanning for bins is disabled.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - The parser now outputs only a roll number and customer name, displayed on two
