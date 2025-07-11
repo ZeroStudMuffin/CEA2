@@ -25,6 +25,9 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * When roll, customer and bin are all present a **Send Record** button appears
   allowing upload to the warehouse database. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
+* A **Debug mode** checkbox on the main screen disables sending and adds **Show
+  OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
+  box heights and the crop preview displays the last capture tinted blue.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling for other parts of the app is still minimal.

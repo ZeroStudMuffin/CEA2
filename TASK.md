@@ -13,3 +13,6 @@
 ## [2025-07-11] Implement Send Record feature - DONE
 ## [2025-07-11] Display server error message on send failure - DONE
 
+
+## [2025-07-11] Generate PRP for Debug Mode feature - DONE
+## [2025-07-11] Implement Debug Mode feature - DONE
