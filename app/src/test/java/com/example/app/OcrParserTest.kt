@@ -54,7 +54,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:ROLL 42", "Cust-Name:CUSTOMER ACME"),
+            listOf("Roll#:ROLL 42", "Cust:CUSTOMER ACME"),
             result
         )
     }
@@ -69,7 +69,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:98765", "Cust-Name:LONGESTNAME"),
+            listOf("Roll#:98765", "Cust:LONGESTNAME"),
             result
         )
     }
@@ -83,7 +83,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:12345", "Cust-Name:CUSTOMER ACME"),
+            listOf("Roll#:12345", "Cust:CUSTOMER ACME"),
             result
         )
     }

@@ -239,15 +239,16 @@ class BinLocatorActivity : AppCompatActivity() {
     private fun updateSendRecordVisibility() {
         val textLines = ocrTextView.text.split("\n")
         val hasRoll = textLines.any { it.startsWith("Roll#:") }
-        val hasCust = textLines.any { it.startsWith("Cust-Name:") }
+        val hasCust = textLines.any { it.startsWith("Cust:") }
         val hasBin = textLines.any { it.contains("BIN=") }
         sendRecordButton.visibility = if (hasRoll && hasCust && hasBin) View.VISIBLE else View.GONE
     }
 
     private fun sendRecord() {
         val lines = ocrTextView.text.split("\n")
-        val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
-        val customer = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter("Cust-Name:")?.trim()
+        val rollLine = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
+        val roll = rollLine?.replace(Regex("\\s*BIN=.*"), "")?.trim()
+        val customer = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
         val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
         if (roll == null || customer == null || bin == null) return
         RecordUploader.sendRecord(roll, customer, bin) { success ->
