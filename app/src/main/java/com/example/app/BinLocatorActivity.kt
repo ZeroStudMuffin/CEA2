@@ -74,7 +74,7 @@ class BinLocatorActivity : AppCompatActivity() {
         rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
-        setBinButton.setOnClickListener { scanBin() }
+        setBinButton.setOnClickListener { showBinMenu() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -195,35 +195,39 @@ class BinLocatorActivity : AppCompatActivity() {
             }
     }
 
-    private fun scanBin() {
-        val bitmap = lastBitmap
-        if (bitmap == null) {
-            Log.d(TAG, "scanBin called with no bitmap")
-            return
+    private fun showBinMenu() {
+        val bins = (19..65).map(Int::toString) + listOf("Floor BR", "Floor BL")
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Select Bin")
+                .setItems(bins.toTypedArray()) { _, which ->
+                    applyBin(bins[which])
+                }
+                .show()
         }
-        Log.d(TAG, "Starting bin scan with bitmap ${bitmap.width}x${bitmap.height}")
-        val image = InputImage.fromBitmap(bitmap, 0)
-        val client = BarcodeScanning.getClient()
-        client.process(image)
-            .addOnSuccessListener { barcodes ->
-                Log.d(TAG, "Barcode scan success: ${barcodes.size} codes")
-                for ((index, code) in barcodes.withIndex()) {
-                    Log.d(
-                        TAG,
-                        "code[$index] format=${code.format} value=${code.rawValue} bounds=${code.boundingBox}"
-                    )
-                }
-                val bin = BarcodeUtils.extractBin(barcodes)
-                if (bin != null) {
-                    Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
+    }
+
+    private fun applyBin(bin: String) {
+        runOnUiThread {
+            val lines = ocrTextView.text.split("\n").toMutableList()
+            val rollIndex = lines.indexOfFirst { it.startsWith("Roll#:") }
+
+            if (rollIndex >= 0) {
+                val withoutBin = lines[rollIndex].replace(Regex("\\s+BIN=.*"), "")
+                lines[rollIndex] = "$withoutBin BIN=$bin"
+                lines.removeAll { it.trim().startsWith("BIN=") && lines.indexOf(it) != rollIndex }
+            } else {
+                val existing = lines.indexOfFirst { it.trim().startsWith("BIN=") }
+                if (existing >= 0) {
+                    lines[existing] = "BIN=$bin"
                 } else {
-                    Snackbar.make(previewView, "no bin found", Snackbar.LENGTH_SHORT).show()
+                    lines.add("BIN=$bin")
                 }
             }
-            .addOnFailureListener {
-                Log.e(TAG, "Barcode scan failed", it)
-                showError(it)
-            }
+
+            ocrTextView.text = lines.joinToString("\n")
+            Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     private fun showError(e: Exception) {
