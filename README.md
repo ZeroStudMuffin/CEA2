@@ -74,6 +74,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 
 ## Features
 
+ - Requires a 4 digit PIN on launch. Accepted PINs are fetched from a
+   Google Sheet so only authorized users can proceed.
  - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
   text for OCR. The box now covers about **85%** of the screen for easier framing.
 - Captured images are cropped to this box and processed with ML Kit text

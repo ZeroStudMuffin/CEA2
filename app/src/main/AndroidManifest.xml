@@ -9,8 +9,9 @@
         android:label="BasicAndroidApp"
         android:theme="@style/Theme.BasicAndroidApp">
         <activity android:name=".BinLocatorActivity" />
+        <activity android:name=".MainActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".PinEntryActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
