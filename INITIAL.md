@@ -1,11 +1,12 @@
 ## FEATURE:
 
-- [ ] Goal: End up with only Roll#s and Customer names after parsing
-- [ ] add to or modify the currect parser, do no create a new one. The additions will happen after the current parsing logic. (this is for further parsing)
-- [ ] Rules: 1. strings with known words become the customer name, then line with the most characters (excluding the newly set customer name line) becomes the roll#. 2. If no known words are detected, the line with the most numbers becomes the roll#, then the next line with the most characters becomes the customer name. 
-- [ ] The final result is what is shown in the text box on screen. Previosuly it was showing the full OCR text, now It will show only the parsed (final) ocr text. Roll#s will be the first line structered as "Roll#:<extracted roll#>" and the customer name will be "Cust-Name:<extracted name>"
-## EXAMPLES:
+- [ ] After record is complete with a roll#, cutomer name, and a bin#, a new button appears called "Send Record". The record does not need to include a release number.
+- [ ] Send Record uploads the record to an sql database.
+- [ ] After record is confirmed to be sent, clear the data and get ready for another capture.
+- [ ] Confirmation snackbar when record is accepted by the database
 
+## EXAMPLES:
+insert.php - this is the actual php we will be using
 https://github.com/android/nowinandroid?tab=readme-ov-file - a simple android app EXAMPLE.
 https://github.com/ryccoatika/Image-To-Text - an image-to-text app example
 https://github.com/krishnachaitanya0107/TextRecognizerApp/blob/master/app/src/main/java/com/example/textrecognizer/MainActivity.kt - the mainactivity.kt example from another image-to-text app
@@ -17,5 +18,7 @@ https://github.com/android/nowinandroid/blob/main/docs/ArchitectureLearningJourn
 https://developer.android.com/ - a very high quality resource for all things android development focused. Search the subdomains for more relevant topics to your task.
 
 ## OTHER CONSIDERATIONS:
-
+you may modify insert.php if needed. But explain why and what was changed.
+website housing the database is unitedexpresstrucking.com
+If extra info is needed like keys or tokens, set up the code for them and inform the user after completion of what needs to be added. User will give the info before executing the PRP.
 User will help when asked. Work with the user if something cannot be handled bu Codex alone.
