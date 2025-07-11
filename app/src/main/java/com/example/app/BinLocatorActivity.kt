@@ -31,6 +31,7 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
+import com.example.app.RecordUploader
 import android.util.Log
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -48,6 +49,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var actionButtons: LinearLayout
     private lateinit var getReleaseButton: Button
     private lateinit var setBinButton: Button
+    private lateinit var sendRecordButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
@@ -69,12 +71,14 @@ class BinLocatorActivity : AppCompatActivity() {
         actionButtons = findViewById(R.id.actionButtons)
         getReleaseButton = findViewById(R.id.getReleaseButton)
         setBinButton = findViewById(R.id.setBinButton)
+        sendRecordButton = findViewById(R.id.sendRecordButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
         setBinButton.setOnClickListener { showBinMenu() }
+        sendRecordButton.setOnClickListener { sendRecord() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -161,6 +165,7 @@ class BinLocatorActivity : AppCompatActivity() {
         runOnUiThread {
             ocrTextView.text = lines.joinToString("\n")
             actionButtons.visibility = View.VISIBLE
+            updateSendRecordVisibility()
         }
     }
 
@@ -227,6 +232,35 @@ class BinLocatorActivity : AppCompatActivity() {
 
             ocrTextView.text = lines.joinToString("\n")
             Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
+            updateSendRecordVisibility()
+        }
+    }
+
+    private fun updateSendRecordVisibility() {
+        val textLines = ocrTextView.text.split("\n")
+        val hasRoll = textLines.any { it.startsWith("Roll#:") }
+        val hasCust = textLines.any { it.startsWith("Cust-Name:") }
+        val hasBin = textLines.any { it.contains("BIN=") }
+        sendRecordButton.visibility = if (hasRoll && hasCust && hasBin) View.VISIBLE else View.GONE
+    }
+
+    private fun sendRecord() {
+        val lines = ocrTextView.text.split("\n")
+        val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
+        val customer = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter("Cust-Name:")?.trim()
+        val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
+        if (roll == null || customer == null || bin == null) return
+        RecordUploader.sendRecord(roll, customer, bin) { success ->
+            runOnUiThread {
+                if (success) {
+                    ocrTextView.text = ""
+                    actionButtons.visibility = View.GONE
+                    sendRecordButton.visibility = View.GONE
+                    Snackbar.make(previewView, "Record sent", Snackbar.LENGTH_SHORT).show()
+                } else {
+                    Snackbar.make(previewView, "Send failed", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 

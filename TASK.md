@@ -9,4 +9,6 @@
 ## [2025-07-10] Trim roll prefix after extraction - DONE
 ## [2025-07-10] Replace bin QR scanning with manual selection popup - DONE
 ## [2025-07-11] Fix bin selection to replace existing value instead of appending - DONE
+## [2025-07-11] Generate PRP for Send Record feature - DONE
+## [2025-07-11] Implement Send Record feature
 

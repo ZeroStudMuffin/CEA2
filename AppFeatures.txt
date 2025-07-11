@@ -22,6 +22,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * **Get Release** still uses ML Kit barcode scanning. **Set Bin** now opens a menu
   with bins 19-65 and "Floor BR/BL". Selected bins set `BIN=<value>` on the
   roll number line, replacing any previous value.
+* When roll, customer and bin are all present a **Send Record** button appears
+  allowing upload to the warehouse database. On success the text view clears.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling is basic and does not present failures to the user beyond printing stack traces.
