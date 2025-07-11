@@ -4,6 +4,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 
 ## 1. Main Activity
 * Displays a "Hello World" text view on launch.
+* Loads a list of valid 4-digit PINs from a Google Sheet and prompts the user to enter one before enabling the Bin Locator.
 * Contains a **Bin Locator** button. When pressed, this launches the `BinLocatorActivity` using an explicit intent.
 * Limitations: the main screen only provides navigation to the bin locator and does not contain additional functionality.
 
