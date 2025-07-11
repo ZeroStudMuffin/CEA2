@@ -94,3 +94,6 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
+- On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
+  and prompts the user to enter one. The main screen remains disabled until a
+  correct PIN is provided.

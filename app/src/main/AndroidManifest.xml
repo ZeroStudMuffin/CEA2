@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.app">
 
-    <uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Allow install on devices without a camera such as Chromebooks -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 

@@ -12,4 +12,5 @@
 ## [2025-07-11] Generate PRP for Send Record feature - DONE
 ## [2025-07-11] Implement Send Record feature - DONE
 ## [2025-07-11] Display server error message on send failure - DONE
+## [2025-07-11] Prompt for PIN on startup and fetch allowed list from Google Sheet - DONE
 
