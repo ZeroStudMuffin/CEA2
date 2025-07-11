@@ -3,9 +3,14 @@
 The project is a minimal Android application written in Kotlin. Below are all of the current features and how they operate.
 
 ## 1. Main Activity
-* Displays a "Hello World" text view on launch.
+* Displays a "Hello World" text view after a PIN check.
 * Contains a **Bin Locator** button. When pressed, this launches the `BinLocatorActivity` using an explicit intent.
 * Limitations: the main screen only provides navigation to the bin locator and does not contain additional functionality.
+
+## 1a. Pin Activity
+* Shown at app start to request a 4-digit PIN.
+* Accepted pins are downloaded from a Google Sheet.
+* On success the user is taken to the main menu. Invalid pins show a Snackbar error.
 
 ## 2. Bin Locator Activity
 * Provides a camera preview using **CameraX**. When the screen loads it requests the camera permission if needed and starts the camera.

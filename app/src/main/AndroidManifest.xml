@@ -2,6 +2,7 @@
     package="com.example.app">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- Allow install on devices without a camera such as Chromebooks -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
@@ -9,8 +10,9 @@
         android:label="BasicAndroidApp"
         android:theme="@style/Theme.BasicAndroidApp">
         <activity android:name=".BinLocatorActivity" />
+        <activity android:name=".MainActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".PinActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

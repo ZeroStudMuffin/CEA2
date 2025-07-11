@@ -74,7 +74,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 
 ## Features
 
- - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
+- Camera-based **Bin Locator** with a bounding box overlay guiding where to place
   text for OCR. The box now covers about **85%** of the screen for easier framing.
 - Captured images are cropped to this box and processed with ML Kit text
   recognition.
@@ -94,3 +94,5 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
+- App opens with a 4-digit **PIN entry** screen. Valid pins are fetched from a
+  Google Sheet so only authorized users can continue to the main menu.
