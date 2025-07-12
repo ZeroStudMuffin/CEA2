@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, BinLocatorActivity::class.java)
             intent.putExtra("debug", debugCheckBox.isChecked)
             startActivity(intent)
+        }
         binButton = findViewById(R.id.binLocatorButton)
         binButton.isEnabled = false
         binButton.setOnClickListener {
