@@ -17,3 +17,4 @@
 
 ## [2025-07-11] Generate PRP for Debug Mode feature - DONE
 ## [2025-07-11] Implement Debug Mode feature - DONE
+## [2025-07-12] Fix debug mode checkbox not applied - DONE
