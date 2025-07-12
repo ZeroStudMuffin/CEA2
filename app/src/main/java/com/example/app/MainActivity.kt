@@ -18,15 +18,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val debugCheckBox = findViewById<CheckBox>(R.id.debugCheckBox)
-        findViewById<Button>(R.id.binLocatorButton).setOnClickListener {
-            val intent = Intent(this, BinLocatorActivity::class.java)
-            intent.putExtra("debug", debugCheckBox.isChecked)
-            startActivity(intent)
-        }
         binButton = findViewById(R.id.binLocatorButton)
         binButton.isEnabled = false
         binButton.setOnClickListener {
-            startActivity(Intent(this, BinLocatorActivity::class.java))
+            val intent = Intent(this, BinLocatorActivity::class.java)
+            intent.putExtra("debug", debugCheckBox.isChecked)
+            startActivity(intent)
         }
 
         PinFetcher.fetchPins({ pins ->
