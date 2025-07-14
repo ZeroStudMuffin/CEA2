@@ -97,6 +97,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
   disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+- A **Batch Binning** checkbox queues multiple captures before assigning a bin.
+  An **Add Item** button saves each roll/customer pair and a **Show Items**
+  dialog lists them. **Send Record** uploads all queued items at once.
 - On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
   and prompts the user to enter one. The main screen remains disabled until a
   correct PIN is provided.

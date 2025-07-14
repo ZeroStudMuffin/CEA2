@@ -52,12 +52,16 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var sendRecordButton: Button
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
+    private lateinit var addItemButton: Button
+    private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
     private var lastBitmap: Bitmap? = null
     private var debugMode: Boolean = false
+    private var batchMode: Boolean = false
+    private val batchItems = mutableListOf<BatchRecord>()
     private var rawLines: List<String> = emptyList()
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
@@ -70,6 +74,7 @@ class BinLocatorActivity : AppCompatActivity() {
         overlay = findViewById(R.id.boundingBox)
         ocrTextView = findViewById(R.id.ocrTextView)
         captureButton = findViewById(R.id.captureButton)
+        addItemButton = findViewById(R.id.addItemButton)
         rotateButton = findViewById(R.id.rotateButton)
         zoomSlider = findViewById(R.id.zoomSlider)
         zoomResetButton = findViewById(R.id.zoomResetButton)
@@ -79,10 +84,16 @@ class BinLocatorActivity : AppCompatActivity() {
         sendRecordButton = findViewById(R.id.sendRecordButton)
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
+        showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         debugMode = intent.getBooleanExtra("debug", false)
+        batchMode = intent.getBooleanExtra("batch", false)
+        if (batchMode) {
+            addItemButton.visibility = View.VISIBLE
+            showBatchButton.visibility = View.VISIBLE
+        }
         if (debugMode) {
             sendRecordButton.visibility = View.GONE
             showOcrButton.visibility = View.VISIBLE
@@ -94,6 +105,8 @@ class BinLocatorActivity : AppCompatActivity() {
         getReleaseButton.setOnClickListener { scanRelease() }
         setBinButton.setOnClickListener { showBinMenu() }
         sendRecordButton.setOnClickListener { sendRecord() }
+        addItemButton.setOnClickListener { onAddItem() }
+        showBatchButton.setOnClickListener { showBatchItems() }
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
 
@@ -249,6 +262,11 @@ class BinLocatorActivity : AppCompatActivity() {
             }
 
             ocrTextView.text = lines.joinToString("\n")
+            if (batchMode) {
+                for (item in batchItems) {
+                    item.bin = bin
+                }
+            }
             Snackbar.make(previewView, "Bin: $bin", Snackbar.LENGTH_SHORT).show()
             updateSendRecordVisibility()
         }
@@ -263,7 +281,8 @@ class BinLocatorActivity : AppCompatActivity() {
         val hasRoll = textLines.any { it.startsWith("Roll#:") }
         val hasCust = textLines.any { it.startsWith("Cust:") }
         val hasBin = textLines.any { it.contains("BIN=") }
-        sendRecordButton.visibility = if (hasRoll && hasCust && hasBin) View.VISIBLE else View.GONE
+        val batchReady = batchMode && batchItems.isNotEmpty() && batchItems.all { it.bin != null }
+        sendRecordButton.visibility = if ((hasRoll && hasCust && hasBin) || batchReady) View.VISIBLE else View.GONE
     }
 
     private fun sendRecord() {
@@ -271,23 +290,35 @@ class BinLocatorActivity : AppCompatActivity() {
             Snackbar.make(previewView, "Debug mode - record not sent", Snackbar.LENGTH_SHORT).show()
             return
         }
+        val payloads = mutableListOf<Triple<String, String, String>>()
         val lines = ocrTextView.text.split("\n")
         val rollLine = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
         val roll = rollLine?.replace(Regex("\\s*BIN=.*"), "")?.trim()
         val customer = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
         val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
-        if (roll == null || customer == null || bin == null) return
-        RecordUploader.sendRecord(roll, customer, bin) { success, message ->
-            runOnUiThread {
-                if (success) {
-                    ocrTextView.text = ""
-                    actionButtons.visibility = View.GONE
-                    sendRecordButton.visibility = View.GONE
-                    Snackbar.make(previewView, message ?: "Record sent", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(previewView, message ?: "Send failed", Snackbar.LENGTH_SHORT).show()
+        if (roll != null && customer != null && bin != null) {
+            payloads += Triple(roll, customer, bin)
+        }
+        if (batchMode) {
+            batchItems.mapNotNullTo(payloads) { item ->
+                val b = item.bin
+                if (b == null) null else Triple(item.roll, item.customer, b)
+            }
+        }
+        if (payloads.isEmpty()) return
+        for ((r, c, b) in payloads) {
+            RecordUploader.sendRecord(r, c, b) { success, message ->
+                runOnUiThread {
+                    val text = if (success) message ?: "Record sent" else message ?: "Send failed"
+                    Snackbar.make(previewView, text, Snackbar.LENGTH_SHORT).show()
                 }
             }
+        }
+        runOnUiThread {
+            batchItems.clear()
+            ocrTextView.text = ""
+            actionButtons.visibility = View.GONE
+            sendRecordButton.visibility = View.GONE
         }
     }
 
@@ -314,6 +345,31 @@ class BinLocatorActivity : AppCompatActivity() {
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun onAddItem() {
+        val lines = ocrTextView.text.split("\n")
+        val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.replace(Regex("\\s*BIN=.*"), "")?.trim()
+        val cust = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
+        val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
+        if (roll != null && cust != null) {
+            batchItems += BatchRecord(roll, cust, bin)
+            ocrTextView.text = ""
+            actionButtons.visibility = View.GONE
+            updateSendRecordVisibility()
+        }
+    }
+
+    private fun showBatchItems() {
+        if (batchItems.isEmpty()) return
+        val message = batchItems.joinToString("\n") { "${it.roll} - ${it.customer} - ${it.bin ?: "no bin"}" }
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Queued Items")
+                .setMessage(message)
+                .setPositiveButton("OK", null)
+                .show()
         }
     }
 
