@@ -9,7 +9,9 @@
     <application
         android:label="BasicAndroidApp"
         android:theme="@style/Theme.BasicAndroidApp">
-        <activity android:name=".BinLocatorActivity" />
+        <activity
+            android:name=".BinLocatorActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

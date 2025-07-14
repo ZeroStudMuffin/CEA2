@@ -21,3 +21,4 @@
 ## [2025-07-14] Generate PRP for Batch Binning mode - DONE
 ## [2025-07-14] Implement Batch Binning mode - DONE
 ## [2025-07-14] Default to Batch mode and remove checkbox - DONE
+## [2025-07-14] Remove rotate button and lock orientation to portrait - DONE
