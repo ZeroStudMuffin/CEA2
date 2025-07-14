@@ -17,12 +17,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val batchCheckBox = findViewById<CheckBox>(R.id.batchCheckBox)
         val debugCheckBox = findViewById<CheckBox>(R.id.debugCheckBox)
         binButton = findViewById(R.id.binLocatorButton)
         binButton.isEnabled = false
         binButton.setOnClickListener {
             val intent = Intent(this, BinLocatorActivity::class.java)
             intent.putExtra("debug", debugCheckBox.isChecked)
+            intent.putExtra("batch", batchCheckBox.isChecked)
             startActivity(intent)
         }
 
