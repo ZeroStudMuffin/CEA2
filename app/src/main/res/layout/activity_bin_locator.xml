@@ -22,7 +22,7 @@
         android:orientation="horizontal"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer"
         app:layout_constraintTop_toBottomOf="@id/ocrTextView">
 
         <Button
@@ -39,37 +39,44 @@
             android:layout_weight="1"
             android:text="Set Bin" />
 
-        <Button
-            android:id="@+id/sendRecordButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:text="Send Record" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/showButtonsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/actionButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <Button
             android:id="@+id/showOcrButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:text="Show OCR" />
+            android:text="Show OCR"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/showCropButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:text="Show Crop" />
+            android:text="Show Crop"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/showBatchButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:visibility="gone"
             android:text="Show Items" />
+
+        <Button
+            android:id="@+id/sendRecordButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:text="Send Record" />
     </LinearLayout>
 
     <FrameLayout
@@ -79,7 +86,7 @@
         app:layout_constraintTop_toBottomOf="@id/actionButtons"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toStartOf="@id/showButtonsContainer">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
@@ -102,7 +109,7 @@
 
     <Button
         android:id="@+id/captureButton"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:text="Capture"
         app:layout_constraintBottom_toBottomOf="parent"
