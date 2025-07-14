@@ -22,3 +22,4 @@
 ## [2025-07-14] Implement Batch Binning mode - DONE
 ## [2025-07-14] Default to Batch mode and remove checkbox - DONE
 ## [2025-07-14] Remove rotate button and lock orientation to portrait - DONE
+## [2025-07-14] Move debug buttons to side container and disable Send button until ready

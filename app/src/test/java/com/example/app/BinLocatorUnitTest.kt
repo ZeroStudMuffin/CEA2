@@ -23,12 +23,12 @@ class BinLocatorUnitTest {
 
     @Test
     @org.junit.Ignore("Robolectric dependencies not available in CI")
-    fun debugMode_hidesSendButton() {
+    fun debugMode_disablesSendButton() {
         val intent = Intent(ApplicationProvider.getApplicationContext(), BinLocatorActivity::class.java)
         intent.putExtra("debug", true)
         val controller = Robolectric.buildActivity(BinLocatorActivity::class.java, intent).setup()
         val activity = controller.get()
         val button = activity.findViewById<android.widget.Button>(R.id.sendRecordButton)
-        assertEquals(android.view.View.GONE, button.visibility)
+        assertEquals(false, button.isEnabled)
     }
 }

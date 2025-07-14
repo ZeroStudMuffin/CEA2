@@ -93,10 +93,10 @@ class BinLocatorActivity : AppCompatActivity() {
             showBatchButton.visibility = View.VISIBLE
         }
         if (debugMode) {
-            sendRecordButton.visibility = View.GONE
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
         }
+        sendRecordButton.isEnabled = false
 
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
@@ -270,16 +270,14 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun updateSendRecordVisibility() {
-        if (debugMode) {
-            sendRecordButton.visibility = View.GONE
-            return
-        }
         val textLines = ocrTextView.text.split("\n")
         val hasRoll = textLines.any { it.startsWith("Roll#:") }
         val hasCust = textLines.any { it.startsWith("Cust:") }
         val hasBin = textLines.any { it.contains("BIN=") }
         val batchReady = batchMode && batchItems.isNotEmpty() && batchItems.all { it.bin != null }
-        sendRecordButton.visibility = if ((hasRoll && hasCust && hasBin) || batchReady) View.VISIBLE else View.GONE
+        val enabled = !debugMode && ((hasRoll && hasCust && hasBin) || batchReady)
+        sendRecordButton.isEnabled = enabled
+        sendRecordButton.alpha = if (enabled) 1f else 0.5f
     }
 
     private fun sendRecord() {
@@ -315,7 +313,8 @@ class BinLocatorActivity : AppCompatActivity() {
             batchItems.clear()
             ocrTextView.text = ""
             actionButtons.visibility = View.GONE
-            sendRecordButton.visibility = View.GONE
+            sendRecordButton.isEnabled = false
+            sendRecordButton.alpha = 0.5f
         }
     }
 
