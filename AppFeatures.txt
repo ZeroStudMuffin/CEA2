@@ -29,9 +29,9 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * A **Debug mode** checkbox on the main screen disables sending and adds **Show
   OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
   box heights and the crop preview displays the last capture tinted blue.
-* A **Batch Binning** option queues multiple captures. Use **Add Item** to store
-  each roll/customer pair then **Show Items** to review them. **Send Record**
-  uploads all queued entries in one batch.
+* Batch Binning is always enabled. Use **Add Item** to store each roll/customer
+  pair then **Show Items** to review them. **Send Record** uploads all queued
+  entries in one batch.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling for other parts of the app is still minimal.

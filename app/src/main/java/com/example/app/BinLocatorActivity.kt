@@ -89,7 +89,7 @@ class BinLocatorActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         debugMode = intent.getBooleanExtra("debug", false)
-        batchMode = intent.getBooleanExtra("batch", false)
+        batchMode = intent.getBooleanExtra("batch", true)
         if (batchMode) {
             addItemButton.visibility = View.VISIBLE
             showBatchButton.visibility = View.VISIBLE
