@@ -80,7 +80,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   recognition.
 - Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
   finer control when capturing text.
-- A rotate button switches the app between portrait and landscape modes, ensuring captured images match the screen orientation.
+- The screen orientation is locked to portrait; rotating the device has no effect.
  - Recognised text is shown in a TextView with a **Get Release** button that
    scans barcodes using ML Kit. The **Set Bin** button now opens a pop-up menu
   listing bins 19-65 plus "Floor BR" and "Floor BL". Selecting a value sets
@@ -94,12 +94,13 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
-- A **Debug mode** checkbox on the main screen launches Bin Locator with sending
-  disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
-  with bounding box heights and a blue-tinted crop preview for troubleshooting.
-- A **Batch Binning** checkbox queues multiple captures before assigning a bin.
-  An **Add Item** button saves each roll/customer pair and a **Show Items**
-  dialog lists them. **Send Record** uploads all queued items at once.
+ - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
+   disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
+   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+ - Batch Binning is enabled by default, allowing multiple captures before
+   assigning a bin. An **Add Item** button saves each roll/customer pair and a
+   **Show Items** dialog lists them. **Send Record** uploads all queued items at
+   once.
 - On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
   and prompts the user to enter one. The main screen remains disabled until a
   correct PIN is provided.

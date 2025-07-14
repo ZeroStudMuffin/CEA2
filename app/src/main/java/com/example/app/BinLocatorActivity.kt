@@ -43,7 +43,6 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var overlay: BoundingBoxOverlay
     private lateinit var ocrTextView: TextView
     private lateinit var captureButton: Button
-    private lateinit var rotateButton: ImageButton
     private lateinit var zoomSlider: Slider
     private lateinit var zoomResetButton: Button
     private lateinit var actionButtons: LinearLayout
@@ -75,7 +74,6 @@ class BinLocatorActivity : AppCompatActivity() {
         ocrTextView = findViewById(R.id.ocrTextView)
         captureButton = findViewById(R.id.captureButton)
         addItemButton = findViewById(R.id.addItemButton)
-        rotateButton = findViewById(R.id.rotateButton)
         zoomSlider = findViewById(R.id.zoomSlider)
         zoomResetButton = findViewById(R.id.zoomResetButton)
         actionButtons = findViewById(R.id.actionButtons)
@@ -89,7 +87,7 @@ class BinLocatorActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         debugMode = intent.getBooleanExtra("debug", false)
-        batchMode = intent.getBooleanExtra("batch", false)
+        batchMode = intent.getBooleanExtra("batch", true)
         if (batchMode) {
             addItemButton.visibility = View.VISIBLE
             showBatchButton.visibility = View.VISIBLE
@@ -100,7 +98,6 @@ class BinLocatorActivity : AppCompatActivity() {
             showCropButton.visibility = View.VISIBLE
         }
 
-        rotateButton.setOnClickListener { toggleOrientation() }
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
         setBinButton.setOnClickListener { showBinMenu() }
@@ -377,15 +374,6 @@ class BinLocatorActivity : AppCompatActivity() {
         e.printStackTrace()
         Snackbar.make(previewView, e.message ?: "Error", Snackbar.LENGTH_SHORT).show()
     }
-
-    private fun toggleOrientation() {
-        requestedOrientation = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        } else {
-            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
-    }
-
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
