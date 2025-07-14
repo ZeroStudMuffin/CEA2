@@ -97,6 +97,7 @@ class BinLocatorActivity : AppCompatActivity() {
             showCropButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
+        sendRecordButton.alpha = 0.5f
 
         captureButton.setOnClickListener { takePhoto() }
         getReleaseButton.setOnClickListener { scanRelease() }
