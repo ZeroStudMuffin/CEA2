@@ -1,9 +1,12 @@
 ## FEATURE:
 
-- [ ] "debug" mode enabled by a small checkbox on the apps home page
-- [ ] debug mode does not allow records to be sent
-- [ ] debug mode adds a small button to the bin locator screen that pops up a window with the most recent unfiltered OCR result and the bounding box sizes.
-- [ ] debug mode adds a small button to the bin locator screen that hides the "TOP" and crop box indicators. Then, shows the bitmap area being captured by the last "capture" button press. pressing the button again returns to the normal view.
+- [ ] Checkbox above the debug checkbox enables "Batch Binning" mode
+- [ ] Batch binning changes capture button to a square and adds a button to the right of the capture button called "Add Item"
+- [ ] Capture button works like normal.
+- [ ] Add Item button adds the current roll number and customer name to a list, then clears the textview, and gets ready for another capture.
+- [ ] List of items ready to have a bin number added is available in a pop-up window similar to the "OCR raw text" button and pop-up wundow.
+- [ ] When Set Bin is used, set the bin for all records in the list as well as the one that had just been captured but was not added to the list yet.
+- [ ] Send Record now sends each item on the list. Each item is sent as its own record. After sending the records, everything is cleared and made ready for another batch.
 
 ## EXAMPLES:
 
@@ -18,5 +21,7 @@ https://github.com/android/nowinandroid/blob/main/docs/ArchitectureLearningJourn
 https://developer.android.com/ - a very high quality resource for all things android development focused. Search the subdomains for more relevant topics to your task.
 
 ## OTHER CONSIDERATIONS:
+
+The pupose of this feature is to allow users to gather multiple roll number/customer name records and set the bin location for all of them at once. Then send the records all at once.
 If extra info is needed like keys or tokens, set up the code for them and inform the user after completion of what needs to be added. User will give the info before executing the PRP.
 User will help when asked. Work with the user if something cannot be handled bu Codex alone.
