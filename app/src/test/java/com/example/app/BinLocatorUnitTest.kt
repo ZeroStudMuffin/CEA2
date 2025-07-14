@@ -29,6 +29,7 @@ class BinLocatorUnitTest {
         val controller = Robolectric.buildActivity(BinLocatorActivity::class.java, intent).setup()
         val activity = controller.get()
         val button = activity.findViewById<android.widget.Button>(R.id.sendRecordButton)
-        assertEquals(android.view.View.GONE, button.visibility)
+        assertEquals(android.view.View.VISIBLE, button.visibility)
+        assertEquals(false, button.isEnabled)
     }
 }
