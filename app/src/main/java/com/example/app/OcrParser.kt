@@ -51,7 +51,18 @@ object OcrParser {
         }
         val name = customer ?: cleanLines.filterNot { it == roll }.maxByOrNull { it.length }
 
-        val rollStr = roll?.substringAfter(' ', roll) ?: ""
+        val rollStr = roll?.let { raw ->
+            var trimmed = raw
+            val spaceIndex = trimmed.indexOf(' ')
+            val underscoreIndex = trimmed.indexOf('_')
+            val cutIndex = listOf(spaceIndex, underscoreIndex)
+                .filter { it >= 0 }
+                .minOrNull() ?: -1
+            if (cutIndex != -1) {
+                trimmed = trimmed.substring(cutIndex + 1)
+            }
+            trimmed.replace(" ", "").replace("_", "")
+        } ?: ""
         val nameStr = name ?: ""
         return listOf("Roll#:$rollStr", "Cust:$nameStr")
     }

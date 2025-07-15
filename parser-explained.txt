@@ -1,10 +1,12 @@
 OcrParser processes lines from ML Kit OCR results:
 1. Find the tallest line's bounding box height.
 2. Ignore any line shorter than 75% of that height.
-3. Replace underscores with spaces.
+3. Convert spaces to underscores.
 4. Remove quoted text and content inside brackets.
 5. Strip characters except letters, digits, spaces, '-' and '%'.
 6. Trim whitespace and return the cleaned strings.
 7. Detect the customer line using known keywords, then choose the roll line
    either as the longest remaining line or the one with the most digits.
-   Return only `Roll#:<value>` and `Cust-Name:<value>`.
+   The roll value removes any prefix before the first space or underscore and
+   strips remaining spaces/underscores. Return only `Roll#:<value>` and
+   `Cust-Name:<value>`.

@@ -29,3 +29,4 @@
 ## [2025-07-15] Add debug log window with Log button - DONE
 ## [2025-07-15] Implement refined OCR pipeline - DONE
 ## [2025-07-15] Fix build error from float arguments to Bitmap.createBitmap
+## [2025-07-15] Strip underscores and prefixes from roll numbers - DONE

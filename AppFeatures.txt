@@ -18,7 +18,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Each OCR line and its bounding box height are printed to logcat for debugging.
 * OCR results are cleaned using `OcrParser` before barcode scanning.
 * Only the extracted roll number and customer name are displayed back to the user, simplifying the on-screen text.
-* The parser strips any prefix text before the first space in the roll number so only the numeric portion remains.
+* The parser strips any prefix text before the first space or underscore in the roll number and removes any remaining spaces or underscores so only the numeric portion remains.
 * **Get Release** still uses ML Kit barcode scanning. **Set Bin** now opens a menu
   with bins 19-65 and "Floor BR/BL". Selected bins set `BIN=<value>` on the
   roll number line, replacing any previous value.

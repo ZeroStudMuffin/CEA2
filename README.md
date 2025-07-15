@@ -92,8 +92,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - The parser now outputs only a roll number and customer name, displayed on two
-  lines in the Bin Locator screen. Any prefix before the first space in the
-  roll number is removed so users see only the numeric portion.
+  lines in the Bin Locator screen. Any prefix before the first space or
+  underscore in the roll number is removed and any remaining spaces or
+  underscores are stripped so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
