@@ -77,7 +77,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
  - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
   text for OCR. The box now covers about **85%** of the screen for easier framing.
 - Captured images are cropped to this box and processed with ML Kit text
-  recognition.
+  recognition. A second pass via `LabelCropper` tightens the crop to the label
+  itself, improving OCR accuracy. When debug mode is enabled this refined image
+  is written to `cacheDir/ocr_debug.jpg` for inspection.
 - Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
   finer control when capturing text.
 - The screen orientation is locked to portrait; rotating the device has no effect.
@@ -96,7 +98,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   returns an error, the provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
    disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
-   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+   with bounding box heights. **Show Crop** loads the saved refined image so
+   users can verify the detection area.
  - Batch Binning is enabled by default, allowing multiple captures before
    assigning a bin. An **Add Item** button saves each roll/customer pair and a
    **Show Items** dialog lists them. **Send Record** uploads all queued items at

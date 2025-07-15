@@ -32,8 +32,11 @@ import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
+import com.example.app.LabelCropper
 import android.util.Log
 import java.io.File
+import java.io.FileOutputStream
+import android.graphics.BitmapFactory
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -166,8 +169,15 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.width(),
                     crop.height()
                 )
-                lastBitmap = cropped
-                val inputImage = InputImage.fromBitmap(cropped, 0)
+                val refined = LabelCropper.refineCrop(cropped)
+                lastBitmap = refined
+                if (debugMode) {
+                    val outFile = File(cacheDir, "ocr_debug.jpg")
+                    FileOutputStream(outFile).use { stream ->
+                        refined.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+                    }
+                }
+                val inputImage = InputImage.fromBitmap(refined, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->
@@ -331,7 +341,12 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun toggleCropPreview() {
-        val bitmap = lastBitmap ?: return
+        val bitmap = if (debugMode) {
+            val file = File(cacheDir, "ocr_debug.jpg")
+            if (file.exists()) android.graphics.BitmapFactory.decodeFile(file.absolutePath) else lastBitmap
+        } else {
+            lastBitmap
+        } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
                 cropPreview.setImageBitmap(bitmap)
