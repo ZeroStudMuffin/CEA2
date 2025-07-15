@@ -77,7 +77,10 @@ This app relies on Material Components. A custom theme extending `Theme.Material
  - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
   text for OCR. The box now covers about **85%** of the screen for easier framing.
 - Captured images are cropped to this box and processed with ML Kit text
-  recognition.
+  recognition. A second pass via `LabelCropper` trims any white borders,
+  converts the bitmap to grayscale and returns the image supplied to ML Kit.
+  When debug mode is enabled this final image is written to
+  `cacheDir/ocr_debug.png` for inspection.
 - Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
   finer control when capturing text.
 - The screen orientation is locked to portrait; rotating the device has no effect.
@@ -89,14 +92,16 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - The parser now outputs only a roll number and customer name, displayed on two
-  lines in the Bin Locator screen. Any prefix before the first space in the
-  roll number is removed so users see only the numeric portion.
+  lines in the Bin Locator screen. Any prefix before the first space or
+  underscore in the roll number is removed and any remaining spaces or
+  underscores are stripped so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
-   disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
-   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+  disabled. Additional **Show OCR**, **Show Crop**, and **Log** buttons reveal
+  raw text with bounding box heights, display the grayscale image passed to
+  ML Kit, and show recent debug log messages for troubleshooting.
  - Batch Binning is enabled by default, allowing multiple captures before
    assigning a bin. An **Add Item** button saves each roll/customer pair and a
    **Show Items** dialog lists them. **Send Record** uploads all queued items at

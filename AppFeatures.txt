@@ -12,13 +12,13 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Provides a camera preview using **CameraX**. When the screen loads it requests the camera permission if needed and starts the camera.
 * Screen orientation is fixed to portrait, simplifying camera alignment regardless of device rotation.
 * Includes a **Capture** button. When tapped it captures a photo to a temporary file, rotates the image based on the current setting and runs **ML Kit Text Recognition**.
-* Shows a green **TOP** label with a bounding box overlay so users align text correctly. The captured image is cropped to this region before processing.
+* Shows a green **TOP** label with a bounding box overlay so users align text correctly. The captured image is cropped using this overlay then passed to `LabelCropper` which trims white borders, converts it to grayscale, and in debug mode writes the exact image sent to ML Kit at `cacheDir/ocr_debug.png`.
 * Supports pinch-to-zoom on the preview with a slider and 1x reset button for precise adjustments.
 * Recognised text appears in a persistent text view at the top of the screen.
 * Each OCR line and its bounding box height are printed to logcat for debugging.
 * OCR results are cleaned using `OcrParser` before barcode scanning.
 * Only the extracted roll number and customer name are displayed back to the user, simplifying the on-screen text.
-* The parser strips any prefix text before the first space in the roll number so only the numeric portion remains.
+* The parser strips any prefix text before the first space or underscore in the roll number and removes any remaining spaces or underscores so only the numeric portion remains.
 * **Get Release** still uses ML Kit barcode scanning. **Set Bin** now opens a menu
   with bins 19-65 and "Floor BR/BL". Selected bins set `BIN=<value>` on the
   roll number line, replacing any previous value.
@@ -26,8 +26,10 @@ The project is a minimal Android application written in Kotlin. Below are all of
   allowing upload to the warehouse database. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
 * A **Debug mode** checkbox on the main screen disables sending and adds **Show
-  OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
-  box heights and the crop preview displays the last capture tinted blue.
+  OCR**, **Show Crop**, and **Log** buttons. The OCR dialog lists raw lines with
+  bounding box heights, the crop preview loads the grayscale image saved to
+  `cacheDir/ocr_debug.png`, and the log window displays messages captured during
+  processing.
 * Batch Binning is always enabled. Use **Add Item** to store each roll/customer
   pair then **Show Items** to review them. **Send Record** uploads all queued
   entries in one batch.

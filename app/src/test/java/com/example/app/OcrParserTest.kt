@@ -90,6 +90,20 @@ class OcrParserTest {
 
     @Ignore("Robolectric dependencies not available in CI")
     @Test
+    fun parse_stripsUnderscoresAndPrefix() {
+        val lines = listOf(
+            fakeLine("(SO] F609890102", 100),
+            fakeLine("CLIENT FOO", 100)
+        )
+        val result = OcrParser.parse(lines)
+        assertEquals(
+            listOf("Roll#:F609890102", "Cust:CLIENT FOO"),
+            result
+        )
+    }
+
+    @Ignore("Robolectric dependencies not available in CI")
+    @Test
     fun parse_returnsEmptyWhenNoLines() {
         assertTrue(OcrParser.parse(emptyList()).isEmpty())
     }

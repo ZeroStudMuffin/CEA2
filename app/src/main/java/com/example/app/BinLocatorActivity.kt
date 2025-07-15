@@ -32,8 +32,14 @@ import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
+import com.example.app.BarcodeUtils
+import com.example.app.LabelCropper
+import com.example.app.DebugLogger
+import com.example.app.BatchRecord
 import android.util.Log
 import java.io.File
+import java.io.FileOutputStream
+import android.graphics.BitmapFactory
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -51,6 +57,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var sendRecordButton: Button
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
+    private lateinit var showLogButton: Button
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
@@ -82,6 +89,7 @@ class BinLocatorActivity : AppCompatActivity() {
         sendRecordButton = findViewById(R.id.sendRecordButton)
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
+        showLogButton = findViewById(R.id.showLogButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -95,6 +103,7 @@ class BinLocatorActivity : AppCompatActivity() {
         if (debugMode) {
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
+            showLogButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
         sendRecordButton.alpha = 0.5f
@@ -107,6 +116,7 @@ class BinLocatorActivity : AppCompatActivity() {
         showBatchButton.setOnClickListener { showBatchItems() }
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
+        showLogButton.setOnClickListener { showDebugLog() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -157,17 +167,35 @@ class BinLocatorActivity : AppCompatActivity() {
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val rotated = ImageUtils.decodeRotatedBitmap(photoFile)
-                val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
-                Log.d(TAG, "Crop rect: $crop bitmap=${rotated.width}x${rotated.height}")
+                val viewRect = overlay.getCropRect()
+                val box = BoundingBoxOverlay.scaleRect(
+                    viewRect,
+                    overlay.width,
+                    overlay.height,
+                    rotated.width,
+                    rotated.height
+                )
+                DebugLogger.log("Overlay rect=$viewRect mapped=$box")
                 val cropped = Bitmap.createBitmap(
                     rotated,
-                    crop.left,
-                    crop.top,
-                    crop.width(),
-                    crop.height()
+                    box.left,
+                    box.top,
+                    box.width(),
+                    box.height()
                 )
-                lastBitmap = cropped
-                val inputImage = InputImage.fromBitmap(cropped, 0)
+                val refined = LabelCropper.refineCrop(cropped)
+                lastBitmap = refined
+                if (debugMode) {
+                    DebugLogger.log("Refined crop ${refined.width}x${refined.height}")
+                    val outFile = File(cacheDir, "ocr_debug.png")
+                    FileOutputStream(outFile).use { stream ->
+                        // Reason: PNG is lossless so the saved debug image is
+                        // pixel-identical to the bitmap passed to ML Kit.
+                        refined.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                    }
+                    DebugLogger.log("Saved debug image to ${outFile.absolutePath}")
+                }
+                val inputImage = InputImage.fromBitmap(refined, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->
@@ -330,12 +358,29 @@ class BinLocatorActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDebugLog() {
+        val logs = DebugLogger.getLogs()
+        if (logs.isEmpty()) return
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Debug Log")
+                .setMessage(logs.joinToString("\n"))
+                .setPositiveButton("OK", null)
+                .show()
+        }
+    }
+
     private fun toggleCropPreview() {
-        val bitmap = lastBitmap ?: return
+        val bitmap = if (debugMode) {
+            val file = File(cacheDir, "ocr_debug.png")
+            if (file.exists()) android.graphics.BitmapFactory.decodeFile(file.absolutePath) else lastBitmap
+        } else {
+            lastBitmap
+        } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
                 cropPreview.setImageBitmap(bitmap)
-                cropPreview.setColorFilter(android.graphics.Color.BLUE)
+                cropPreview.colorFilter = null
                 cropPreview.visibility = View.VISIBLE
                 overlay.visibility = View.GONE
             } else {
