@@ -58,6 +58,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
     private lateinit var showLogButton: Button
+    private lateinit var tuningButton: Button
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
@@ -90,6 +91,7 @@ class BinLocatorActivity : AppCompatActivity() {
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
         showLogButton = findViewById(R.id.showLogButton)
+        tuningButton = findViewById(R.id.tuningButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -104,6 +106,7 @@ class BinLocatorActivity : AppCompatActivity() {
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
             showLogButton.visibility = View.VISIBLE
+            tuningButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
         sendRecordButton.alpha = 0.5f
@@ -117,6 +120,7 @@ class BinLocatorActivity : AppCompatActivity() {
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
         showLogButton.setOnClickListener { showDebugLog() }
+        tuningButton.setOnClickListener { showTuningDialog() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -387,6 +391,22 @@ class BinLocatorActivity : AppCompatActivity() {
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }
+        }
+    }
+
+    private fun showTuningDialog() {
+        runOnUiThread {
+            val dialogView = layoutInflater.inflate(R.layout.tuning_dialog, null)
+            val heightSlider = dialogView.findViewById<Slider>(R.id.heightSlider)
+            heightSlider.value = DebugTuning.options.heightPercent * 100f
+            heightSlider.addOnChangeListener { _, value, _ ->
+                DebugTuning.options = DebugTuning.options.copy(heightPercent = value / 100f)
+            }
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Tuning")
+                .setView(dialogView)
+                .setPositiveButton("Done", null)
+                .show()
         }
     }
 

@@ -30,6 +30,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
   bounding box heights, the crop preview loads the grayscale image saved to
   `cacheDir/ocr_debug.png`, and the log window displays messages captured during
   processing.
+* In debug mode a **Tuning** button opens sliders to tweak OCR height and other
+  parameters at runtime. Values reset on app restart.
 * Batch Binning is always enabled. Use **Add Item** to store each roll/customer
   pair then **Show Items** to review them. **Send Record** uploads all queued
   entries in one batch.

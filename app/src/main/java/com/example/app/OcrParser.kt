@@ -1,6 +1,7 @@
 package com.example.app
 
 import com.google.mlkit.vision.text.Text
+import com.example.app.DebugTuning
 
 /** Utility for filtering and cleaning OCR lines. */
 object OcrParser {
@@ -24,7 +25,7 @@ object OcrParser {
         if (lines.isEmpty()) return emptyList()
         val tallest = lines.maxOfOrNull { it.boundingBox?.height() ?: 0 } ?: 0
         if (tallest == 0) return emptyList()
-        val threshold = tallest * 0.75
+        val threshold = tallest * DebugTuning.options.heightPercent
         val quoteRegex = Regex("[\"'].*?[\"']")
         val bracketRegex = Regex("\\[[^\\]]*\\]|\\([^)]*\\)")
         // allow letters, digits, spaces, underscores, '-', and '%'

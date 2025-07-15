@@ -101,7 +101,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
   disabled. Additional **Show OCR**, **Show Crop**, and **Log** buttons reveal
   raw text with bounding box heights, display the grayscale image passed to
-  ML Kit, and show recent debug log messages for troubleshooting.
+  ML Kit, and show recent debug log messages for troubleshooting. A **Tuning**
+  button opens a dialog with sliders to adjust OCR parameters at runtime.
  - Batch Binning is enabled by default, allowing multiple captures before
    assigning a bin. An **Add Item** button saves each roll/customer pair and a
    **Show Items** dialog lists them. **Send Record** uploads all queued items at

@@ -30,3 +30,5 @@
 ## [2025-07-15] Implement refined OCR pipeline - DONE
 ## [2025-07-15] Fix build error from float arguments to Bitmap.createBitmap
 ## [2025-07-15] Strip underscores and prefixes from roll numbers - DONE
+## [2025-07-15] Generate PRP for debug tuning knobs
+## [2025-07-15] Implement debug tuning knobs

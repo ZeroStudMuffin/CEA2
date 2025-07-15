@@ -2,6 +2,7 @@ package com.example.app
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import com.example.app.DebugTuning
 
 /**
  * Utility for refining a cropped bitmap to the label region.
@@ -19,7 +20,8 @@ object LabelCropper {
     fun refineCrop(src: Bitmap): Bitmap {
         val ratio = src.width.toFloat() / src.height.toFloat()
         val diff = kotlin.math.abs(ratio - EXPECTED_RATIO) / EXPECTED_RATIO
-        val centerCropped = if (diff <= TOLERANCE) {
+        val tol = TOLERANCE + DebugTuning.options.expandCropPercent
+        val centerCropped = if (diff <= tol) {
             src
         } else if (ratio > EXPECTED_RATIO) {
             val targetWidth = (src.height * EXPECTED_RATIO).toInt()
