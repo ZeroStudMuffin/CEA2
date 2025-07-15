@@ -79,7 +79,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Captured images are cropped to this box and processed with ML Kit text
   recognition. A second pass via `LabelCropper` tightens the crop to the label
   itself, improving OCR accuracy. When debug mode is enabled this refined image
-  is written to `cacheDir/ocr_debug.jpg` for inspection.
+  is written to `cacheDir/ocr_debug.png` for inspection.
 - Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
   finer control when capturing text.
 - The screen orientation is locked to portrait; rotating the device has no effect.

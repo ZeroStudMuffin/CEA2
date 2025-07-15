@@ -178,9 +178,11 @@ class BinLocatorActivity : AppCompatActivity() {
                 lastBitmap = refined
                 if (debugMode) {
                     DebugLogger.log("Refined crop ${refined.width}x${refined.height}")
-                    val outFile = File(cacheDir, "ocr_debug.jpg")
+                    val outFile = File(cacheDir, "ocr_debug.png")
                     FileOutputStream(outFile).use { stream ->
-                        refined.compress(Bitmap.CompressFormat.JPEG, 90, stream)
+                        // Reason: PNG is lossless so the saved debug image is
+                        // pixel-identical to the bitmap passed to ML Kit.
+                        refined.compress(Bitmap.CompressFormat.PNG, 100, stream)
                     }
                     DebugLogger.log("Saved debug image to ${outFile.absolutePath}")
                 }
@@ -361,7 +363,7 @@ class BinLocatorActivity : AppCompatActivity() {
 
     private fun toggleCropPreview() {
         val bitmap = if (debugMode) {
-            val file = File(cacheDir, "ocr_debug.jpg")
+            val file = File(cacheDir, "ocr_debug.png")
             if (file.exists()) android.graphics.BitmapFactory.decodeFile(file.absolutePath) else lastBitmap
         } else {
             lastBitmap

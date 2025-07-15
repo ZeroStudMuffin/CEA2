@@ -26,4 +26,4 @@
 
 
 ## [2025-07-15] Generate PRP for refined OCR pipeline - DONE
-## [2025-07-15] Add debug log window with Log button
+## [2025-07-15] Add debug log window with Log button - DONE

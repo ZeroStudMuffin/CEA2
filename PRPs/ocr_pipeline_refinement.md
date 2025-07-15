@@ -128,7 +128,7 @@ Task 1:
 Task 2:
   MODIFY app/src/main/java/com/example/app/BinLocatorActivity.kt:
     - After initial crop call LabelCropper.refineCrop.
-    - In debug mode write the returned bitmap to cacheDir/ocr_debug.jpg.
+  - In debug mode write the returned bitmap to cacheDir/ocr_debug.png.
     - showCropButton should load this file when toggling preview.
 
 Task 3:

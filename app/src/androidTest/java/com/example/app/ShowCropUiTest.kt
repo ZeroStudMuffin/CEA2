@@ -25,10 +25,10 @@ class ShowCropUiTest {
         }
         ActivityScenario.launch<BinLocatorActivity>(intent).use { scenario ->
             scenario.onActivity { activity ->
-                val file = File(activity.cacheDir, "ocr_debug.jpg")
+                val file = File(activity.cacheDir, "ocr_debug.png")
                 val bmp = Bitmap.createBitmap(2, 2, Config.ARGB_8888)
                 FileOutputStream(file).use { out ->
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, out)
+                    bmp.compress(Bitmap.CompressFormat.PNG, 100, out)
                 }
             }
             onView(withId(R.id.showCropButton)).perform(click())
