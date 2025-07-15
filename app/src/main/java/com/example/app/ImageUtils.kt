@@ -25,4 +25,17 @@ object ImageUtils {
         val exif = ExifInterface(file.absolutePath)
         return rotateBitmap(bitmap, exif.rotationDegrees)
     }
+
+    /**
+     * Convert a bitmap to grayscale using a color matrix.
+     */
+    fun toGrayscale(src: Bitmap): Bitmap {
+        val gray = Bitmap.createBitmap(src.width, src.height, Bitmap.Config.ARGB_8888)
+        val canvas = android.graphics.Canvas(gray)
+        val paint = android.graphics.Paint()
+        val matrix = android.graphics.ColorMatrix().apply { setSaturation(0f) }
+        paint.colorFilter = android.graphics.ColorMatrixColorFilter(matrix)
+        canvas.drawBitmap(src, 0f, 0f, paint)
+        return gray
+    }
 }
