@@ -29,3 +29,4 @@
 
 ### Discovered During Work
 ## [2025-07-15] Fix missing aspectRatio function causing build failure - DONE
+## [2025-07-15] Save warped image when Show Crop is used - DONE

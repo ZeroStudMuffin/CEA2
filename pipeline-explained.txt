@@ -7,3 +7,6 @@
 5. **Contour Filtering** - find convex quadrilaterals near the expected aspect ratio.
 6. **Perspective Warp** - warp the best quad to a fixed size bitmap.
 7. **ML Kit Input** - feed the warped bitmap to TextRecognition.
+8. **Debug Save** - when Show Crop is used, the warped bitmap is written to
+   `cacheDir/warped.jpg` so developers can review the exact image passed to ML
+   Kit.

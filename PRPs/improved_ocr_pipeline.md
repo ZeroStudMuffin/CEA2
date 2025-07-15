@@ -17,7 +17,8 @@ description: |
 
 ## Goal
 Detect the label within the cropped bitmap, correct perspective based on its aspect ratio, and feed the warped
-image to ML Kit. When debug mode is enabled the "Show Crop" button displays this warped image. The pipeline
+image to ML Kit. When debug mode is enabled the "Show Crop" button saves and displays this warped image so
+developers can inspect it. The pipeline
 should tolerate skewed or angled labels and keep performance reasonable on mid‑range devices.
 
 ## Why

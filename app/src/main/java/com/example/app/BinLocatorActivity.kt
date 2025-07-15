@@ -172,9 +172,7 @@ class BinLocatorActivity : AppCompatActivity() {
                 val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
                 lastBitmap = warped
                 if (debugMode) {
-                    File(cacheDir, "warped.jpg").outputStream().use { out ->
-                        warped.compress(Bitmap.CompressFormat.JPEG, 90, out)
-                    }
+                    saveDebugImage(warped)
                 }
                 val inputImage = InputImage.fromBitmap(warped, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
@@ -348,6 +346,7 @@ class BinLocatorActivity : AppCompatActivity() {
         } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
+                saveDebugImage(bmp)
                 cropPreview.setImageBitmap(bmp)
                 cropPreview.setColorFilter(android.graphics.Color.BLUE)
                 cropPreview.visibility = View.VISIBLE
@@ -356,6 +355,19 @@ class BinLocatorActivity : AppCompatActivity() {
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }
+        }
+    }
+
+    /**
+     * Saves the given bitmap to cache for debugging purposes.
+     */
+    private fun saveDebugImage(bmp: Bitmap) {
+        try {
+            File(cacheDir, "warped.jpg").outputStream().use { out ->
+                bmp.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save debug image", e)
         }
     }
 
