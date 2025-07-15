@@ -1,18 +1,19 @@
 ## FEATURE:
 
-- [ ] Checkbox above the debug checkbox enables "Batch Binning" mode
-- [ ] Batch binning changes capture button to a square and adds a button to the right of the capture button called "Add Item"
-- [ ] Capture button works like normal.
-- [ ] Add Item button adds the current roll number and customer name to a list, then clears the textview, and gets ready for another capture.
-- [ ] List of items ready to have a bin number added is available in a pop-up window similar to the "OCR raw text" button and pop-up wundow.
-- [ ] When Set Bin is used, set the bin for all records in the list as well as the one that had just been captured but was not added to the list yet.
-- [ ] Send Record now sends each item on the list. Each item is sent as its own record. After sending the records, everything is cleared and made ready for another batch.
+- [ ] Modified pipeline from image to OCR result.
+- [ ] still uses the current crop box as the first pre-processing step.
+- [ ] modified pipeline starts after the intial crop.
+- [ ] uses the labels aspect ratio (can be inferred from the crop box visual aids aspect ratio) to identify a likely candidate for the label. This allows for further cropping before OCR.
+- [ ] compensates for labels that are not perfectly flat or at an angle.
+- [ ] debug mode: "show crop" button no longer shows the bitmap
+- [ ] debug mode: the image sent to MLkit gets saved temporarily. This image is available by using the "show crop" button.
 
 ## EXAMPLES:
-
+Key example: examples/Image_to_OCR_pipeline.md - this is a guide on how the pipeline should work with a few code examples.
+examples/pipeline_tuning_guide.md - helpful for understanding the tuning knobs that are available.
 https://github.com/android/nowinandroid?tab=readme-ov-file - a simple android app EXAMPLE.
-https://github.com/ryccoatika/Image-To-Text - an image-to-text app example
-https://github.com/krishnachaitanya0107/TextRecognizerApp/blob/master/app/src/main/java/com/example/textrecognizer/MainActivity.kt - the mainactivity.kt example from another image-to-text app
+https://github.com/ryccoatika/Image-To-Text - an image-to-text app example.
+https://github.com/krishnachaitanya0107/TextRecognizerApp/blob/master/app/src/main/java/com/example/textrecognizer/MainActivity.kt - the mainactivity.kt example from another image-to-text app.
 
 ## DOCUMENTATION:
 
@@ -22,6 +23,5 @@ https://developer.android.com/ - a very high quality resource for all things and
 
 ## OTHER CONSIDERATIONS:
 
-The pupose of this feature is to allow users to gather multiple roll number/customer name records and set the bin location for all of them at once. Then send the records all at once.
 If extra info is needed like keys or tokens, set up the code for them and inform the user after completion of what needs to be added. User will give the info before executing the PRP.
 User will help when asked. Work with the user if something cannot be handled bu Codex alone.
