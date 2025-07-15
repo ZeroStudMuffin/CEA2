@@ -167,14 +167,21 @@ class BinLocatorActivity : AppCompatActivity() {
 
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val rotated = ImageUtils.decodeRotatedBitmap(photoFile)
-                val box = BoundingBoxOverlay.calculateBoxRect(rotated.width, rotated.height)
-                Log.d(TAG, "Crop rect: $box bitmap=${rotated.width}x${rotated.height}")
+                val viewRect = overlay.getCropRect()
+                val box = BoundingBoxOverlay.scaleRect(
+                    viewRect,
+                    overlay.width,
+                    overlay.height,
+                    rotated.width,
+                    rotated.height
+                )
+                DebugLogger.log("Overlay rect=$viewRect mapped=$box")
                 val cropped = Bitmap.createBitmap(
                     rotated,
-                    box.left.toInt(),
-                    box.top.toInt(),
-                    box.width().toInt(),
-                    box.height().toInt()
+                    box.left,
+                    box.top,
+                    box.width(),
+                    box.height()
                 )
                 val refined = LabelCropper.refineCrop(cropped)
                 lastBitmap = refined

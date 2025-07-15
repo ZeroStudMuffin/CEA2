@@ -42,16 +42,23 @@ object LabelCropper {
         var top = 0
         var bottom = bitmap.height - 1
 
+        fun isWhite(pixel: Int): Boolean {
+            val r = Color.red(pixel)
+            val g = Color.green(pixel)
+            val b = Color.blue(pixel)
+            return r > 240 && g > 240 && b > 240
+        }
+
         fun columnHasContent(x: Int): Boolean {
             for (y in 0 until bitmap.height) {
-                if (bitmap.getPixel(x, y) != Color.WHITE) return true
+                if (!isWhite(bitmap.getPixel(x, y))) return true
             }
             return false
         }
 
         fun rowHasContent(y: Int): Boolean {
             for (x in 0 until bitmap.width) {
-                if (bitmap.getPixel(x, y) != Color.WHITE) return true
+                if (!isWhite(bitmap.getPixel(x, y))) return true
             }
             return false
         }
