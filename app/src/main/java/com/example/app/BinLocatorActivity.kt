@@ -35,7 +35,6 @@ import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
 import android.util.Log
-import java.io.FileOutputStream
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -170,11 +169,12 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.height()
                 )
                 val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
-                lastBitmap = warped
+                val processed = ImageUtils.toGrayscale(warped)
+                lastBitmap = processed
                 if (debugMode) {
-                    saveDebugImage(warped)
+                    saveDebugImage(processed)
                 }
-                val inputImage = InputImage.fromBitmap(warped, 0)
+                val inputImage = InputImage.fromBitmap(processed, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->

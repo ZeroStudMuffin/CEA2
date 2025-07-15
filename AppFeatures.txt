@@ -27,8 +27,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
   allowing upload to the warehouse database. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
  * A **Debug mode** checkbox on the main screen disables sending and adds **Show
-  OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
-  box heights. **Show Crop** saves the warped label image used for OCR before
+ OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
+ box heights. **Show Crop** saves the grayscale warped label image used for OCR before
   displaying it, making preprocessing easy to inspect.
 * Batch Binning is always enabled. Use **Add Item** to store each roll/customer
   pair then **Show Items** to review them. **Send Record** uploads all queued

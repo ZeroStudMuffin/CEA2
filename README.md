@@ -88,7 +88,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   scanning for bins is disabled.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
- - Captured labels are perspective corrected using OpenCV prior to OCR for better accuracy. When debugging, the **Show Crop** button saves this warped image before displaying it so you can inspect exactly what ML Kit saw.
+ - Captured labels are perspective corrected using OpenCV and converted to grayscale prior to OCR for better accuracy. When debugging, the **Show Crop** button saves this grayscale warped image before displaying it so you can inspect exactly what ML Kit saw.
 - The parser now outputs only a roll number and customer name, displayed on two
   lines in the Bin Locator screen. Any prefix before the first space in the
   roll number is removed so users see only the numeric portion.
