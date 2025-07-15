@@ -19,6 +19,7 @@ class DebugUiTest {
         ActivityScenario.launch<BinLocatorActivity>(intent).use {
             onView(withId(R.id.showOcrButton)).check(matches(isDisplayed()))
             onView(withId(R.id.showCropButton)).check(matches(isDisplayed()))
+            onView(withId(R.id.showLogButton)).check(matches(isDisplayed()))
             onView(withId(R.id.sendRecordButton)).check(matches(isDisplayed()))
             onView(withId(R.id.sendRecordButton)).check(matches(not(isEnabled())))
         }
