@@ -55,4 +55,5 @@ dependencies {
     implementation 'com.google.mlkit:text-recognition:16.0.1'
     implementation 'com.google.mlkit:barcode-scanning:17.2.0'
     implementation 'androidx.exifinterface:exifinterface:1.4.1'
+    implementation 'ai.eye2you:opencv-android:4.5.2'
 }

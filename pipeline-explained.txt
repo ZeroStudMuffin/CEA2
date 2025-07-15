@@ -1,0 +1,9 @@
+# Improved OCR Pipeline
+
+1. **Grayscale** - convert to single channel for consistent processing.
+2. **Gaussian Blur** - smooth noise to reduce spurious edges.
+3. **Canny Edge Detection** - highlight strong edges of the label.
+4. **Dilate** - close small gaps in the edges.
+5. **Contour Filtering** - find convex quadrilaterals near the expected aspect ratio.
+6. **Perspective Warp** - warp the best quad to a fixed size bitmap.
+7. **ML Kit Input** - feed the warped bitmap to TextRecognition.

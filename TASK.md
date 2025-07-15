@@ -24,3 +24,5 @@
 ## [2025-07-14] Remove rotate button and lock orientation to portrait - DONE
 ## [2025-07-14] Move debug buttons to side container and disable Send button until ready - DONE
 
+## [2025-07-15] Generate PRP for Improved OCR pipeline - DONE
+## [2025-07-15] Implement Improved OCR pipeline - DONE

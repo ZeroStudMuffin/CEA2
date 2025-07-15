@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Button
@@ -29,10 +30,12 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
+import com.example.app.LabelCropper
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
 import android.util.Log
+import java.io.FileOutputStream
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -166,8 +169,14 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.width(),
                     crop.height()
                 )
-                lastBitmap = cropped
-                val inputImage = InputImage.fromBitmap(cropped, 0)
+                val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
+                lastBitmap = warped
+                if (debugMode) {
+                    File(cacheDir, "warped.jpg").outputStream().use { out ->
+                        warped.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                    }
+                }
+                val inputImage = InputImage.fromBitmap(warped, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->
@@ -331,10 +340,15 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun toggleCropPreview() {
-        val bitmap = lastBitmap ?: return
+        val bmp = if (debugMode) {
+            val file = File(cacheDir, "warped.jpg")
+            if (file.exists()) BitmapFactory.decodeFile(file.absolutePath) else lastBitmap
+        } else {
+            lastBitmap
+        } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
-                cropPreview.setImageBitmap(bitmap)
+                cropPreview.setImageBitmap(bmp)
                 cropPreview.setColorFilter(android.graphics.Color.BLUE)
                 cropPreview.visibility = View.VISIBLE
                 overlay.visibility = View.GONE
