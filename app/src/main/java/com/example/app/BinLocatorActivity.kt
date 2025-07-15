@@ -348,10 +348,11 @@ class BinLocatorActivity : AppCompatActivity() {
             if (cropPreview.visibility == View.GONE) {
                 saveDebugImage(bmp)
                 cropPreview.setImageBitmap(bmp)
-                cropPreview.setColorFilter(android.graphics.Color.BLUE)
+                cropPreview.clearColorFilter()
                 cropPreview.visibility = View.VISIBLE
                 overlay.visibility = View.GONE
             } else {
+                cropPreview.clearColorFilter()
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }

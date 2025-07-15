@@ -96,8 +96,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
-   disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
-   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+  disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
+  with bounding box heights and an exact crop preview showing the warped image
+  passed to ML Kit for debugging.
  - Batch Binning is enabled by default, allowing multiple captures before
    assigning a bin. An **Add Item** button saves each roll/customer pair and a
    **Show Items** dialog lists them. **Send Record** uploads all queued items at
