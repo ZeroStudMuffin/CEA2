@@ -32,8 +32,10 @@ import com.example.app.ImageUtils
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
+import com.example.app.BarcodeUtils
 import com.example.app.LabelCropper
 import com.example.app.DebugLogger
+import com.example.app.BatchRecord
 import android.util.Log
 import java.io.File
 import java.io.FileOutputStream
