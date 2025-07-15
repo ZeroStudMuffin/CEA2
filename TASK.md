@@ -26,3 +26,6 @@
 
 ## [2025-07-15] Generate PRP for Improved OCR pipeline - DONE
 ## [2025-07-15] Implement Improved OCR pipeline - DONE
+
+### Discovered During Work
+## [2025-07-15] Fix missing aspectRatio function causing build failure - DONE
