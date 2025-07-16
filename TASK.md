@@ -38,3 +38,5 @@
 ## [2025-07-16] Implement Batch Mode toggle & bins menu - DONE
 ## [2025-07-16] Fix bin menu overlay touch area and keep action buttons visible in batch mode - DONE
 ## [2025-07-16] Fix default mode UI visibility when bin menu shown - DONE
+## [2025-07-17] Generate PRP for Checkout Items feature - DONE
+## [2025-07-17] Implement Checkout Items feature
