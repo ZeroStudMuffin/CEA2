@@ -28,7 +28,7 @@ class OcrParserTest {
             fakeLine("short", 50)
         )
         val result = OcrParser.parse(lines)
-        assertEquals(listOf("HELLO WORLD", "42%"), result)
+        assertEquals(listOf("HELLO_WORLD", "_42%"), result)
     }
 
     @Ignore("Robolectric dependencies not available in CI")
@@ -54,7 +54,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:ROLL 42", "Cust:CUSTOMER ACME"),
+            listOf("Roll#:42", "Cust:CUSTOMER_ACME"),
             result
         )
     }
@@ -83,7 +83,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:12345", "Cust:CUSTOMER ACME"),
+            listOf("Roll#:12345", "Cust:CUSTOMER_ACME"),
             result
         )
     }

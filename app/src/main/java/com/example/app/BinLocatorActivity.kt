@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Button
-import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.view.View
 import com.google.android.material.slider.Slider
@@ -46,7 +45,6 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var ocrTextView: TextView
     private lateinit var captureButton: Button
     private lateinit var zoomSlider: Slider
-    private lateinit var zoomResetButton: Button
     private lateinit var actionButtons: LinearLayout
     private lateinit var getReleaseButton: Button
     private lateinit var setBinButton: Button
@@ -80,7 +78,6 @@ class BinLocatorActivity : AppCompatActivity() {
         captureButton = findViewById(R.id.captureButton)
         addItemButton = findViewById(R.id.addItemButton)
         zoomSlider = findViewById(R.id.zoomSlider)
-        zoomResetButton = findViewById(R.id.zoomResetButton)
         actionButtons = findViewById(R.id.actionButtons)
         getReleaseButton = findViewById(R.id.getReleaseButton)
         setBinButton = findViewById(R.id.setBinButton)
@@ -141,9 +138,8 @@ class BinLocatorActivity : AppCompatActivity() {
                 controller.setLinearZoom(clamped)
             }
 
-            zoomResetButton.setOnClickListener {
-                controller.setZoomRatio(1f)
-            }
+            controller.setLinearZoom(0.4f)
+            zoomSlider.value = 0.4f
 
             controller.zoomState.observe(this) { state ->
                 val clamped = ZoomUtils.clampZoomRatio(state.zoomRatio)

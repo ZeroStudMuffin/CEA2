@@ -156,25 +156,16 @@
         app:layout_constraintStart_toEndOf="@id/captureButton"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <Button
-        android:id="@+id/zoomResetButton"
-        android:layout_width="48dp"
-        android:layout_height="wrap_content"
-        android:text="1x"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/captureButton"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="8dp" />
-
     <com.google.android.material.slider.Slider
         android:id="@+id/zoomSlider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:valueFrom="0"
         android:valueTo="1"
-        app:layout_constraintStart_toEndOf="@id/zoomResetButton"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/captureButton"
+        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp" />
 

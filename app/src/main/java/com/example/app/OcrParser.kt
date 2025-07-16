@@ -17,8 +17,8 @@ object OcrParser {
      * Returns cleaned text lines and extracts roll number and customer name.
      *
      * Lines shorter than 75% of the tallest line are ignored. Special
-     * characters are removed except letters, digits, space, '-', and '%'.
-     * Underscores are converted to spaces and text within brackets or quotes
+     * characters are removed except letters, digits, underscore, '-', and '%'.
+     * Spaces are converted to underscores and text within brackets or quotes
      * is stripped.
      */
     fun parse(lines: List<Text.Line>): List<String> {
@@ -28,11 +28,11 @@ object OcrParser {
         val threshold = tallest * TuningParams.lineHeightPercent
         val quoteRegex = Regex("[\"'].*?[\"']")
         val bracketRegex = Regex("\\[[^\\]]*\\]|\\([^)]*\\)")
-        val cleanRegex = Regex("""[^A-Za-z0-9 %\-]""")
+        val cleanRegex = Regex("""[^A-Za-z0-9_%\-]""")
 
         val cleanLines = lines.filter { (it.boundingBox?.height() ?: 0) >= threshold }
             .map { line ->
-                var text = line.text.replace('_', ' ')
+                var text = line.text.replace(' ', '_')
                 text = text.replace(quoteRegex, "")
                 text = text.replace(bracketRegex, "")
                 text = text.replace(cleanRegex, "").trim()
@@ -49,7 +49,7 @@ object OcrParser {
         }
         val name = customer ?: cleanLines.filterNot { it == roll }.maxByOrNull { it.length }
 
-        val rollStr = roll?.substringAfter(' ', roll) ?: ""
+        val rollStr = roll?.substringAfter('_', roll) ?: ""
         val nameStr = name ?: ""
         return listOf("Roll#:$rollStr", "Cust:$nameStr")
     }

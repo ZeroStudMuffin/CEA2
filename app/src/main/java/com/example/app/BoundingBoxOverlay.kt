@@ -8,7 +8,6 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
-import kotlin.math.min
 
 /**
  * Overlay view drawing a fixed landscape bounding box with orientation text.
@@ -69,11 +68,12 @@ class BoundingBoxOverlay @JvmOverloads constructor(
     companion object {
         /**
          * Calculates the bounding box rectangle for the given view size.
+         * The box spans 60% of the view's width while maintaining a 34:15
+         * aspect ratio.
          */
         fun calculateBoxRect(viewWidth: Int, viewHeight: Int): RectF {
-            val boxSize = 0.85f * min(viewWidth, viewHeight)
-            val boxWidth = boxSize
-            val boxHeight = boxSize * 15f / 34f
+            val boxWidth = 0.6f * viewWidth
+            val boxHeight = boxWidth * 15f / 34f
             val left = (viewWidth - boxWidth) / 2f
             val top = (viewHeight - boxHeight) / 2f
             return RectF(left, top, left + boxWidth, top + boxHeight)
