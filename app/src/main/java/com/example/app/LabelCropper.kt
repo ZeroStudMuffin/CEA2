@@ -1,6 +1,7 @@
 package com.example.app
 
 import android.graphics.Bitmap
+import android.util.Log
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.*
@@ -11,6 +12,7 @@ import kotlin.math.abs
  * Utility for detecting and warping label images using OpenCV.
  */
 object LabelCropper {
+    private const val TAG = "LabelCropper"
     private const val LABEL_W = 800
     private const val LABEL_H = 200
     private const val RATIO_TOLERANCE = 0.15f
@@ -35,6 +37,7 @@ object LabelCropper {
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(edges, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+        Log.d(TAG, "Contours found: ${'$'}{contours.size}")
 
         var bestQuad: MatOfPoint2f? = null
         for (c in contours) {
@@ -49,10 +52,13 @@ object LabelCropper {
                 }
             }
         }
-
-        if (bestQuad == null) return bitmap
+        if (bestQuad == null) {
+            Log.d(TAG, "No quad found")
+            return bitmap
+        }
 
         val srcPts = sortCorners(bestQuad.toArray())
+        Log.d(TAG, "Warping label")
         val dstPts = arrayOf(
             Point(0.0, 0.0),
             Point(LABEL_W.toDouble(), 0.0),

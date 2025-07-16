@@ -53,6 +53,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var sendRecordButton: Button
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
+    private lateinit var showLogButton: Button
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
@@ -64,6 +65,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private var batchMode: Boolean = false
     private val batchItems = mutableListOf<BatchRecord>()
     private var rawLines: List<String> = emptyList()
+    private val debugLog = StringBuilder()
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
     private val REQUEST_CAMERA_PERMISSION = 1001
@@ -84,6 +86,7 @@ class BinLocatorActivity : AppCompatActivity() {
         sendRecordButton = findViewById(R.id.sendRecordButton)
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
+        showLogButton = findViewById(R.id.showLogButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -97,6 +100,7 @@ class BinLocatorActivity : AppCompatActivity() {
         if (debugMode) {
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
+            showLogButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
         sendRecordButton.alpha = 0.5f
@@ -109,6 +113,7 @@ class BinLocatorActivity : AppCompatActivity() {
         showBatchButton.setOnClickListener { showBatchItems() }
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
+        showLogButton.setOnClickListener { showDebugLog() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -168,7 +173,9 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.width(),
                     crop.height()
                 )
+                dLog("Initial crop ${crop.width()}x${crop.height()}")
                 val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
+                dLog("Warped size ${warped.width}x${warped.height}")
                 val processed = ImageUtils.toGrayscale(warped)
                 lastBitmap = processed
                 if (debugMode) {
@@ -346,17 +353,38 @@ class BinLocatorActivity : AppCompatActivity() {
         } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
+                dLog("Showing crop preview")
                 saveDebugImage(bmp)
                 cropPreview.setImageBitmap(bmp)
                 cropPreview.clearColorFilter()
                 cropPreview.visibility = View.VISIBLE
                 overlay.visibility = View.GONE
             } else {
+                dLog("Hiding crop preview")
                 cropPreview.clearColorFilter()
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }
         }
+    }
+
+    /** Displays the collected debug log messages. */
+    private fun showDebugLog() {
+        val text = debugLog.toString()
+        if (text.isEmpty()) return
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Debug Log")
+                .setMessage(text)
+                .setPositiveButton("OK", null)
+                .show()
+        }
+    }
+
+    /** Adds a message to the in-memory debug log and logcat. */
+    private fun dLog(msg: String) {
+        Log.d(TAG, msg)
+        debugLog.append(msg).append('\n')
     }
 
     /**
@@ -367,6 +395,7 @@ class BinLocatorActivity : AppCompatActivity() {
             File(cacheDir, "warped.jpg").outputStream().use { out ->
                 bmp.compress(Bitmap.CompressFormat.JPEG, 90, out)
             }
+            dLog("Debug image saved")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to save debug image", e)
         }

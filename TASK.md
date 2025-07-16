@@ -32,3 +32,4 @@
 ## [2025-07-15] Save warped image when Show Crop is used - DONE
 ## [2025-07-15] Remove blue tint from Show Crop preview - DONE
 ## [2025-07-15] Convert warped crop to grayscale before OCR - DONE
+## [2025-07-16] Add Show Log debug button and messages - DONE
