@@ -1,8 +1,12 @@
 package com.example.app
 
 import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Matrix
+import android.graphics.Paint
 import androidx.exifinterface.media.ExifInterface
 import java.io.File
 
@@ -24,5 +28,19 @@ object ImageUtils {
         val bitmap = BitmapFactory.decodeFile(file.absolutePath)
         val exif = ExifInterface(file.absolutePath)
         return rotateBitmap(bitmap, exif.rotationDegrees)
+    }
+
+    /**
+     * Convert a bitmap to grayscale.
+     */
+    fun toGrayscale(bitmap: Bitmap): Bitmap {
+        val result = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val paint = Paint()
+        val matrix = ColorMatrix()
+        matrix.setSaturation(0f)
+        paint.colorFilter = ColorMatrixColorFilter(matrix)
+        canvas.drawBitmap(bitmap, 0f, 0f, paint)
+        return result
     }
 }

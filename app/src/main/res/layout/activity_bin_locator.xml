@@ -107,6 +107,31 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:text="Show Crop" />
+
+        <Button
+            android:id="@+id/tuneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Tune" />
+    </LinearLayout>
+
+    <!-- Separate container for showing debug log -->
+    <LinearLayout
+        android:id="@+id/logButtonContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toEndOf="@id/showButtonsContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/captureButton">
+
+        <Button
+            android:id="@+id/showLogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Show Log" />
     </LinearLayout>
 
 

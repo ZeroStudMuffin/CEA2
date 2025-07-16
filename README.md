@@ -88,6 +88,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   scanning for bins is disabled.
 - Each OCR line's bounding box height is printed to logcat alongside the text.
 - OCR results are cleaned with `OcrParser` before barcode scanning.
+- Captured labels are perspective corrected using OpenCV and converted to grayscale prior to OCR for better accuracy. When debugging, the **Show Crop** button saves this grayscale warped image before displaying it so you can inspect exactly what ML Kit saw.
+- The **Show Log** button in debug mode displays any debug messages captured during processing.
 - The parser now outputs only a roll number and customer name, displayed on two
   lines in the Bin Locator screen. Any prefix before the first space in the
   roll number is removed so users see only the numeric portion.
@@ -95,8 +97,11 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   Tapping uploads the data to the server and clears the text view. If the server
   returns an error, the provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
-   disabled. Additional **Show OCR** and **Show Crop** buttons reveal raw text
-   with bounding box heights and a blue-tinted crop preview for troubleshooting.
+  disabled. Additional **Show OCR**, **Show Crop** and **Show Log** buttons reveal raw text
+  with bounding box heights, an exact crop preview showing the warped image
+  passed to ML Kit, and a dialog with collected debug logs for troubleshooting.
+- A **Tune Pipeline** button in debug mode opens sliders and fields for
+  adjusting OCR preprocessing values during the current session.
  - Batch Binning is enabled by default, allowing multiple captures before
    assigning a bin. An **Add Item** button saves each roll/customer pair and a
    **Show Items** dialog lists them. **Send Record** uploads all queued items at

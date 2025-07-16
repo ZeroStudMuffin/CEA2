@@ -1,16 +1,12 @@
-## FEATURE:
-
-- [ ] Modified pipeline from image to OCR result.
-- [ ] still uses the current crop box as the first pre-processing step.
-- [ ] modified pipeline starts after the intial crop.
-- [ ] uses the labels aspect ratio (can be inferred from the crop box visual aids aspect ratio) to identify a likely candidate for the label. This allows for further cropping before OCR.
-- [ ] compensates for labels that are not perfectly flat or at an angle.
-- [ ] debug mode: "show crop" button no longer shows the bitmap
-- [ ] debug mode: the image sent to MLkit gets saved temporarily. This image is available by using the "show crop" button.
+- [ ] Debug mode tuning: In debug mode, a button brings up a menu with all the tuning "knobs" for parsing and preprocessing.
+- [ ] Tuning knobs are derived from the tuning example file. There are 7 knobs detailedin the file. If Currently we do not have defined values for some of the knobs, add a default value that seems appropriate. The guide gives some decent defaults for most or all of the parameters.
+- [ ] Uses sliders and text boxes for user input. Label all the knobs. Derive the possible values from the guide.
+- [ ] Accept tuning changes with a button and apply them to debug mode only.
+- [ ] Tuning knob changes do not get saved across app reboots.
+- [ ] Additional tuning knobs: The "percent height of tallest line" will be tunable. 100% = only the tallest line (or equal). 0% = all lines regardless of height.
 
 ## EXAMPLES:
-Key example: examples/Image_to_OCR_pipeline.md - this is a guide on how the pipeline should work with a few code examples.
-examples/pipeline_tuning_guide.md - helpful for understanding the tuning knobs that are available.
+examples/pipeline_tuning_guide.md - helpful for understanding the tuning knobs that are available and how they work.
 https://github.com/android/nowinandroid?tab=readme-ov-file - a simple android app EXAMPLE.
 https://github.com/ryccoatika/Image-To-Text - an image-to-text app example.
 https://github.com/krishnachaitanya0107/TextRecognizerApp/blob/master/app/src/main/java/com/example/textrecognizer/MainActivity.kt - the mainactivity.kt example from another image-to-text app.

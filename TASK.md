@@ -24,3 +24,12 @@
 ## [2025-07-14] Remove rotate button and lock orientation to portrait - DONE
 ## [2025-07-14] Move debug buttons to side container and disable Send button until ready - DONE
 
+## [2025-07-15] Generate PRP for Improved OCR pipeline - DONE
+## [2025-07-15] Implement Improved OCR pipeline - DONE
+
+### Discovered During Work
+## [2025-07-15] Fix missing aspectRatio function causing build failure - DONE
+## [2025-07-15] Save warped image when Show Crop is used - DONE
+## [2025-07-15] Remove blue tint from Show Crop preview - DONE
+## [2025-07-15] Convert warped crop to grayscale before OCR - DONE
+## [2025-07-16] Add Show Log debug button and messages - DONE

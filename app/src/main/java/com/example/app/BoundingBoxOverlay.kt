@@ -61,6 +61,11 @@ class BoundingBoxOverlay @JvmOverloads constructor(
         return scaleRect(rect, width, height, bitmapWidth, bitmapHeight)
     }
 
+    /**
+     * Returns the current crop box aspect ratio (width / height).
+     */
+    fun aspectRatio(): Float = rect.width() / rect.height()
+
     companion object {
         /**
          * Calculates the bounding box rectangle for the given view size.

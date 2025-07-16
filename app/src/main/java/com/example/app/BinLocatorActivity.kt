@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.TextView
 import android.widget.Button
@@ -29,6 +30,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.example.app.ImageUtils
+import com.example.app.LabelCropper
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
@@ -51,6 +53,8 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var sendRecordButton: Button
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
+    private lateinit var tuneButton: Button
+    private lateinit var showLogButton: Button
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
@@ -62,6 +66,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private var batchMode: Boolean = false
     private val batchItems = mutableListOf<BatchRecord>()
     private var rawLines: List<String> = emptyList()
+    private val debugLog = StringBuilder()
 
     private val CAMERA_PERMISSION = Manifest.permission.CAMERA
     private val REQUEST_CAMERA_PERMISSION = 1001
@@ -82,6 +87,8 @@ class BinLocatorActivity : AppCompatActivity() {
         sendRecordButton = findViewById(R.id.sendRecordButton)
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
+        tuneButton = findViewById(R.id.tuneButton)
+        showLogButton = findViewById(R.id.showLogButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
         cameraExecutor = Executors.newSingleThreadExecutor()
@@ -95,6 +102,8 @@ class BinLocatorActivity : AppCompatActivity() {
         if (debugMode) {
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
+            showLogButton.visibility = View.VISIBLE
+            tuneButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
         sendRecordButton.alpha = 0.5f
@@ -107,6 +116,8 @@ class BinLocatorActivity : AppCompatActivity() {
         showBatchButton.setOnClickListener { showBatchItems() }
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
+        showLogButton.setOnClickListener { showDebugLog() }
+        tuneButton.setOnClickListener { showTuningDialog() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -166,8 +177,15 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.width(),
                     crop.height()
                 )
-                lastBitmap = cropped
-                val inputImage = InputImage.fromBitmap(cropped, 0)
+                dLog("Initial crop ${crop.width()}x${crop.height()}")
+                val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
+                dLog("Warped size ${warped.width}x${warped.height}")
+                val processed = ImageUtils.toGrayscale(warped)
+                lastBitmap = processed
+                if (debugMode) {
+                    saveDebugImage(processed)
+                }
+                val inputImage = InputImage.fromBitmap(processed, 0)
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 recognizer.process(inputImage)
                     .addOnSuccessListener { result ->
@@ -331,17 +349,106 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun toggleCropPreview() {
-        val bitmap = lastBitmap ?: return
+        val bmp = if (debugMode) {
+            val file = File(cacheDir, "warped.jpg")
+            if (file.exists()) BitmapFactory.decodeFile(file.absolutePath) else lastBitmap
+        } else {
+            lastBitmap
+        } ?: return
         runOnUiThread {
             if (cropPreview.visibility == View.GONE) {
-                cropPreview.setImageBitmap(bitmap)
-                cropPreview.setColorFilter(android.graphics.Color.BLUE)
+                dLog("Showing crop preview")
+                saveDebugImage(bmp)
+                cropPreview.setImageBitmap(bmp)
+                cropPreview.clearColorFilter()
                 cropPreview.visibility = View.VISIBLE
                 overlay.visibility = View.GONE
             } else {
+                dLog("Hiding crop preview")
+                cropPreview.clearColorFilter()
                 cropPreview.visibility = View.GONE
                 overlay.visibility = View.VISIBLE
             }
+        }
+    }
+
+    /** Shows a dialog allowing runtime tuning of OCR parameters. */
+    private fun showTuningDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_tuning, null)
+        val blur = view.findViewById<com.google.android.material.slider.Slider>(R.id.blurSlider)
+        val cannyLow = view.findViewById<com.google.android.material.slider.Slider>(R.id.cannyLowSlider)
+        val cannyHigh = view.findViewById<com.google.android.material.slider.Slider>(R.id.cannyHighSlider)
+        val dilate = view.findViewById<com.google.android.material.slider.Slider>(R.id.dilateSlider)
+        val eps = view.findViewById<com.google.android.material.slider.Slider>(R.id.epsilonSlider)
+        val minArea = view.findViewById<com.google.android.material.slider.Slider>(R.id.minAreaSlider)
+        val ratioTol = view.findViewById<com.google.android.material.slider.Slider>(R.id.ratioSlider)
+        val widthEdit = view.findViewById<android.widget.EditText>(R.id.widthEdit)
+        val heightEdit = view.findViewById<android.widget.EditText>(R.id.heightEdit)
+        val lineHeight = view.findViewById<com.google.android.material.slider.Slider>(R.id.lineHeightSlider)
+
+        blur.value = TuningParams.blurKernel.toFloat()
+        cannyLow.value = TuningParams.cannyLow.toFloat()
+        cannyHigh.value = TuningParams.cannyHigh.toFloat()
+        dilate.value = TuningParams.dilateKernel.toFloat()
+        eps.value = TuningParams.epsilon.toFloat()
+        minArea.value = TuningParams.minAreaRatio
+        ratioTol.value = TuningParams.ratioTolerance
+        widthEdit.setText(TuningParams.outputWidth.toString())
+        heightEdit.setText(TuningParams.outputHeight.toString())
+        lineHeight.value = TuningParams.lineHeightPercent
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Tune Pipeline")
+            .setView(view)
+            .create()
+
+        view.findViewById<Button>(R.id.applyButton).setOnClickListener {
+            TuningParams.blurKernel = blur.value.toInt()
+            TuningParams.cannyLow = cannyLow.value.toInt()
+            TuningParams.cannyHigh = cannyHigh.value.toInt()
+            TuningParams.dilateKernel = dilate.value.toInt()
+            TuningParams.epsilon = eps.value.toDouble()
+            TuningParams.minAreaRatio = minArea.value
+            TuningParams.ratioTolerance = ratioTol.value
+            TuningParams.outputWidth = widthEdit.text.toString().toIntOrNull() ?: TuningParams.outputWidth
+            TuningParams.outputHeight = heightEdit.text.toString().toIntOrNull() ?: TuningParams.outputHeight
+            TuningParams.lineHeightPercent = lineHeight.value
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    /** Displays the collected debug log messages. */
+    private fun showDebugLog() {
+        val text = debugLog.toString()
+        if (text.isEmpty()) return
+        runOnUiThread {
+            androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Debug Log")
+                .setMessage(text)
+                .setPositiveButton("OK", null)
+                .show()
+        }
+    }
+
+    /** Adds a message to the in-memory debug log and logcat. */
+    private fun dLog(msg: String) {
+        Log.d(TAG, msg)
+        debugLog.append(msg).append('\n')
+    }
+
+    /**
+     * Saves the given bitmap to cache for debugging purposes.
+     */
+    private fun saveDebugImage(bmp: Bitmap) {
+        try {
+            File(cacheDir, "warped.jpg").outputStream().use { out ->
+                bmp.compress(Bitmap.CompressFormat.JPEG, 90, out)
+            }
+            dLog("Debug image saved")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to save debug image", e)
         }
     }
 

@@ -13,6 +13,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Screen orientation is fixed to portrait, simplifying camera alignment regardless of device rotation.
 * Includes a **Capture** button. When tapped it captures a photo to a temporary file, rotates the image based on the current setting and runs **ML Kit Text Recognition**.
 * Shows a green **TOP** label with a bounding box overlay so users align text correctly. The captured image is cropped to this region before processing.
+* The cropped label is perspective corrected with OpenCV before OCR for improved accuracy.
 * Supports pinch-to-zoom on the preview with a slider and 1x reset button for precise adjustments.
 * Recognised text appears in a persistent text view at the top of the screen.
 * Each OCR line and its bounding box height are printed to logcat for debugging.
@@ -26,8 +27,10 @@ The project is a minimal Android application written in Kotlin. Below are all of
   allowing upload to the warehouse database. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
 * A **Debug mode** checkbox on the main screen disables sending and adds **Show
-  OCR** and **Show Crop** buttons. The OCR dialog lists raw lines with bounding
-  box heights and the crop preview displays the last capture tinted blue.
+ OCR**, **Show Crop**, and **Show Log** buttons. The OCR dialog lists raw lines with bounding
+ box heights. **Show Crop** saves the grayscale warped label image used for OCR before
+ displaying it, and **Show Log** shows collected debug messages so preprocessing is easy to inspect.
+* A **Tune Pipeline** button in debug mode lets developers adjust OCR pipeline parameters with sliders for the current session only.
 * Batch Binning is always enabled. Use **Add Item** to store each roll/customer
   pair then **Show Items** to review them. **Send Record** uploads all queued
   entries in one batch.

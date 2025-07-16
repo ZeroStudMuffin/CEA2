@@ -1,0 +1,13 @@
+# Improved OCR Pipeline
+
+1. **Grayscale** - convert to single channel for consistent processing.
+2. **Gaussian Blur** - smooth noise to reduce spurious edges.
+3. **Canny Edge Detection** - highlight strong edges of the label.
+4. **Dilate** - close small gaps in the edges.
+5. **Contour Filtering** - find convex quadrilaterals near the expected aspect ratio.
+6. **Perspective Warp** - warp the best quad to a fixed size bitmap.
+7. **Grayscale** - convert the warped image to grayscale for OCR.
+8. **ML Kit Input** - feed the grayscale bitmap to TextRecognition.
+9. **Debug Save** - when Show Crop is used, the warped bitmap is written to
+   `cacheDir/warped.jpg` so developers can review the exact image passed to ML
+   Kit.
