@@ -1,14 +1,14 @@
 ## FEATURE:
 
-- [ ] Add "Batch Mode" checkbox to the home screen
-- [ ] They may be "batch mode" items that have been changed to always on by default but, these features will be moved to the batch mode only: add item, show list, the current send record and set bin (the last 2 will be added in different forms in the new default mode)
-- [ ] Default mode now pops up a large "BINS" menu when a roll# and customer name has been found. Pop up window has no label and takes up the entire screen except for where the capture button is. When clicked outside the menu (where the capture button was) the window disappears so user can attempt another capture.
-- [ ] Menu is a set of buttons 5 wide and as long as it needs to be. Menu scales vertically so no scrolling is needed to see all the buttons.
-- [ ] Buttons are as large of text as possible while fitting in its box. Buttons go from 9-65 as well as F1-F4. (61 total buttons) The text is simply the number or F1-F4.
-- [ ] Clicking a button sets the bin for the record, then sends the record. Then closes the menu and clears the textview. Ready for another capture.
+- [ ] New module. Button on home screen called "Checkout Items". Layout is same as bin locator but with different buttons and functionality.
+- [ ] "checkout Items" should use as much of the existing code as possible to eliminate bloat.
+- [ ] Same as bin locator batch mode, add items and show list are available. The rest are hidden.
+- [ ] Instead of "Send Record" there is a "Checkout" button brings up a confirmation pop-up window. Confirmation sends the update.
+- [ ] checkout.php expects a roll_num, customer, and the pin used when starting the app. If all are given and the item is not already checkout out or missing from the database, it updates the records as "checked out"
 
 ## EXAMPLES:
 
+examples/checkout.php - this is the actual checkout.php that will be used.
 https://github.com/android/nowinandroid?tab=readme-ov-file - a simple android app EXAMPLE.
 
 ## DOCUMENTATION:
