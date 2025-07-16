@@ -102,10 +102,12 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   passed to ML Kit, and a dialog with collected debug logs for troubleshooting.
 - A **Tune Pipeline** button in debug mode opens sliders and fields for
   adjusting OCR preprocessing values during the current session.
- - Batch Binning is enabled by default, allowing multiple captures before
-   assigning a bin. An **Add Item** button saves each roll/customer pair and a
-   **Show Items** dialog lists them. **Send Record** uploads all queued items at
-   once.
+- A **Batch mode** checkbox on the main screen controls whether captures queue
+  multiple items or use a single-record flow. When unchecked a full-screen
+  **Bins** menu appears once roll and customer are recognised; choosing a bin
+  immediately uploads the record. When checked an **Add Item** button saves each
+  roll/customer pair and a **Show Items** dialog lists them so they can be sent
+  together.
 - On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
   and prompts the user to enter one. The main screen remains disabled until a
   correct PIN is provided.

@@ -34,3 +34,5 @@
 ## [2025-07-15] Convert warped crop to grayscale before OCR - DONE
 ## [2025-07-16] Add Show Log debug button and messages - DONE
 ## [2025-07-16] Update parsing to use underscores, adjust zoom defaults and crop box size
+## [2025-07-16] Generate PRP for Batch Mode toggle & bins menu - DONE
+## [2025-07-16] Implement Batch Mode toggle & bins menu

@@ -56,6 +56,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
+    private lateinit var binMenuContainer: android.widget.FrameLayout
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
@@ -88,10 +89,11 @@ class BinLocatorActivity : AppCompatActivity() {
         showLogButton = findViewById(R.id.showLogButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
+        binMenuContainer = findViewById(R.id.binMenuContainer)
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         debugMode = intent.getBooleanExtra("debug", false)
-        batchMode = intent.getBooleanExtra("batch", true)
+        batchMode = intent.getBooleanExtra("batch", false)
         if (batchMode) {
             addItemButton.visibility = View.VISIBLE
             showBatchButton.visibility = View.VISIBLE
@@ -209,6 +211,13 @@ class BinLocatorActivity : AppCompatActivity() {
             ocrTextView.text = lines.joinToString("\n")
             actionButtons.visibility = View.VISIBLE
             updateSendRecordVisibility()
+            if (!batchMode) {
+                val hasRoll = lines.any { it.startsWith("Roll#:") }
+                val hasCust = lines.any { it.startsWith("Cust:") }
+                if (hasRoll && hasCust) {
+                    showBinOverlay()
+                }
+            }
         }
     }
 
@@ -471,6 +480,34 @@ class BinLocatorActivity : AppCompatActivity() {
                 .setPositiveButton("OK", null)
                 .show()
         }
+    }
+
+    private fun showBinOverlay() {
+        val view = layoutInflater.inflate(R.layout.dialog_bins, binMenuContainer, false)
+        view.findViewById<View>(R.id.overlayBackground).setOnClickListener {
+            binMenuContainer.removeAllViews()
+            binMenuContainer.visibility = View.GONE
+        }
+        for (i in 9..65) {
+            val resId = resources.getIdentifier("bin$i", "id", packageName)
+            view.findViewById<Button>(resId)?.setOnClickListener {
+                applyBin(i.toString())
+                sendRecord()
+                binMenuContainer.removeAllViews()
+                binMenuContainer.visibility = View.GONE
+            }
+        }
+        for (i in 1..4) {
+            val resId = resources.getIdentifier("binF$i", "id", packageName)
+            view.findViewById<Button>(resId)?.setOnClickListener {
+                applyBin("F$i")
+                sendRecord()
+                binMenuContainer.removeAllViews()
+                binMenuContainer.visibility = View.GONE
+            }
+        }
+        binMenuContainer.addView(view)
+        binMenuContainer.visibility = View.VISIBLE
     }
 
     private fun showError(e: Exception) {

@@ -23,11 +23,20 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <CheckBox
+        android:id="@+id/batchCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Batch mode"
+        app:layout_constraintTop_toBottomOf="@id/binLocatorButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <CheckBox
         android:id="@+id/debugCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Debug mode"
-        app:layout_constraintTop_toBottomOf="@id/binLocatorButton"
+        app:layout_constraintTop_toBottomOf="@id/batchCheckBox"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

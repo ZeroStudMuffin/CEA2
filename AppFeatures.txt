@@ -31,9 +31,11 @@ The project is a minimal Android application written in Kotlin. Below are all of
  box heights. **Show Crop** saves the grayscale warped label image used for OCR before
  displaying it, and **Show Log** shows collected debug messages so preprocessing is easy to inspect.
 * A **Tune Pipeline** button in debug mode lets developers adjust OCR pipeline parameters with sliders for the current session only.
-* Batch Binning is always enabled. Use **Add Item** to store each roll/customer
-  pair then **Show Items** to review them. **Send Record** uploads all queued
-  entries in one batch.
+* A **Batch mode** checkbox determines the workflow. When unchecked a full-screen
+  bin menu appears automatically once roll and customer are parsed. Selecting a
+  value sends the record immediately. When checked use **Add Item** to queue
+  roll/customer pairs and **Show Items** to review them before sending all at
+  once.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling for other parts of the app is still minimal.
