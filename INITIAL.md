@@ -1,15 +1,15 @@
-- [ ] Debug mode tuning: In debug mode, a button brings up a menu with all the tuning "knobs" for parsing and preprocessing.
-- [ ] Tuning knobs are derived from the tuning example file. There are 7 knobs detailedin the file. If Currently we do not have defined values for some of the knobs, add a default value that seems appropriate. The guide gives some decent defaults for most or all of the parameters.
-- [ ] Uses sliders and text boxes for user input. Label all the knobs. Derive the possible values from the guide.
-- [ ] Accept tuning changes with a button and apply them to debug mode only.
-- [ ] Tuning knob changes do not get saved across app reboots.
-- [ ] Additional tuning knobs: The "percent height of tallest line" will be tunable. 100% = only the tallest line (or equal). 0% = all lines regardless of height.
+## FEATURE:
+
+- [ ] Add "Batch Mode" checkbox to the home screen
+- [ ] They may be "batch mode" items that have been changed to always on by default but, these features will be moved to the batch mode only: add item, show list, the current send record and set bin (the last 2 will be added in different forms in the new default mode)
+- [ ] Default mode now pops up a large "BINS" menu when a roll# and customer name has been found. Pop up window has no label and takes up the entire screen except for where the capture button is. When clicked outside the menu (where the capture button was) the window disappears so user can attempt another capture.
+- [ ] Menu is a set of buttons 5 wide and as long as it needs to be. Menu scales vertically so no scrolling is needed to see all the buttons.
+- [ ] Buttons are as large of text as possible while fitting in its box. Buttons go from 9-65 as well as F1-F4. (61 total buttons) The text is simply the number or F1-F4.
+- [ ] Clicking a button sets the bin for the record, then sends the record. Then closes the menu and clears the textview. Ready for another capture.
 
 ## EXAMPLES:
-examples/pipeline_tuning_guide.md - helpful for understanding the tuning knobs that are available and how they work.
+
 https://github.com/android/nowinandroid?tab=readme-ov-file - a simple android app EXAMPLE.
-https://github.com/ryccoatika/Image-To-Text - an image-to-text app example.
-https://github.com/krishnachaitanya0107/TextRecognizerApp/blob/master/app/src/main/java/com/example/textrecognizer/MainActivity.kt - the mainactivity.kt example from another image-to-text app.
 
 ## DOCUMENTATION:
 
