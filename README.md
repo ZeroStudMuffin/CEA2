@@ -75,11 +75,11 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 ## Features
 
  - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
-  text for OCR. The box now covers about **85%** of the screen for easier framing.
+  text for OCR. The box now covers about **60%** of the screen width for easier framing.
 - Captured images are cropped to this box and processed with ML Kit text
   recognition.
-- Camera preview supports pinch-to-zoom with a slider and a 1x reset button for
-  finer control when capturing text.
+- Camera preview supports pinch-to-zoom with a slider. The preview starts at a
+  zoom level of 40% for easier text alignment.
 - The screen orientation is locked to portrait; rotating the device has no effect.
  - Recognised text is shown in a TextView with a **Get Release** button that
    scans barcodes using ML Kit. The **Set Bin** button now opens a pop-up menu
@@ -90,8 +90,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - Captured labels are perspective corrected using OpenCV and converted to grayscale prior to OCR for better accuracy. When debugging, the **Show Crop** button saves this grayscale warped image before displaying it so you can inspect exactly what ML Kit saw.
 - The **Show Log** button in debug mode displays any debug messages captured during processing.
-- The parser now outputs only a roll number and customer name, displayed on two
-  lines in the Bin Locator screen. Any prefix before the first space in the
+ - The parser now outputs only a roll number and customer name, displayed on two
+  lines in the Bin Locator screen. Any prefix before the first underscore in the
   roll number is removed so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears.
   Tapping uploads the data to the server and clears the text view. If the server

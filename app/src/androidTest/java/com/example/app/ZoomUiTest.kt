@@ -26,7 +26,19 @@ class ZoomUiTest {
     fun launchActivity_showsZoomControls() {
         ActivityScenario.launch(BinLocatorActivity::class.java)
         onView(withId(R.id.zoomSlider)).check(matches(isDisplayed()))
-        onView(withId(R.id.zoomResetButton)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun defaultZoom_isFortyPercent() {
+        val scenario = ActivityScenario.launch(BinLocatorActivity::class.java)
+        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
+        scenario.onActivity { activity ->
+            val field = BinLocatorActivity::class.java.getDeclaredField("controller")
+            field.isAccessible = true
+            val controller = field.get(activity) as LifecycleCameraController
+            val zoom = controller.zoomState.value?.linearZoom ?: 0f
+            assertEquals(0.4f, zoom, 0.05f)
+        }
     }
 
     @Test
@@ -44,21 +56,6 @@ class ZoomUiTest {
         }
     }
 
-    @Test
-    fun resetButton_resetsZoomToOneX() {
-        val scenario = ActivityScenario.launch(BinLocatorActivity::class.java)
-        onView(withId(R.id.zoomSlider)).perform(setSliderValue(0.6f))
-        onView(withId(R.id.zoomResetButton)).perform(click())
-        InstrumentationRegistry.getInstrumentation().waitForIdleSync()
-
-        scenario.onActivity { activity ->
-            val field = BinLocatorActivity::class.java.getDeclaredField("controller")
-            field.isAccessible = true
-            val controller = field.get(activity) as LifecycleCameraController
-            val ratio = controller.zoomState.value?.zoomRatio ?: 0f
-            assertEquals(1f, ratio, 0.01f)
-        }
-    }
 
     private fun setSliderValue(value: Float): ViewAction = object : ViewAction {
         override fun getConstraints(): Matcher<View> = isAssignableFrom(Slider::class.java)
