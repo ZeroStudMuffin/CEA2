@@ -81,8 +81,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - Camera preview supports pinch-to-zoom with a slider. The preview starts at a
   zoom level of 40% for easier text alignment.
 - The screen orientation is locked to portrait; rotating the device has no effect.
- - Recognised text is shown in a TextView with a **Get Release** button that
-   scans barcodes using ML Kit. The **Set Bin** button now opens a pop-up menu
+ - Recognised text is shown in a TextView with **Get Release** and **Set Bin**
+   buttons when batch mode is enabled. The Set Bin option opens a pop-up menu
   listing bins 19-65 plus "Floor BR" and "Floor BL". Selecting a value sets
   `BIN=<bin>` on the roll number line, replacing any previous value. Barcode
   scanning for bins is disabled.

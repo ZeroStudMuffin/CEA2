@@ -95,6 +95,7 @@ class BinLocatorActivity : AppCompatActivity() {
         debugMode = intent.getBooleanExtra("debug", false)
         batchMode = intent.getBooleanExtra("batch", false)
         if (batchMode) {
+            actionButtons.visibility = View.VISIBLE
             addItemButton.visibility = View.VISIBLE
             showBatchButton.visibility = View.VISIBLE
             sendRecordButton.visibility = View.VISIBLE
@@ -343,7 +344,9 @@ class BinLocatorActivity : AppCompatActivity() {
         runOnUiThread {
             batchItems.clear()
             ocrTextView.text = ""
-            actionButtons.visibility = View.GONE
+            if (!batchMode) {
+                actionButtons.visibility = View.GONE
+            }
             sendRecordButton.isEnabled = false
             sendRecordButton.alpha = 0.5f
         }
@@ -472,7 +475,9 @@ class BinLocatorActivity : AppCompatActivity() {
         if (roll != null && cust != null) {
             batchItems += BatchRecord(roll, cust, bin)
             ocrTextView.text = ""
-            actionButtons.visibility = View.GONE
+            if (!batchMode) {
+                actionButtons.visibility = View.GONE
+            }
             updateSendRecordVisibility()
         }
     }
