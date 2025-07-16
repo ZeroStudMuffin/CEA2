@@ -26,6 +26,8 @@ class BinMenuUiTest {
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             onView(withId(R.id.binMenuContainer)).check(matches(isDisplayed()))
             onView(withId(R.id.addItemButton)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.captureButton)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.zoomSlider)).check(matches(not(isDisplayed())))
         }
     }
 }

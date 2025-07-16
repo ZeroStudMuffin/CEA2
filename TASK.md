@@ -36,3 +36,4 @@
 ## [2025-07-16] Update parsing to use underscores, adjust zoom defaults and crop box size
 ## [2025-07-16] Generate PRP for Batch Mode toggle & bins menu - DONE
 ## [2025-07-16] Implement Batch Mode toggle & bins menu
+## [2025-07-16] Fix default mode UI visibility when bin menu shown - DONE

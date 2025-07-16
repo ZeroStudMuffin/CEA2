@@ -93,9 +93,10 @@ This app relies on Material Components. A custom theme extending `Theme.Material
  - The parser now outputs only a roll number and customer name, displayed on two
   lines in the Bin Locator screen. Any prefix before the first underscore in the
   roll number is removed so users see only the numeric portion.
-- Once roll, customer and bin are present a **Send Record** button appears.
-  Tapping uploads the data to the server and clears the text view. If the server
-  returns an error, the provided message is shown instead of a generic failure.
+- Once roll, customer and bin are present a **Send Record** button appears when
+  batch mode is enabled. In default mode a full-screen bin menu pops up and
+  selecting a value uploads immediately. If the server returns an error, the
+  provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
   disabled. Additional **Show OCR**, **Show Crop** and **Show Log** buttons reveal raw text
   with bounding box heights, an exact crop preview showing the warped image
@@ -105,7 +106,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - A **Batch mode** checkbox on the main screen controls whether captures queue
   multiple items or use a single-record flow. When unchecked a full-screen
   **Bins** menu appears once roll and customer are recognised; choosing a bin
-  immediately uploads the record. When checked an **Add Item** button saves each
+  immediately uploads the record. The capture button and zoom slider disappear
+  while this menu is visible. When checked an **Add Item** button saves each
   roll/customer pair and a **Show Items** dialog lists them so they can be sent
   together.
 - On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
