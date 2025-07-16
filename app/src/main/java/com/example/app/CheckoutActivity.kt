@@ -58,6 +58,9 @@ class CheckoutActivity : AppCompatActivity() {
         checkoutButton = findViewById(R.id.checkoutButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
         pin = intent.getStringExtra("pin") ?: ""
+        // Show the queue controls since checkout always runs in batch mode
+        addItemButton.visibility = android.view.View.VISIBLE
+        showBatchButton.visibility = android.view.View.VISIBLE
 
         captureButton.setOnClickListener { takePhoto() }
         addItemButton.setOnClickListener { onAddItem() }
