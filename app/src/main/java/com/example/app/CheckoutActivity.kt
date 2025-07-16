@@ -68,6 +68,7 @@ class CheckoutActivity : AppCompatActivity() {
         checkoutButton.setOnClickListener { confirmCheckout() }
         checkoutButton.isEnabled = false
         checkoutButton.alpha = 0.5f
+        checkoutButton.visibility = android.view.View.GONE
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -145,9 +146,13 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun updateCheckoutButton() {
-        val enabled = batchItems.isNotEmpty()
+        val lines = ocrTextView.text.split("\n")
+        val hasRoll = lines.any { it.startsWith("Roll#:") }
+        val hasCust = lines.any { it.startsWith("Cust:") }
+        val enabled = batchItems.isNotEmpty() || (hasRoll && hasCust)
         checkoutButton.isEnabled = enabled
         checkoutButton.alpha = if (enabled) 1f else 0.5f
+        checkoutButton.visibility = if (enabled) android.view.View.VISIBLE else android.view.View.GONE
     }
 
     private fun confirmCheckout() {

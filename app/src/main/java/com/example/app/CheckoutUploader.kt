@@ -1,5 +1,6 @@
 package com.example.app
 
+import android.util.Log
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
@@ -11,6 +12,7 @@ import java.util.concurrent.Executors
  * Utility for uploading checkout requests to checkout.php.
  */
 object CheckoutUploader {
+    private const val TAG = "CheckoutUploader"
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
 
     /** Allows tests to provide a mock connection. */
@@ -44,6 +46,7 @@ object CheckoutUploader {
 
                 val body = buildString {
                     items.forEach { item ->
+                        Log.d(TAG, "roll_num=${item.roll}, customer=${item.customer}, pin=$pin")
                         append("roll_num[]=")
                         append(URLEncoder.encode(item.roll, "UTF-8"))
                         append("&customer[]=")
