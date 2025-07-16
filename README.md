@@ -115,4 +115,5 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   correct PIN is provided.
 - A **Checkout Items** option on the main screen opens a camera screen similar
   to Bin Locator. Items can be queued and confirmed with a Checkout button which
-  posts them with the user's PIN to `checkout.php`.
+  posts them with the user's PIN to `checkout.php`. When debug mode is enabled
+  this screen also offers a **Show Log** button for reviewing debug messages.

@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, CheckoutActivity::class.java)
             intent.putExtra("pin", pin)
             intent.putExtra("batch", true)
+            intent.putExtra("debug", debugCheckBox.isChecked)
             startActivity(intent)
         }
 

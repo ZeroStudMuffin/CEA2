@@ -40,4 +40,5 @@
 ## [2025-07-16] Fix default mode UI visibility when bin menu shown - DONE
 ## [2025-07-17] Generate PRP for Checkout Items feature - DONE
 ## [2025-07-17] Implement Checkout Items feature - DONE
-## [2025-07-17] Log checkout payload fields and enable button when roll/customer scanned
+## [2025-07-17] Log checkout payload fields and enable button when roll/customer scanned - DONE
+## [2025-07-17] Add Show Log button to CheckoutActivity

@@ -47,6 +47,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * Uses the same camera and OCR pipeline as the Bin Locator but operates only in batch mode.
 * Queued roll/customer pairs are sent to `checkout.php` with the user's PIN after confirmation.
 * A confirmation dialog shows how many items will be checked out.
+* When debug mode is enabled a **Show Log** button displays collected debug messages.
 
 ## 4. Image Utilities
 * `ImageUtils.rotateBitmap()` rotates a bitmap by a specified angle using a `Matrix`. If the angle is a multiple of 360 the input bitmap is returned unmodified.
