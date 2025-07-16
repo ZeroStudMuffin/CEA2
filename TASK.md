@@ -34,3 +34,7 @@
 ## [2025-07-15] Convert warped crop to grayscale before OCR - DONE
 ## [2025-07-16] Add Show Log debug button and messages - DONE
 ## [2025-07-16] Update parsing to use underscores, adjust zoom defaults and crop box size
+## [2025-07-16] Generate PRP for Batch Mode toggle & bins menu - DONE
+## [2025-07-16] Implement Batch Mode toggle & bins menu - DONE
+## [2025-07-16] Fix bin menu overlay touch area and keep action buttons visible in batch mode - DONE
+## [2025-07-16] Fix default mode UI visibility when bin menu shown - DONE

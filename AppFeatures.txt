@@ -20,9 +20,10 @@ The project is a minimal Android application written in Kotlin. Below are all of
 * OCR results are cleaned using `OcrParser` before barcode scanning.
 * Only the extracted roll number and customer name are displayed back to the user, simplifying the on-screen text.
 * The parser strips any prefix text before the first underscore in the roll number so only the numeric portion remains.
-* **Get Release** still uses ML Kit barcode scanning. **Set Bin** now opens a menu
-  with bins 19-65 and "Floor BR/BL". Selected bins set `BIN=<value>` on the
-  roll number line, replacing any previous value.
+* **Get Release** still uses ML Kit barcode scanning and along with **Set Bin**
+  only shows when Batch mode is enabled. **Set Bin** opens a menu with bins 19-65
+  and "Floor BR/BL". Selected bins set `BIN=<value>` on the roll number line,
+  replacing any previous value.
 * When roll, customer and bin are all present a **Send Record** button appears
   allowing upload to the warehouse database. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
@@ -31,9 +32,12 @@ The project is a minimal Android application written in Kotlin. Below are all of
  box heights. **Show Crop** saves the grayscale warped label image used for OCR before
  displaying it, and **Show Log** shows collected debug messages so preprocessing is easy to inspect.
 * A **Tune Pipeline** button in debug mode lets developers adjust OCR pipeline parameters with sliders for the current session only.
-* Batch Binning is always enabled. Use **Add Item** to store each roll/customer
-  pair then **Show Items** to review them. **Send Record** uploads all queued
-  entries in one batch.
+* A **Batch mode** checkbox determines the workflow. When unchecked a full-screen
+  bin menu appears automatically once roll and customer are parsed. Selecting a
+  value sends the record immediately and the capture and zoom controls are hidden
+  while the menu is open. When checked use **Add Item** to queue roll/customer
+  pairs and **Show Items** to review them before sending all at once. The
+  **Send Record** button only shows in this mode.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling for other parts of the app is still minimal.
