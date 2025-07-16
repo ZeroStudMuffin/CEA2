@@ -107,6 +107,13 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:text="Show Crop" />
+
+        <Button
+            android:id="@+id/tuneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Tune" />
     </LinearLayout>
 
     <!-- Separate container for showing debug log -->
