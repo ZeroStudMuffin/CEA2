@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -8,11 +9,11 @@
         android:id="@+id/ocrTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:background="#66000000"
+        android:padding="8dp"
         android:textColor="@android:color/white"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
@@ -21,9 +22,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer"
-        app:layout_constraintTop_toBottomOf="@id/ocrTextView">
+        app:layout_constraintTop_toBottomOf="@id/ocrTextView"
+        tools:visibility="visible">
 
         <Button
             android:id="@+id/getReleaseButton"
@@ -37,36 +39,48 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Set Bin" />
+            android:text="Set Bin"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
 
     <FrameLayout
-        android:id="@+id/previewContainer"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/actionButtons"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/actionButtons">
 
-        <androidx.camera.view.PreviewView
-            android:id="@+id/viewFinder"
+        <FrameLayout
+            android:id="@+id/previewContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
 
-        <com.example.app.BoundingBoxOverlay
-            android:id="@+id/boundingBox"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <androidx.camera.view.PreviewView
+                android:id="@+id/viewFinder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-        <ImageView
-            android:id="@+id/cropPreview"
+            <com.example.app.BoundingBoxOverlay
+                android:id="@+id/boundingBox"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/cropPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:scaleType="fitCenter" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/binMenuContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:scaleType="fitCenter" />
+            android:visibility="gone" />
     </FrameLayout>
 
     <!-- Overlay container for debug and send controls -->
@@ -75,45 +89,47 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/actionButtons"
-        app:layout_constraintStart_toEndOf="@id/actionButtons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/previewContainer">
+        app:layout_constraintTop_toBottomOf="@+id/actionButtons">
 
         <Button
             android:id="@+id/showBatchButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Show Items"
             android:visibility="gone"
-            android:text="Show Items" />
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/sendRecordButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send Record"
-            android:alpha="0.5" />
+            android:alpha="0.5"
+            android:text="Send Record" />
 
         <Button
             android:id="@+id/showOcrButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Show OCR"
             android:visibility="gone"
-            android:text="Show OCR" />
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/showCropButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Show Crop"
             android:visibility="gone"
-            android:text="Show Crop" />
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/tuneButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Tune"
             android:visibility="gone"
-            android:text="Tune" />
+            tools:visibility="visible" />
     </LinearLayout>
 
     <!-- Separate container for showing debug log -->
@@ -122,53 +138,54 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@id/showButtonsContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/captureButton">
+        app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer"
+        tools:layout_editor_absoluteY="83dp">
 
         <Button
             android:id="@+id/showLogButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Show Log"
             android:visibility="gone"
-            android:text="Show Log" />
+            tools:visibility="visible" />
     </LinearLayout>
 
 
     <Button
         android:id="@+id/captureButton"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="307dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="8dp"
         android:text="Capture"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/addItemButton"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintEnd_toStartOf="@+id/addItemButton" />
+        tools:visibility="visible" />
 
     <Button
         android:id="@+id/addItemButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="78dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="8dp"
         android:text="+"
         android:visibility="gone"
-        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/captureButton"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="visible" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/zoomSlider"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:valueFrom="0"
-        android:valueTo="1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/captureButton"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp" />
-
+        android:layout_marginBottom="8dp"
+        android:valueFrom="0"
+        android:valueTo="1"
+        app:layout_constraintBottom_toTopOf="@id/captureButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
