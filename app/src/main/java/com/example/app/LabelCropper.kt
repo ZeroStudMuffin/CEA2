@@ -2,6 +2,7 @@ package com.example.app
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.example.app.TuningParams
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
 import org.opencv.core.*
@@ -13,9 +14,6 @@ import kotlin.math.abs
  */
 object LabelCropper {
     private const val TAG = "LabelCropper"
-    private const val LABEL_W = 800
-    private const val LABEL_H = 200
-    private const val RATIO_TOLERANCE = 0.15f
 
     /**
      * Finds the label rectangle closest to the given aspect ratio and
@@ -30,10 +28,22 @@ object LabelCropper {
 
         val gray = Mat()
         Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGBA2GRAY)
-        Imgproc.GaussianBlur(gray, gray, Size(5.0, 5.0), 0.0)
+        Imgproc.GaussianBlur(
+            gray,
+            gray,
+            Size(TuningParams.blurKernel.toDouble(), TuningParams.blurKernel.toDouble()),
+            0.0
+        )
         val edges = Mat()
-        Imgproc.Canny(gray, edges, 50.0, 150.0)
-        Imgproc.dilate(edges, edges, Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(3.0, 3.0)))
+        Imgproc.Canny(gray, edges, TuningParams.cannyLow.toDouble(), TuningParams.cannyHigh.toDouble())
+        Imgproc.dilate(
+            edges,
+            edges,
+            Imgproc.getStructuringElement(
+                Imgproc.MORPH_RECT,
+                Size(TuningParams.dilateKernel.toDouble(), TuningParams.dilateKernel.toDouble())
+            )
+        )
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(edges, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -42,11 +52,17 @@ object LabelCropper {
         var bestQuad: MatOfPoint2f? = null
         for (c in contours) {
             val poly = MatOfPoint2f()
-            Imgproc.approxPolyDP(MatOfPoint2f(*c.toArray()), poly, 10.0, true)
+            Imgproc.approxPolyDP(
+                MatOfPoint2f(*c.toArray()),
+                poly,
+                TuningParams.epsilon,
+                true
+            )
             if (poly.total() == 4L && Imgproc.isContourConvex(MatOfPoint(*poly.toArray()))) {
                 val r = Imgproc.boundingRect(c)
                 val ratio = r.width.toFloat() / r.height
-                if (abs(ratio - aspect) < RATIO_TOLERANCE * aspect) {
+                val areaOk = r.area() > src.width() * src.height() * TuningParams.minAreaRatio
+                if (areaOk && abs(ratio - aspect) < TuningParams.ratioTolerance * aspect) {
                     bestQuad = poly
                     break
                 }
@@ -59,15 +75,17 @@ object LabelCropper {
 
         val srcPts = sortCorners(bestQuad.toArray())
         Log.d(TAG, "Warping label")
+        val w = TuningParams.outputWidth.toDouble()
+        val h = TuningParams.outputHeight.toDouble()
         val dstPts = arrayOf(
             Point(0.0, 0.0),
-            Point(LABEL_W.toDouble(), 0.0),
-            Point(LABEL_W.toDouble(), LABEL_H.toDouble()),
-            Point(0.0, LABEL_H.toDouble())
+            Point(w, 0.0),
+            Point(w, h),
+            Point(0.0, h)
         )
         val transform = Imgproc.getPerspectiveTransform(MatOfPoint2f(*srcPts), MatOfPoint2f(*dstPts))
         val label = Mat()
-        Imgproc.warpPerspective(src, label, transform, Size(LABEL_W.toDouble(), LABEL_H.toDouble()))
+        Imgproc.warpPerspective(src, label, transform, Size(w, h))
         val result = Bitmap.createBitmap(label.cols(), label.rows(), Bitmap.Config.ARGB_8888)
         Utils.matToBitmap(label, result)
         return result

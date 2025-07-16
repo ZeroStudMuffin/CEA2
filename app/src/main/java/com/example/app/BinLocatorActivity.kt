@@ -53,6 +53,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var sendRecordButton: Button
     private lateinit var showOcrButton: Button
     private lateinit var showCropButton: Button
+    private lateinit var tuneButton: Button
     private lateinit var showLogButton: Button
     private lateinit var addItemButton: Button
     private lateinit var showBatchButton: Button
@@ -86,6 +87,7 @@ class BinLocatorActivity : AppCompatActivity() {
         sendRecordButton = findViewById(R.id.sendRecordButton)
         showOcrButton = findViewById(R.id.showOcrButton)
         showCropButton = findViewById(R.id.showCropButton)
+        tuneButton = findViewById(R.id.tuneButton)
         showLogButton = findViewById(R.id.showLogButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         cropPreview = findViewById(R.id.cropPreview)
@@ -101,6 +103,7 @@ class BinLocatorActivity : AppCompatActivity() {
             showOcrButton.visibility = View.VISIBLE
             showCropButton.visibility = View.VISIBLE
             showLogButton.visibility = View.VISIBLE
+            tuneButton.visibility = View.VISIBLE
         }
         sendRecordButton.isEnabled = false
         sendRecordButton.alpha = 0.5f
@@ -114,6 +117,7 @@ class BinLocatorActivity : AppCompatActivity() {
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
         showLogButton.setOnClickListener { showDebugLog() }
+        tuneButton.setOnClickListener { showTuningDialog() }
 
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
@@ -366,6 +370,53 @@ class BinLocatorActivity : AppCompatActivity() {
                 overlay.visibility = View.VISIBLE
             }
         }
+    }
+
+    /** Shows a dialog allowing runtime tuning of OCR parameters. */
+    private fun showTuningDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_tuning, null)
+        val blur = view.findViewById<com.google.android.material.slider.Slider>(R.id.blurSlider)
+        val cannyLow = view.findViewById<com.google.android.material.slider.Slider>(R.id.cannyLowSlider)
+        val cannyHigh = view.findViewById<com.google.android.material.slider.Slider>(R.id.cannyHighSlider)
+        val dilate = view.findViewById<com.google.android.material.slider.Slider>(R.id.dilateSlider)
+        val eps = view.findViewById<com.google.android.material.slider.Slider>(R.id.epsilonSlider)
+        val minArea = view.findViewById<com.google.android.material.slider.Slider>(R.id.minAreaSlider)
+        val ratioTol = view.findViewById<com.google.android.material.slider.Slider>(R.id.ratioSlider)
+        val widthEdit = view.findViewById<android.widget.EditText>(R.id.widthEdit)
+        val heightEdit = view.findViewById<android.widget.EditText>(R.id.heightEdit)
+        val lineHeight = view.findViewById<com.google.android.material.slider.Slider>(R.id.lineHeightSlider)
+
+        blur.value = TuningParams.blurKernel.toFloat()
+        cannyLow.value = TuningParams.cannyLow.toFloat()
+        cannyHigh.value = TuningParams.cannyHigh.toFloat()
+        dilate.value = TuningParams.dilateKernel.toFloat()
+        eps.value = TuningParams.epsilon.toFloat()
+        minArea.value = TuningParams.minAreaRatio
+        ratioTol.value = TuningParams.ratioTolerance
+        widthEdit.setText(TuningParams.outputWidth.toString())
+        heightEdit.setText(TuningParams.outputHeight.toString())
+        lineHeight.value = TuningParams.lineHeightPercent
+
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Tune Pipeline")
+            .setView(view)
+            .create()
+
+        view.findViewById<Button>(R.id.applyButton).setOnClickListener {
+            TuningParams.blurKernel = blur.value.toInt()
+            TuningParams.cannyLow = cannyLow.value.toInt()
+            TuningParams.cannyHigh = cannyHigh.value.toInt()
+            TuningParams.dilateKernel = dilate.value.toInt()
+            TuningParams.epsilon = eps.value.toDouble()
+            TuningParams.minAreaRatio = minArea.value
+            TuningParams.ratioTolerance = ratioTol.value
+            TuningParams.outputWidth = widthEdit.text.toString().toIntOrNull() ?: TuningParams.outputWidth
+            TuningParams.outputHeight = heightEdit.text.toString().toIntOrNull() ?: TuningParams.outputHeight
+            TuningParams.lineHeightPercent = lineHeight.value
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 
     /** Displays the collected debug log messages. */
