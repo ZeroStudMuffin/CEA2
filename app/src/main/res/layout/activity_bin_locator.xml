@@ -138,6 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/ocrTextView"
         app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer"
         tools:layout_editor_absoluteY="83dp">
 
