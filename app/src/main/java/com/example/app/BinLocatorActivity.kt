@@ -65,6 +65,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private var lastBitmap: Bitmap? = null
     private var debugMode: Boolean = false
     private var batchMode: Boolean = false
+    private lateinit var pin: String
     private val batchItems = mutableListOf<BatchRecord>()
     private var manualRoll: String? = null
     private var manualCustomer: String? = null
@@ -99,6 +100,7 @@ class BinLocatorActivity : AppCompatActivity() {
 
         debugMode = intent.getBooleanExtra("debug", false)
         batchMode = intent.getBooleanExtra("batch", false)
+        pin = intent.getStringExtra("pin") ?: ""
         if (batchMode) {
             actionButtons.visibility = View.VISIBLE
             addItemButton.visibility = View.VISIBLE
@@ -342,7 +344,7 @@ class BinLocatorActivity : AppCompatActivity() {
         }
         if (payloads.isEmpty()) return
         for ((r, c, b) in payloads) {
-            RecordUploader.sendRecord(r, c, b) { success, message ->
+            RecordUploader.sendRecord(r, c, b, pin) { success, message ->
                 runOnUiThread {
                     val text = if (success) message ?: "Record sent" else message ?: "Send failed"
                     Snackbar.make(previewView, text, Snackbar.LENGTH_SHORT).show()

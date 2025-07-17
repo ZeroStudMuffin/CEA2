@@ -26,7 +26,7 @@ class RecordUploaderTest {
         RecordUploader.connectionFactory = { conn }
         var result = false
         var msg: String? = null
-        RecordUploader.sendRecord("1", "Cust", "B") { success, message ->
+        RecordUploader.sendRecord("1", "Cust", "B", "1234") { success, message ->
             result = success
             msg = message
         }
@@ -50,7 +50,7 @@ class RecordUploaderTest {
         RecordUploader.connectionFactory = { conn }
         var result = true
         var msg: String? = null
-        RecordUploader.sendRecord("1", "Cust", "B") { success, message ->
+        RecordUploader.sendRecord("1", "Cust", "B", "1234") { success, message ->
             result = success
             msg = message
         }

@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, BinLocatorActivity::class.java)
             intent.putExtra("debug", debugCheckBox.isChecked)
             intent.putExtra("batch", batchCheckBox.isChecked)
+            intent.putExtra("pin", pin)
             startActivity(intent)
         }
         checkoutButton.setOnClickListener {

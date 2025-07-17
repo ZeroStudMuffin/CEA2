@@ -18,6 +18,7 @@ object RecordUploader {
         roll: String,
         customer: String,
         bin: String,
+        pin: String,
         onComplete: (Boolean, String?) -> Unit
     ) {
         executor.execute {
@@ -32,7 +33,8 @@ object RecordUploader {
 
                 val body = "roll_num=" + URLEncoder.encode(roll, "UTF-8") +
                     "&customer=" + URLEncoder.encode(customer, "UTF-8") +
-                    "&bin=" + URLEncoder.encode(bin, "UTF-8")
+                    "&bin=" + URLEncoder.encode(bin, "UTF-8") +
+                    "&last_user=" + URLEncoder.encode(pin, "UTF-8")
                 conn.outputStream.use { it.write(body.toByteArray()) }
 
                 val responseCode = conn.responseCode
