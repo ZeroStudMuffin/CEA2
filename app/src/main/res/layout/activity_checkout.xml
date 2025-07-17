@@ -16,33 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/actionButtons"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ocrTextView"
-        tools:visibility="visible">
-
-        <Button
-            android:id="@+id/getReleaseButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Get Release" />
-
-        <Button
-            android:id="@+id/setBinButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Set Bin"
-            tools:visibility="visible" />
-
-    </LinearLayout>
+    <!-- No extra action buttons for checkout -->
 
 
     <FrameLayout
@@ -51,7 +25,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/actionButtons">
+        app:layout_constraintTop_toBottomOf="@id/ocrTextView">
 
         <FrameLayout
             android:id="@+id/previewContainer"
@@ -90,7 +64,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionButtons">
+        app:layout_constraintTop_toBottomOf="@id/ocrTextView">
 
         <Button
             android:id="@+id/showBatchButton"
@@ -101,35 +75,12 @@
             tools:visibility="visible" />
 
         <Button
-            android:id="@+id/sendRecordButton"
+            android:id="@+id/checkoutButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0.5"
-            android:text="Send Record" />
+            android:text="Checkout" />
 
-        <Button
-            android:id="@+id/showOcrButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show OCR"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <Button
-            android:id="@+id/showCropButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Show Crop"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <Button
-            android:id="@+id/tuneButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tune"
-            android:visibility="gone"
-            tools:visibility="visible" />
     </LinearLayout>
 
     <!-- Separate container for showing debug log -->
@@ -139,8 +90,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/ocrTextView"
-        app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer"
-        tools:layout_editor_absoluteY="83dp">
+        app:layout_constraintEnd_toStartOf="@+id/showButtonsContainer">
 
         <Button
             android:id="@+id/showLogButton"
@@ -150,7 +100,6 @@
             android:visibility="gone"
             tools:visibility="visible" />
     </LinearLayout>
-
 
     <Button
         android:id="@+id/captureButton"

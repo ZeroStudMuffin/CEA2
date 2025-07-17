@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binButton: Button
+    private lateinit var checkoutButton: Button
     private var allowedPins: Set<String> = emptySet()
+    private var pin: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,11 +22,20 @@ class MainActivity : AppCompatActivity() {
         val batchCheckBox = findViewById<CheckBox>(R.id.batchCheckBox)
         val debugCheckBox = findViewById<CheckBox>(R.id.debugCheckBox)
         binButton = findViewById(R.id.binLocatorButton)
+        checkoutButton = findViewById(R.id.checkoutButton)
         binButton.isEnabled = false
+        checkoutButton.isEnabled = false
         binButton.setOnClickListener {
             val intent = Intent(this, BinLocatorActivity::class.java)
             intent.putExtra("debug", debugCheckBox.isChecked)
             intent.putExtra("batch", batchCheckBox.isChecked)
+            startActivity(intent)
+        }
+        checkoutButton.setOnClickListener {
+            val intent = Intent(this, CheckoutActivity::class.java)
+            intent.putExtra("pin", pin)
+            intent.putExtra("batch", true)
+            intent.putExtra("debug", debugCheckBox.isChecked)
             startActivity(intent)
         }
 
@@ -46,9 +57,11 @@ class MainActivity : AppCompatActivity() {
             .setView(input)
             .setCancelable(false)
             .setPositiveButton("OK") { _, _ ->
-                val pin = input.text.toString().trim()
-                if (pin.length == 4 && allowedPins.contains(pin)) {
+                val entered = input.text.toString().trim()
+                if (entered.length == 4 && allowedPins.contains(entered)) {
+                    pin = entered
                     binButton.isEnabled = true
+                    checkoutButton.isEnabled = true
                 } else {
                     Toast.makeText(this, "Invalid PIN", Toast.LENGTH_SHORT).show()
                     showPinDialog()
