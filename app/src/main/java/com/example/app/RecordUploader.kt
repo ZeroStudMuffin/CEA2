@@ -27,6 +27,7 @@ object RecordUploader {
                     requestMethod = "POST"
                     doOutput = true
                     setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                    setRequestProperty("X-API-Key", "4!qCj8eD@kP7z#hFwL$yR6bN*tE2s")
                 }
 
                 val body = "roll_num=" + URLEncoder.encode(roll, "UTF-8") +
