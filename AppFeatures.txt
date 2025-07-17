@@ -26,7 +26,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
   and "Floor BR/BL". Selected bins set `BIN=<value>` on the roll number line,
   replacing any previous value.
 * When roll, customer and bin are all present a **Send Record** button appears
-  allowing upload to the warehouse database. On success the text view clears.
+  allowing upload to the warehouse database. Each record is POSTed with an
+  `X-API-Key` header. On success the text view clears.
   If the server responds with an error, its message is displayed to the user.
 * A **Debug mode** checkbox on the main screen disables sending and adds **Show
  OCR**, **Show Crop**, and **Show Log** buttons. The OCR dialog lists raw lines with bounding
@@ -46,6 +47,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
 ## 3. Checkout Items Activity
 * Uses the same camera and OCR pipeline as the Bin Locator but operates only in batch mode.
 * Queued roll/customer pairs are sent to `checkout.php` with the user's PIN included as `last_user` after confirmation.
+  Each POST includes an `X-API-Key` header for authentication.
 * A confirmation dialog shows how many items will be checked out.
 * When debug mode is enabled a **Show Log** button displays collected debug messages.
 

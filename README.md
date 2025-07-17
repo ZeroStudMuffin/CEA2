@@ -86,7 +86,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   roll number is removed so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears when
   batch mode is enabled. In default mode a full-screen bin menu pops up and
-  selecting a value uploads immediately. If the server returns an error, the
+  selecting a value uploads immediately. Requests are POSTed with an
+  `X-API-Key` header for authentication. If the server returns an error, the
   provided message is shown instead of a generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
   disabled. Additional **Show OCR**, **Show Crop** and **Show Log** buttons reveal raw text
@@ -106,5 +107,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   correct PIN is provided.
 - A **Checkout Items** option on the main screen opens a camera screen similar
   to Bin Locator. Items can be queued and confirmed with a Checkout button which
-  posts them with the user's PIN (sent as `last_user`) to `checkout.php`. When debug mode is enabled
-  this screen also offers a **Show Log** button for reviewing debug messages.
+  posts them with the user's PIN (sent as `last_user`) to `checkout.php`. All
+  uploads now include an `X-API-Key` header for authentication.
+  When debug mode is enabled this screen also offers a **Show Log** button for
+  reviewing debug messages.
