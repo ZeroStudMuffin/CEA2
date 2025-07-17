@@ -22,7 +22,7 @@ A reliable setup process that leaves the repo ready to run `./gradlew` tasks and
 
 ## What
 - Update `README.md` Setup section to clarify the order of operations.
-- Confirm `commandlinetools-linux-13114758_latest.zip` exists after `git lfs pull`.
+- Confirm `androidsdk.zip` exists after downloading it.
 - Explicitly set `PATH` for `sdkmanager` before running the install script.
 - Document creation of `local.properties` and environment variables.
 
@@ -56,7 +56,7 @@ A reliable setup process that leaves the repo ready to run `./gradlew` tasks and
 │   └── executed_PRPs/
 ├── README.md
 ├── app/
-├── commandlinetools-linux-13114758_latest.zip
+├── androidsdk.zip
 ├── scripts/
 │   ├── decode_gradle_wrapper.py
 │   └── install_android_sdk.sh
@@ -84,7 +84,7 @@ README.md                       # updated setup steps
 Task 1:
 MODIFY README.md:
   - Clarify step order in Setup section.
-  - Add check for commandlinetools zip after `git lfs pull`.
+  - Add check for androidsdk zip after download.
   - Provide example export of PATH for sdkmanager.
   - Mention running `scripts/decode_gradle_wrapper.py` before pulling LFS.
   - Document creating `local.properties` and setting ANDROID_HOME.
@@ -101,8 +101,8 @@ VERIFY scripts/install_android_sdk.sh:
 2. Reorder setup instructions:
    a. python scripts/decode_gradle_wrapper.py
    b. git lfs pull
-   c. [ -f commandlinetools-linux-13114758_latest.zip ]
-   d. unzip commandlinetools-linux-13114758_latest.zip -d android-tools
+   c. [ -f androidsdk.zip ]
+   d. unzip androidsdk.zip -d android-tools
    e. export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
    f. chmod +x scripts/install_android_sdk.sh && ./scripts/install_android_sdk.sh
    g. echo "sdk.dir=$ANDROID_HOME" > local.properties
