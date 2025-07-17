@@ -191,7 +191,7 @@ class CheckoutActivity : AppCompatActivity() {
     private fun sendCheckout() {
         dLog("Sending ${batchItems.size} items")
         for (item in batchItems) {
-            dLog("checkout roll=${item.roll}, customer=${item.customer}")
+            dLog("checkout roll=${item.roll}, customer=${item.customer}, pin=$pin")
         }
         CheckoutUploader.checkoutItems(batchItems.toList(), pin) { success, message ->
             runOnUiThread {
