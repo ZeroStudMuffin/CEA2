@@ -33,6 +33,7 @@ import com.example.app.LabelCropper
 import com.example.app.ZoomUtils
 import com.example.app.OcrParser
 import com.example.app.RecordUploader
+import com.example.app.CheckoutUtils
 import android.util.Log
 import java.io.File
 import java.util.concurrent.ExecutorService
@@ -483,8 +484,9 @@ class BinLocatorActivity : AppCompatActivity() {
     }
 
     private fun showBatchItems() {
-        if (batchItems.isEmpty()) return
-        val message = batchItems.joinToString("\n") { "${it.roll} - ${it.customer} - ${it.bin ?: "no bin"}" }
+        val items = CheckoutUtils.buildPayload(ocrTextView.text.split("\n"), batchItems)
+        if (items.isEmpty()) return
+        val message = items.joinToString("\n") { "${it.roll} - ${it.customer} - ${it.bin ?: "no bin"}" }
         runOnUiThread {
             androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Queued Items")
