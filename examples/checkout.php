@@ -1,10 +1,10 @@
-<?php
+<?php 
 // checkout.php - mark one or more items checked out
 // Returns JSON messages for client-side handling
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    // --- 1) Set up PDO (same credentials as insert.php) ---
+    // --- 1) Set up PDO ---
     $pdo = new PDO(
         'mysql:host=localhost;dbname=q6zurlh45o4fz23v_UETBINLOCATIONS;charset=utf8mb4',
         'q6zurlh45o4fz23v_admin',
@@ -16,17 +16,16 @@ try {
     );
 
     // --- 2) Grab & validate POST data ---
-    $rollNumsRaw = $_POST['roll_num']  ?? null;
-    $customersRaw = $_POST['customer'] ?? null;
-    $pin = $_POST['pin'] ?? null;
+    $rollNumsRaw  = $_POST['roll_num']   ?? null;
+    $customersRaw = $_POST['customer']   ?? null;
+    $lastUser     = $_POST['last_user']  ?? null;
 
-    // Required fields
     $missing = [];
     if (!$rollNumsRaw)   $missing[] = 'roll_num';
     if (!$customersRaw)  $missing[] = 'customer';
-    if (!$pin)           $missing[] = 'pin';
+    if (!$lastUser)      $missing[] = 'last_user';
 
-    if (!empty($missing)) {
+    if ($missing) {
         http_response_code(400);
         echo json_encode([
             'status'  => 'error',
@@ -35,19 +34,18 @@ try {
         exit;
     }
 
-    // PIN must be exactly 4 digits
-    if (!preg_match('/^\d{4}$/', $pin)) {
+    if (!preg_match('/^\d{4}$/', $lastUser)) {
         http_response_code(400);
         echo json_encode([
             'status'  => 'error',
-            'message' => 'Invalid PIN format. Must be 4 digits.'
+            'message' => 'Invalid last_user format. Must be 4 digits.'
         ]);
         exit;
     }
 
     // Normalize to arrays
-    $rollNums  = is_array($rollNumsRaw)  ? $rollNumsRaw  : [ $rollNumsRaw ];
-    $customers = is_array($customersRaw) ? $customersRaw : [ $customersRaw ];
+    $rollNums  = is_array($rollNumsRaw)  ? $rollNumsRaw  : [$rollNumsRaw];
+    $customers = is_array($customersRaw) ? $customersRaw : [$customersRaw];
 
     if (count($rollNums) !== count($customers)) {
         http_response_code(400);
@@ -58,10 +56,7 @@ try {
         exit;
     }
 
-    // --- 3) Process each pair ---
-    $checkedOut = 0;
-    $errors     = [];
-
+    // --- 3) Prepare statements ---
     $checkStmt = $pdo->prepare(
         'SELECT id
            FROM pallet_info
@@ -71,17 +66,18 @@ try {
     );
     $updateStmt = $pdo->prepare(
         'UPDATE pallet_info
-           SET in_warehouse  = "NO",
-               checkout_date = NOW(),
-               bin           = NULL,
-               last_user     = :pin
+           SET in_warehouse = "NO",
+               bin          = NULL,
+               last_user    = :last_user
          WHERE id = :id'
     );
+
+    $checkedOut = 0;
+    $errors     = [];
 
     foreach ($rollNums as $i => $rollNum) {
         $cust = $customers[$i];
 
-        // look up a matching "in_warehouse" record
         $checkStmt->execute([
             ':roll_num' => $rollNum,
             ':customer' => $cust,
@@ -89,10 +85,9 @@ try {
         $row = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
         if ($row) {
-            // perform checkout
             $updateStmt->execute([
-                ':pin' => $pin,
-                ':id'  => $row['id'],
+                ':last_user' => $lastUser,
+                ':id'        => $row['id'],
             ]);
             $checkedOut++;
         } else {
@@ -100,8 +95,8 @@ try {
         }
     }
 
-    // --- 4) Build response ---
-    if (empty($errors)) {
+    // --- 4) Respond ---
+    if (!$errors) {
         echo json_encode([
             'status'  => 'success',
             'message' => "$checkedOut item(s) checked out"
