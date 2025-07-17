@@ -190,6 +190,9 @@ class CheckoutActivity : AppCompatActivity() {
 
     private fun sendCheckout() {
         dLog("Sending ${batchItems.size} items")
+        for (item in batchItems) {
+            dLog("checkout roll=${item.roll}, customer=${item.customer}")
+        }
         CheckoutUploader.checkoutItems(batchItems.toList(), pin) { success, message ->
             runOnUiThread {
                 val text = message ?: if (success) "Checkout complete" else "Checkout failed"
