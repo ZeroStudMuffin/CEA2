@@ -1,10 +1,10 @@
 <?php
-// insert.php - prevent duplicate roll_num/customer, update bin or insert new record
-// Returns detailed JSON messages for client-side error handling
+// insert.php – check-in (insert) an item
+// Returns JSON messages for client-side handling
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    // 1) Set up PDO with error mode and UTF8
+    // --- 1) Set up PDO (same credentials as checkout.php) ---
     $pdo = new PDO(
         'mysql:host=localhost;dbname=q6zurlh45o4fz23v_UETBINLOCATIONS;charset=utf8mb4',
         'q6zurlh45o4fz23v_admin',
@@ -15,16 +15,18 @@ try {
         ]
     );
 
-    // 2) Validate required POST data
-    $rollNum    = $_POST['roll_num']    ?? null;
-    $customer   = $_POST['customer']    ?? null;
-    $bin        = $_POST['bin']         ?? null;
-    $releaseNum = $_POST['release_num'] ?? null; // optional
+    // --- 2) Grab & validate POST data ---
+    $rollNum    = $_POST['roll_num']     ?? null;
+    $customer   = $_POST['customer']     ?? null;
+    $bin        = $_POST['bin']          ?? null;
+    $releaseNum = $_POST['release_num']  ?? null;
+    $pin        = $_POST['pin']          ?? null;
 
     $missing = [];
-    if (!$rollNum)   $missing[] = 'roll_num';
-    if (!$customer)  $missing[] = 'customer';
-    if (!$bin)       $missing[] = 'bin';
+    if (!$rollNum)    $missing[] = 'roll_num';
+    if (!$customer)   $missing[] = 'customer';
+    if (!$bin)        $missing[] = 'bin';
+    if (!$pin)        $missing[] = 'pin';
 
     if (!empty($missing)) {
         http_response_code(400);
@@ -35,72 +37,58 @@ try {
         exit;
     }
 
-    // 3) Check for existing record
-    $checkStmt = $pdo->prepare(
-        'SELECT id FROM pallet_info WHERE roll_num = :roll_num AND customer = :customer'
+    // PIN must be exactly 4 digits
+    if (!preg_match('/^\d{4}$/', $pin)) {
+        http_response_code(400);
+        echo json_encode([
+            'status'  => 'error',
+            'message' => 'Invalid PIN format. Must be 4 digits.'
+        ]);
+        exit;
+    }
+
+    // --- 3) New check: if already checked out, reject ---
+    $checkOutStmt = $pdo->prepare(
+        'SELECT id
+           FROM pallet_info
+          WHERE roll_num    = :roll_num
+            AND customer    = :customer
+            AND in_warehouse = "NO"'
     );
-    $checkStmt->execute([
+    $checkOutStmt->execute([
         ':roll_num' => $rollNum,
         ':customer' => $customer,
     ]);
-    $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($existing) {
-        // 4a) Update existing record's bin (and release_num)
-        $updateStmt = $pdo->prepare(
-            'UPDATE pallet_info
-             SET bin = :bin, release_num = :release_num
-             WHERE id = :id'
-        );
-        $success = $updateStmt->execute([
-            ':bin'         => $bin,
-            ':release_num' => $releaseNum,
-            ':id'          => $existing['id'],
+    if ($checkOutStmt->fetch(PDO::FETCH_ASSOC)) {
+        // already checked out → error
+        http_response_code(400);
+        echo json_encode([
+            'status'  => 'error',
+            'message' => 'Item is checked out, please call a manager.'
         ]);
-
-        if ($success) {
-            echo json_encode([
-                'status'  => 'updated',
-                'message' => 'Record updated successfully',
-                'id'      => $existing['id'],
-            ]);
-        } else {
-            http_response_code(500);
-            $errorInfo = $updateStmt->errorInfo();
-            echo json_encode([
-                'status'  => 'error',
-                'message' => 'Update failed: ' . $errorInfo[2]
-            ]);
-        }
-
-    } else {
-        // 4b) Insert new record
-        $insertStmt = $pdo->prepare(
-            'INSERT INTO pallet_info (roll_num, customer, bin, release_num)
-             VALUES (:roll_num, :customer, :bin, :release_num)'
-        );
-        $success = $insertStmt->execute([
-            ':roll_num'    => $rollNum,
-            ':customer'    => $customer,
-            ':bin'         => $bin,
-            ':release_num' => $releaseNum,
-        ]);
-
-        if ($success) {
-            echo json_encode([
-                'status'  => 'inserted',
-                'message' => 'Record inserted successfully',
-                'id'      => $pdo->lastInsertId(),
-            ]);
-        } else {
-            http_response_code(500);
-            $errorInfo = $insertStmt->errorInfo();
-            echo json_encode([
-                'status'  => 'error',
-                'message' => 'Insert failed: ' . $errorInfo[2]
-            ]);
-        }
+        exit;
     }
+
+    // --- 4) Proceed with check-in (insert) ---
+    $insertStmt = $pdo->prepare(
+        'INSERT INTO pallet_info
+          (roll_num, customer, bin, release_num, last_user, in_warehouse)
+         VALUES
+          (:roll_num, :customer, :bin, :release_num, :pin, "YES")'
+    );
+    $insertStmt->execute([
+        ':roll_num'    => $rollNum,
+        ':customer'    => $customer,
+        ':bin'         => $bin,
+        ':release_num' => $releaseNum,
+        ':pin'         => $pin,
+    ]);
+
+    echo json_encode([
+        'status'  => 'success',
+        'message' => 'Item checked in.'
+    ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
