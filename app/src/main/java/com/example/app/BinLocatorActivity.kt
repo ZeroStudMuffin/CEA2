@@ -193,7 +193,7 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.height()
                 )
                 dLog("Initial crop ${crop.width()}x${crop.height()}")
-                val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
+                val warped = LabelCropper.cropLabel(cropped)
                 dLog("Warped size ${warped.width}x${warped.height}")
                 val processed = ImageUtils.toGrayscale(warped)
                 lastBitmap = processed
@@ -408,6 +408,7 @@ class BinLocatorActivity : AppCompatActivity() {
         val eps = view.findViewById<com.google.android.material.slider.Slider>(R.id.epsilonSlider)
         val minArea = view.findViewById<com.google.android.material.slider.Slider>(R.id.minAreaSlider)
         val ratioTol = view.findViewById<com.google.android.material.slider.Slider>(R.id.ratioSlider)
+        val targetRatioEdit = view.findViewById<android.widget.EditText>(R.id.targetRatioEdit)
         val widthEdit = view.findViewById<android.widget.EditText>(R.id.widthEdit)
         val heightEdit = view.findViewById<android.widget.EditText>(R.id.heightEdit)
         val lineHeight = view.findViewById<com.google.android.material.slider.Slider>(R.id.lineHeightSlider)
@@ -419,6 +420,7 @@ class BinLocatorActivity : AppCompatActivity() {
         eps.value = TuningParams.epsilon.toFloat()
         minArea.value = TuningParams.minAreaRatio
         ratioTol.value = TuningParams.ratioTolerance
+        targetRatioEdit.setText(TuningParams.targetRatio.toString())
         widthEdit.setText(TuningParams.outputWidth.toString())
         heightEdit.setText(TuningParams.outputHeight.toString())
         lineHeight.value = TuningParams.lineHeightPercent
@@ -436,6 +438,7 @@ class BinLocatorActivity : AppCompatActivity() {
             TuningParams.epsilon = eps.value.toDouble()
             TuningParams.minAreaRatio = minArea.value
             TuningParams.ratioTolerance = ratioTol.value
+            TuningParams.targetRatio = targetRatioEdit.text.toString().toFloatOrNull() ?: TuningParams.targetRatio
             TuningParams.outputWidth = widthEdit.text.toString().toIntOrNull() ?: TuningParams.outputWidth
             TuningParams.outputHeight = heightEdit.text.toString().toIntOrNull() ?: TuningParams.outputHeight
             TuningParams.lineHeightPercent = lineHeight.value
