@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.example.app.CheckoutUtils
 import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -159,8 +160,12 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun showBatchItems() {
-        if (batchItems.isEmpty()) return
-        val message = batchItems.joinToString("\n") { "${it.roll} - ${it.customer}" }
+        val items = CheckoutUtils.buildPayload(
+            ocrTextView.text.split("\n"),
+            batchItems
+        )
+        if (items.isEmpty()) return
+        val message = items.joinToString("\n") { "${it.roll} - ${it.customer}" }
         AlertDialog.Builder(this)
             .setTitle("Queued Items")
             .setMessage(message)
@@ -179,7 +184,8 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun confirmCheckout() {
-        val count = batchItems.size
+        val items = CheckoutUtils.buildPayload(ocrTextView.text.split("\n"), batchItems)
+        val count = items.size
         AlertDialog.Builder(this)
             .setTitle("Checkout")
             .setMessage("Checkout $count item(s)?")
@@ -189,11 +195,12 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun sendCheckout() {
-        dLog("Sending ${batchItems.size} items")
-        for (item in batchItems) {
+        val payloads = CheckoutUtils.buildPayload(ocrTextView.text.split("\n"), batchItems)
+        dLog("Sending ${payloads.size} items")
+        for (item in payloads) {
             dLog("checkout roll=${item.roll}, customer=${item.customer}, pin=$pin")
         }
-        CheckoutUploader.checkoutItems(batchItems.toList(), pin) { success, message ->
+        CheckoutUploader.checkoutItems(payloads, pin) { success, message ->
             runOnUiThread {
                 val text = message ?: if (success) "Checkout complete" else "Checkout failed"
                 Snackbar.make(previewView, text, Snackbar.LENGTH_SHORT).show()
