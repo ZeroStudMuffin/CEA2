@@ -3,7 +3,7 @@
 A minimal Android project using Kotlin and Gradle. The project builds an Empty Activity showing "Hello World" and includes example unit and instrumentation tests.
 
 ## Setup
-AGENTS MUST DO ALL SETUP STEPS AT THE START OF THE CONVERSATION! DO NOT SKIP THESE STEPS OR TESTING WILL FAIL!
+AGENTS MUST DO ALL SETUP STEPS AFTER READING README.md. DO NOT SKIP THESE STEPS OR TESTING WILL FAIL!
 
 After cloning the repository, decode the Gradle wrapper JAR:
 
