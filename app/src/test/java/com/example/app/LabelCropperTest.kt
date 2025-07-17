@@ -12,7 +12,7 @@ class LabelCropperTest {
     @org.junit.Ignore("OpenCV not available in CI")
     fun cropLabel_returnsBitmap() {
         val bmp = Bitmap.createBitmap(100, 50, Bitmap.Config.ARGB_8888)
-        val result = LabelCropper.cropLabel(bmp)
+        val result = LabelCropper.cropLabel(bmp, bmp.width * bmp.height)
         assertTrue(result.width > 0 && result.height > 0)
     }
 }
