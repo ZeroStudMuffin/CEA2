@@ -42,7 +42,7 @@ object CheckoutUploader {
                         "Content-Type",
                         "application/x-www-form-urlencoded"
                     )
-                    setRequestProperty("X-API-Key", "4!qCj8eD@kP7z#hFwL$yR6bN*tE2s")
+                    setRequestProperty("X-API-Key", "4!qCj8eD@kP7z#hFwL%yR6bN*tE2s")
                 }
 
                 val body = buildString {
