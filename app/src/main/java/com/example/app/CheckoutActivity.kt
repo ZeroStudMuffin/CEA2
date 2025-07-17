@@ -39,11 +39,14 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var showBatchButton: Button
     private lateinit var showLogButton: Button
     private lateinit var checkoutButton: Button
+    private lateinit var inputItemButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
     private var cameraProvider: ProcessCameraProvider? = null
     private var lastBitmap: Bitmap? = null
     private val batchItems = mutableListOf<BatchRecord>()
+    private var manualRoll: String? = null
+    private var manualCustomer: String? = null
     private lateinit var pin: String
     private var debugMode: Boolean = false
     private val debugLog = StringBuilder()
@@ -61,6 +64,7 @@ class CheckoutActivity : AppCompatActivity() {
         ocrTextView = findViewById(R.id.ocrTextView)
         captureButton = findViewById(R.id.captureButton)
         addItemButton = findViewById(R.id.addItemButton)
+        inputItemButton = findViewById(R.id.inputItemButton)
         showBatchButton = findViewById(R.id.showBatchButton)
         showLogButton = findViewById(R.id.showLogButton)
         checkoutButton = findViewById(R.id.checkoutButton)
@@ -70,12 +74,14 @@ class CheckoutActivity : AppCompatActivity() {
         // Show the queue controls since checkout always runs in batch mode
         addItemButton.visibility = android.view.View.VISIBLE
         showBatchButton.visibility = android.view.View.VISIBLE
+        inputItemButton.visibility = android.view.View.VISIBLE
         if (debugMode) {
             showLogButton.visibility = View.VISIBLE
         }
 
         captureButton.setOnClickListener { takePhoto() }
         addItemButton.setOnClickListener { onAddItem() }
+        inputItemButton.setOnClickListener { showInputItemDialog() }
         showBatchButton.setOnClickListener { showBatchItems() }
         checkoutButton.setOnClickListener { confirmCheckout() }
         showLogButton.setOnClickListener { showDebugLog() }
@@ -156,7 +162,40 @@ class CheckoutActivity : AppCompatActivity() {
             batchItems += BatchRecord(roll, cust, null)
             ocrTextView.text = ""
             updateCheckoutButton()
+            clearManualQueue()
         }
+    }
+
+    private fun showInputItemDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_input_item, null)
+        val rollEdit = view.findViewById<android.widget.EditText>(R.id.rollEditText)
+        val custEdit = view.findViewById<android.widget.EditText>(R.id.customerEditText)
+        rollEdit.setText(manualRoll ?: "")
+        custEdit.setText(manualCustomer ?: "")
+        AlertDialog.Builder(this)
+            .setTitle("Input Item")
+            .setView(view)
+            .setPositiveButton("Accept") { _, _ ->
+                val r = rollEdit.text.toString().trim()
+                val c = custEdit.text.toString().trim()
+                if (r.isNotEmpty() && c.isNotEmpty()) {
+                    batchItems += BatchRecord(r, c, null)
+                    ocrTextView.text = ""
+                    updateCheckoutButton()
+                } else {
+                    manualRoll = r
+                    manualCustomer = c
+                    return@setPositiveButton
+                }
+                clearManualQueue()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun clearManualQueue() {
+        manualRoll = null
+        manualCustomer = null
     }
 
     private fun showBatchItems() {
@@ -208,6 +247,7 @@ class CheckoutActivity : AppCompatActivity() {
                     batchItems.clear()
                     ocrTextView.text = ""
                     updateCheckoutButton()
+                    clearManualQueue()
                 }
             }
         }
