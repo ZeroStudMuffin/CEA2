@@ -1,6 +1,6 @@
 ### 🔄 Project Awareness & Context
 - **You have full internet access. It is enabled in the codex environment**
-- **Always read `README.md`** at the start of a new conversation to understand the project's architecture, goals, style, and constraints.
+- **Always read `README.md`** at the start of a new conversation to understand the project's architecture, goals, style, constraints, and environment setup.
 - **Check `TASK.md`** before starting a new task. If the task isn’t listed, add it with a brief description and today's date.
 - **Use consistent naming conventions, file structure, and architecture patterns** as described in `PLANNING.md`.
 - **Use venv_linux** (the virtual environment) whenever executing Python commands, including for unit tests.
