@@ -42,3 +42,4 @@
 ## [2025-07-17] Implement Checkout Items feature - DONE
 ## [2025-07-17] Log checkout payload fields and enable button when roll/customer scanned - DONE
 ## [2025-07-17] Add Show Log button to CheckoutActivity
+## [2025-07-17] Log roll & customer in checkout debug log - DONE
