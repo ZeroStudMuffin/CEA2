@@ -44,3 +44,4 @@
 ## [2025-07-17] Add Show Log button to CheckoutActivity
 ## [2025-07-17] Log roll & customer in checkout debug log - DONE
 ## [2025-07-18] Add manual Input Item dialog
+## [2025-07-18] Send PIN as last_user on all POST requests - DONE

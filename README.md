@@ -86,9 +86,10 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   roll number is removed so users see only the numeric portion.
 - Once roll, customer and bin are present a **Send Record** button appears when
   batch mode is enabled. In default mode a full-screen bin menu pops up and
-  selecting a value uploads immediately. Requests are POSTed with an
-  `X-API-Key` header for authentication. If the server returns an error, the
-  provided message is shown instead of a generic failure.
+  selecting a value uploads immediately. Requests are POSTed with the user's
+  PIN included as `last_user` and an `X-API-Key` header for authentication. If
+  the server returns an error, the provided message is shown instead of a
+  generic failure.
  - A **Debug mode** checkbox on the main screen launches Bin Locator with sending
   disabled. Additional **Show OCR**, **Show Crop** and **Show Log** buttons reveal raw text
   with bounding box heights, an exact crop preview showing the warped image
