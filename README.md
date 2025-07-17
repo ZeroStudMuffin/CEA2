@@ -100,7 +100,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   immediately uploads the record. The capture button and zoom slider disappear
   while this menu is visible. When checked an **Add Item** button saves each
   roll/customer pair and a **Show Items** dialog lists them so they can be sent
-  together.
+  together. An **Input Item** button lets users manually enter a roll and
+  customer pair when OCR isn't used.
 - On startup the app fetches a list of valid 4-digit PINs from a Google Sheet
   and prompts the user to enter one. The main screen remains disabled until a
   correct PIN is provided.

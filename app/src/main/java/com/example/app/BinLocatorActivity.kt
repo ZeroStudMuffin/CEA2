@@ -55,6 +55,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private lateinit var tuneButton: Button
     private lateinit var showLogButton: Button
     private lateinit var addItemButton: Button
+    private lateinit var inputItemButton: Button
     private lateinit var showBatchButton: Button
     private lateinit var cropPreview: android.widget.ImageView
     private lateinit var binMenuContainer: android.widget.FrameLayout
@@ -65,6 +66,8 @@ class BinLocatorActivity : AppCompatActivity() {
     private var debugMode: Boolean = false
     private var batchMode: Boolean = false
     private val batchItems = mutableListOf<BatchRecord>()
+    private var manualRoll: String? = null
+    private var manualCustomer: String? = null
     private var rawLines: List<String> = emptyList()
     private val debugLog = StringBuilder()
 
@@ -79,6 +82,7 @@ class BinLocatorActivity : AppCompatActivity() {
         ocrTextView = findViewById(R.id.ocrTextView)
         captureButton = findViewById(R.id.captureButton)
         addItemButton = findViewById(R.id.addItemButton)
+        inputItemButton = findViewById(R.id.inputItemButton)
         zoomSlider = findViewById(R.id.zoomSlider)
         actionButtons = findViewById(R.id.actionButtons)
         getReleaseButton = findViewById(R.id.getReleaseButton)
@@ -98,6 +102,7 @@ class BinLocatorActivity : AppCompatActivity() {
         if (batchMode) {
             actionButtons.visibility = View.VISIBLE
             addItemButton.visibility = View.VISIBLE
+            inputItemButton.visibility = View.VISIBLE
             showBatchButton.visibility = View.VISIBLE
             sendRecordButton.visibility = View.VISIBLE
         } else {
@@ -105,6 +110,7 @@ class BinLocatorActivity : AppCompatActivity() {
             getReleaseButton.visibility = View.GONE
             setBinButton.visibility = View.GONE
             sendRecordButton.visibility = View.GONE
+            inputItemButton.visibility = View.VISIBLE
         }
         if (debugMode) {
             showOcrButton.visibility = View.VISIBLE
@@ -120,6 +126,7 @@ class BinLocatorActivity : AppCompatActivity() {
         setBinButton.setOnClickListener { showBinMenu() }
         sendRecordButton.setOnClickListener { sendRecord() }
         addItemButton.setOnClickListener { onAddItem() }
+        inputItemButton.setOnClickListener { showInputItemDialog() }
         showBatchButton.setOnClickListener { showBatchItems() }
         showOcrButton.setOnClickListener { showRawOcr() }
         showCropButton.setOnClickListener { toggleCropPreview() }
@@ -348,6 +355,7 @@ class BinLocatorActivity : AppCompatActivity() {
             if (!batchMode) {
                 actionButtons.visibility = View.GONE
             }
+            clearManualQueue()
             sendRecordButton.isEnabled = false
             sendRecordButton.alpha = 0.5f
         }
@@ -480,7 +488,41 @@ class BinLocatorActivity : AppCompatActivity() {
                 actionButtons.visibility = View.GONE
             }
             updateSendRecordVisibility()
+            clearManualQueue()
         }
+    }
+
+    private fun showInputItemDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_input_item, null)
+        val rollEdit = view.findViewById<android.widget.EditText>(R.id.rollEditText)
+        val custEdit = view.findViewById<android.widget.EditText>(R.id.customerEditText)
+        rollEdit.setText(manualRoll ?: "")
+        custEdit.setText(manualCustomer ?: "")
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Input Item")
+            .setView(view)
+            .setPositiveButton("Accept") { _, _ ->
+                val r = rollEdit.text.toString().trim()
+                val c = custEdit.text.toString().trim()
+                if (r.isNotEmpty() && c.isNotEmpty()) {
+                    batchItems += BatchRecord(r, c, null)
+                    ocrTextView.text = ""
+                    if (!batchMode) actionButtons.visibility = View.GONE
+                    updateSendRecordVisibility()
+                } else {
+                    manualRoll = r
+                    manualCustomer = c
+                    return@setPositiveButton
+                }
+                clearManualQueue()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun clearManualQueue() {
+        manualRoll = null
+        manualCustomer = null
     }
 
     private fun showBatchItems() {

@@ -37,8 +37,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
   bin menu appears automatically once roll and customer are parsed. Selecting a
   value sends the record immediately and the capture and zoom controls are hidden
   while the menu is open. When checked use **Add Item** to queue roll/customer
-  pairs and **Show Items** to review them before sending all at once. The
-  **Send Record** button only shows in this mode.
+  pairs, **Input Item** to manually enter one, and **Show Items** to review them
+  before sending all at once. The **Send Record** button only shows in this mode.
 * Errors are shown via Snackbars instead of only logcat output.
 * Limitations:
   * Error handling for other parts of the app is still minimal.
