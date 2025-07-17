@@ -46,14 +46,14 @@ object CheckoutUploader {
 
                 val body = buildString {
                     items.forEach { item ->
-                        Log.d(TAG, "roll_num=${item.roll}, customer=${item.customer}, pin=$pin")
+                        Log.d(TAG, "roll_num=${item.roll}, customer=${item.customer}, last_user=$pin")
                         append("roll_num[]=")
                         append(URLEncoder.encode(item.roll, "UTF-8"))
                         append("&customer[]=")
                         append(URLEncoder.encode(item.customer, "UTF-8"))
                         append('&')
                     }
-                    append("pin=")
+                    append("last_user=")
                     append(URLEncoder.encode(pin, "UTF-8"))
                 }
                 conn.outputStream.use { it.write(body.toByteArray()) }
