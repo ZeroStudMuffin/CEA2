@@ -122,7 +122,7 @@ class CheckoutActivity : AppCompatActivity() {
                 val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
                 val cropped = Bitmap.createBitmap(rotated, crop.left, crop.top, crop.width(), crop.height())
                 dLog("Initial crop ${crop.width()}x${crop.height()}")
-                val warped = LabelCropper.cropLabel(cropped, overlay.aspectRatio())
+                val warped = LabelCropper.cropLabel(cropped)
                 dLog("Warped size ${warped.width}x${warped.height}")
                 val processed = ImageUtils.toGrayscale(warped)
                 if (debugMode) {

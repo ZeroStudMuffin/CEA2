@@ -16,11 +16,11 @@ object LabelCropper {
     private const val TAG = "LabelCropper"
 
     /**
-     * Finds the label rectangle closest to the given aspect ratio and
+     * Finds the label rectangle closest to [TuningParams.targetRatio] and
      * returns a perspective-warped bitmap. If detection fails the
      * original bitmap is returned.
      */
-    fun cropLabel(bitmap: Bitmap, aspect: Float): Bitmap {
+    fun cropLabel(bitmap: Bitmap): Bitmap {
         if (!OpenCVLoader.initDebug()) return bitmap
 
         val src = Mat()
@@ -47,6 +47,7 @@ object LabelCropper {
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(edges, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
+        val aspect = TuningParams.targetRatio
         Log.d(TAG, "Contours found: ${'$'}{contours.size}")
 
         var bestQuad: MatOfPoint2f? = null

@@ -13,6 +13,7 @@ class TuningParamsTest {
         assertEquals(10.0, TuningParams.epsilon, 0.001)
         assertEquals(0.1f, TuningParams.minAreaRatio)
         assertEquals(0.1f, TuningParams.ratioTolerance)
+        assertEquals(8.5f / 3.625f, TuningParams.targetRatio, 0.001f)
         assertEquals(800, TuningParams.outputWidth)
         assertEquals(200, TuningParams.outputHeight)
         assertEquals(0.75f, TuningParams.lineHeightPercent)

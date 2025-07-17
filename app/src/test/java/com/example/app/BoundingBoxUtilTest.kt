@@ -13,7 +13,7 @@ class BoundingBoxUtilTest {
     fun calculateRect_maintainsAspectRatio() {
         val rect = BoundingBoxOverlay.calculateBoxRect(1000, 800)
         val ratio = rect.width() / rect.height()
-        val expected = 34f / 15f
+        val expected = 8.5f / 3.625f
         assertEquals(expected, ratio, 0.01f)
     }
 

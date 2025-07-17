@@ -10,7 +10,8 @@ import android.util.AttributeSet
 import android.view.View
 
 /**
- * Overlay view drawing a fixed landscape bounding box with orientation text.
+ * Overlay view drawing a landscape bounding box with orientation text. The
+ * aspect ratio is based on [TuningParams.targetRatio].
  */
 class BoundingBoxOverlay @JvmOverloads constructor(
     context: Context,
@@ -68,12 +69,12 @@ class BoundingBoxOverlay @JvmOverloads constructor(
     companion object {
         /**
          * Calculates the bounding box rectangle for the given view size.
-         * The box spans 60% of the view's width while maintaining a 34:15
-         * aspect ratio.
+         * The box spans 60% of the view's width while maintaining
+         * [TuningParams.targetRatio].
          */
         fun calculateBoxRect(viewWidth: Int, viewHeight: Int): RectF {
             val boxWidth = 0.6f * viewWidth
-            val boxHeight = boxWidth * 15f / 34f
+            val boxHeight = boxWidth / TuningParams.targetRatio
             val left = (viewWidth - boxWidth) / 2f
             val top = (viewHeight - boxHeight) / 2f
             return RectF(left, top, left + boxWidth, top + boxHeight)

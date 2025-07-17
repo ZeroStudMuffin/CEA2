@@ -66,7 +66,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 ## Features
 
  - Camera-based **Bin Locator** with a bounding box overlay guiding where to place
-  text for OCR. The box now covers about **60%** of the screen width for easier framing.
+  text for OCR. The box spans about **60%** of the screen width and uses a configurable target aspect ratio (default 8.5:3.625) so the crop matches the expected label shape.
 - Captured images are cropped to this box and processed with ML Kit text
   recognition.
 - Camera preview supports pinch-to-zoom with a slider. The preview starts at a

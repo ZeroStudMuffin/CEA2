@@ -97,6 +97,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Target Ratio" />
+        <EditText
+            android:id="@+id/targetRatioEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Output Width" />
         <EditText
             android:id="@+id/widthEdit"
