@@ -1,10 +1,19 @@
 <?php
-// insert.php – check-in (insert) an item
-// Returns JSON messages for client-side handling
+// insert.php – check-in (insert) an item, using last_user instead of pin
 header('Content-Type: application/json; charset=utf-8');
 
+require_once __DIR__ . '/config.php';   // defines API_KEY
+
+// --- API key check ---
+$incomingKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
+if ($incomingKey !== API_KEY) {
+    http_response_code(403);
+    echo json_encode(['status'=>'error','message'=>'Invalid API key.']);
+    exit;
+}
+
 try {
-    // --- 1) Set up PDO (same credentials as checkout.php) ---
+    // 1) Set up PDO
     $pdo = new PDO(
         'mysql:host=localhost;dbname=q6zurlh45o4fz23v_UETBINLOCATIONS;charset=utf8mb4',
         'q6zurlh45o4fz23v_admin',
@@ -15,92 +24,89 @@ try {
         ]
     );
 
-    // --- 2) Grab & validate POST data ---
+    // 2) Grab & validate POST data
     $rollNum    = $_POST['roll_num']     ?? null;
     $customer   = $_POST['customer']     ?? null;
     $bin        = $_POST['bin']          ?? null;
     $releaseNum = $_POST['release_num']  ?? null;
-    $pin        = $_POST['pin']          ?? null;
+    $lastUser   = $_POST['last_user']    ?? null;
 
     $missing = [];
     if (!$rollNum)    $missing[] = 'roll_num';
     if (!$customer)   $missing[] = 'customer';
     if (!$bin)        $missing[] = 'bin';
-    if (!$pin)        $missing[] = 'pin';
+    if (!$lastUser)   $missing[] = 'last_user';
 
-    if (!empty($missing)) {
+    if ($missing) {
         http_response_code(400);
         echo json_encode([
-            'status'  => 'error',
-            'message' => 'Missing required field(s): ' . implode(', ', $missing)
+            'status'=>'error',
+            'message'=>'Missing required field(s): '.implode(', ',$missing)
         ]);
         exit;
     }
 
-    // PIN must be exactly 4 digits
-    if (!preg_match('/^\d{4}$/', $pin)) {
+    // last_user must be exactly 4 digits
+    if (!preg_match('/^\d{4}$/', $lastUser)) {
         http_response_code(400);
         echo json_encode([
-            'status'  => 'error',
-            'message' => 'Invalid PIN format. Must be 4 digits.'
+            'status'=>'error',
+            'message'=>'Invalid last_user format. Must be 4 digits.'
         ]);
         exit;
     }
 
-    // --- 3) New check: if already checked out, reject ---
-    $checkOutStmt = $pdo->prepare(
+    // 3) Prevent check-in if already checked out
+    $alreadyOut = $pdo->prepare(
         'SELECT id
            FROM pallet_info
           WHERE roll_num    = :roll_num
             AND customer    = :customer
             AND in_warehouse = "NO"'
     );
-    $checkOutStmt->execute([
-        ':roll_num' => $rollNum,
-        ':customer' => $customer,
+    $alreadyOut->execute([
+        ':roll_num'  => $rollNum,
+        ':customer'  => $customer,
     ]);
-
-    if ($checkOutStmt->fetch(PDO::FETCH_ASSOC)) {
-        // already checked out → error
+    if ($alreadyOut->fetch(PDO::FETCH_ASSOC)) {
         http_response_code(400);
         echo json_encode([
-            'status'  => 'error',
-            'message' => 'Item is checked out, please call a manager.'
+            'status'=>'error',
+            'message'=>'Item is checked out, call a manager.'
         ]);
         exit;
     }
 
-    // --- 4) Proceed with check-in (insert) ---
-    $insertStmt = $pdo->prepare(
+    // 4) Insert new record
+    $insert = $pdo->prepare(
         'INSERT INTO pallet_info
           (roll_num, customer, bin, release_num, last_user, in_warehouse)
          VALUES
-          (:roll_num, :customer, :bin, :release_num, :pin, "YES")'
+          (:roll_num, :customer, :bin, :release_num, :last_user, "YES")'
     );
-    $insertStmt->execute([
+    $insert->execute([
         ':roll_num'    => $rollNum,
         ':customer'    => $customer,
         ':bin'         => $bin,
         ':release_num' => $releaseNum,
-        ':pin'         => $pin,
+        ':last_user'   => $lastUser,
     ]);
 
     echo json_encode([
-        'status'  => 'success',
-        'message' => 'Item checked in.'
+        'status'=>'success',
+        'message'=>'Item checked in.'
     ]);
 
 } catch (PDOException $e) {
     http_response_code(500);
     echo json_encode([
-        'status'  => 'error',
-        'message' => 'Database error: ' . $e->getMessage(),
+        'status'=>'error',
+        'message'=>'Database error: '.$e->getMessage()
     ]);
 } catch (Exception $e) {
     http_response_code(500);
     echo json_encode([
-        'status'  => 'error',
-        'message' => 'Server error: ' . $e->getMessage(),
+        'status'=>'error',
+        'message'=>'Server error: '.$e->getMessage()
     ]);
 }
-?>
