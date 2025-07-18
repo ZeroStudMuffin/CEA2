@@ -46,3 +46,4 @@
 ## [2025-07-18] Add manual Input Item dialog
 ## [2025-07-18] Send PIN as last_user on all POST requests - DONE
 ## [2025-07-18] Add target aspect ratio parameter for cropping
+## [2025-07-19] Create setup script for Codex environment - DONE

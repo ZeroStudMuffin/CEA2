@@ -28,6 +28,10 @@ chmod +x scripts/install_android_sdk.sh  # ensures the script can run if cloned 
 ./scripts/install_android_sdk.sh
 ```
 
+For convenience the `scripts/setup_codex.sh` script automates all of the above
+steps. Run it from the project root after cloning to download the Android SDK
+and prepare Gradle.
+
 The script uses the `androidsdk.zip` archive you downloaded to install the SDK
 without requiring network access. If the archive is missing it will download the
 tools from Google instead.
