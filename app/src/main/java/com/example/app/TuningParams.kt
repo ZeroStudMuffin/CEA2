@@ -16,6 +16,6 @@ object TuningParams {
     var outputWidth: Int = 800
     var outputHeight: Int = 200
     /** Percent height of tallest line to keep, 0-1 */
-    var lineHeightPercent: Float = 0.75f
+    var lineHeightPercent: Float = 0.60f
 }
 

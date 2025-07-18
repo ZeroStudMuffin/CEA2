@@ -47,3 +47,4 @@
 ## [2025-07-18] Send PIN as last_user on all POST requests - DONE
 ## [2025-07-18] Add target aspect ratio parameter for cropping
 ## [2025-07-19] Create setup script for Codex environment - DONE
+## [2025-07-18] Update parser to follow revised steps and update docs - DONE

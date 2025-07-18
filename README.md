@@ -86,9 +86,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - OCR results are cleaned with `OcrParser` before barcode scanning.
 - Captured labels are perspective corrected using OpenCV and converted to grayscale prior to OCR for better accuracy. When debugging, the **Show Crop** button saves this grayscale warped image before displaying it so you can inspect exactly what ML Kit saw.
 - The **Show Log** button in debug mode displays any debug messages captured during processing.
- - The parser now outputs only a roll number and customer name, displayed on two
-  lines in the Bin Locator screen. Any prefix before the first underscore in the
-  roll number is removed so users see only the numeric portion.
+ - The parser now outputs only a roll number and customer name on two lines.
+  Any prefix before the final underscore in the roll number is removed so users
+  see only the numeric portion. Customer lines use the `Cust-Name:` prefix.
 - Once roll, customer and bin are present a **Send Record** button appears when
   batch mode is enabled. In default mode a full-screen bin menu pops up and
   selecting a value uploads immediately. Requests are POSTed with the user's

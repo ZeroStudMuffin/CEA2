@@ -21,7 +21,7 @@ class BinMenuUiTest {
             scenario.onActivity { activity ->
                 val method = BinLocatorActivity::class.java.getDeclaredMethod("showResult", List::class.java)
                 method.isAccessible = true
-                method.invoke(activity, listOf("Roll#:1", "Cust:Bob"))
+                method.invoke(activity, listOf("Roll#:1", "Cust-Name:Bob"))
             }
             InstrumentationRegistry.getInstrumentation().waitForIdleSync()
             onView(withId(R.id.binMenuContainer)).check(matches(isDisplayed()))

@@ -231,7 +231,7 @@ class BinLocatorActivity : AppCompatActivity() {
             updateSendRecordVisibility()
             if (!batchMode) {
                 val hasRoll = lines.any { it.startsWith("Roll#:") }
-                val hasCust = lines.any { it.startsWith("Cust:") }
+                val hasCust = lines.any { it.startsWith("Cust-Name:") }
                 if (hasRoll && hasCust) {
                     showBinOverlay()
                 }
@@ -314,7 +314,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private fun updateSendRecordVisibility() {
         val textLines = ocrTextView.text.split("\n")
         val hasRoll = textLines.any { it.startsWith("Roll#:") }
-        val hasCust = textLines.any { it.startsWith("Cust:") }
+        val hasCust = textLines.any { it.startsWith("Cust-Name:") }
         val hasBin = textLines.any { it.contains("BIN=") }
         val batchReady = batchMode && batchItems.isNotEmpty() && batchItems.all { it.bin != null }
         val enabled = !debugMode && ((hasRoll && hasCust && hasBin) || batchReady)
@@ -332,7 +332,7 @@ class BinLocatorActivity : AppCompatActivity() {
         val lines = ocrTextView.text.split("\n")
         val rollLine = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.trim()
         val roll = rollLine?.replace(Regex("\\s*BIN=.*"), "")?.trim()
-        val customer = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
+        val customer = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter("Cust-Name:")?.trim()
         val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
         if (roll != null && customer != null && bin != null) {
             payloads += Triple(roll, customer, bin)
@@ -485,7 +485,7 @@ class BinLocatorActivity : AppCompatActivity() {
     private fun onAddItem() {
         val lines = ocrTextView.text.split("\n")
         val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter("Roll#:")?.replace(Regex("\\s*BIN=.*"), "")?.trim()
-        val cust = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter("Cust:")?.trim()
+        val cust = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter("Cust-Name:")?.trim()
         val bin = lines.firstOrNull { it.contains("BIN=") }?.substringAfter("BIN=")?.trim()
         if (roll != null && cust != null) {
             batchItems += BatchRecord(roll, cust, bin)

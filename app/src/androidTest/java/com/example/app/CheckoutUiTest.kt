@@ -19,7 +19,7 @@ class CheckoutUiTest {
             scenario.onActivity { activity ->
                 val methodShow = CheckoutActivity::class.java.getDeclaredMethod("showResult", List::class.java)
                 methodShow.isAccessible = true
-                methodShow.invoke(activity, listOf("Roll#:1", "Cust:ACME"))
+                methodShow.invoke(activity, listOf("Roll#:1", "Cust-Name:ACME"))
                 val methodAdd = CheckoutActivity::class.java.getDeclaredMethod("onAddItem")
                 methodAdd.isAccessible = true
                 methodAdd.invoke(activity)

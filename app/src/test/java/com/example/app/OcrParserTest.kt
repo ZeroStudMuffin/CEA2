@@ -28,21 +28,22 @@ class OcrParserTest {
             fakeLine("short", 50)
         )
         val result = OcrParser.parse(lines)
-        assertEquals(listOf("HELLO_WORLD", "_42%"), result)
+        assertEquals(listOf("Roll#:42%", "Cust-Name:HELLO_WORLD"), result)
     }
 
     @Ignore("Robolectric dependencies not available in CI")
     @Test
     fun parse_allLinesFiltered() {
         val lines = listOf(fakeLine("foo", 10))
-        assertTrue(OcrParser.parse(lines).isEmpty())
+        val result = OcrParser.parse(lines)
+        assertEquals(listOf("Roll#:foo", "Cust-Name:foo"), result)
     }
 
     @Ignore("Robolectric dependencies not available in CI")
     @Test
     fun parse_removesSpecialChars() {
         val lines = listOf(fakeLine("Foo@Bar!", 100))
-        assertEquals(listOf("FooBar"), OcrParser.parse(lines))
+        assertEquals(listOf("Roll#:FooBar", "Cust-Name:FooBar"), OcrParser.parse(lines))
     }
 
     @Ignore("Robolectric dependencies not available in CI")
@@ -54,7 +55,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:42", "Cust:CUSTOMER_ACME"),
+            listOf("Roll#:42", "Cust-Name:CUSTOMER_ACME"),
             result
         )
     }
@@ -69,7 +70,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:98765", "Cust:LONGESTNAME"),
+            listOf("Roll#:98765", "Cust-Name:LONGESTNAME"),
             result
         )
     }
@@ -83,7 +84,7 @@ class OcrParserTest {
         )
         val result = OcrParser.parse(lines)
         assertEquals(
-            listOf("Roll#:12345", "Cust:CUSTOMER_ACME"),
+            listOf("Roll#:12345", "Cust-Name:CUSTOMER_ACME"),
             result
         )
     }
