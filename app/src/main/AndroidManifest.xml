@@ -16,6 +16,11 @@
             android:name=".CheckoutActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".DeveloperActivity" />
+        <activity
+            android:name=".PreprocessDebugActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
