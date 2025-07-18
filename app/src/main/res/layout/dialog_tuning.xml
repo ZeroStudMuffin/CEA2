@@ -73,14 +73,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Min Area Ratio" />
+            android:text="Min Area %" />
         <com.google.android.material.slider.Slider
             android:id="@+id/minAreaSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:valueFrom="0"
-            android:valueTo="0.3"
-            android:stepSize="0.01" />
+            android:valueTo="1"
+            android:stepSize="0.05" />
 
         <TextView
             android:layout_width="wrap_content"

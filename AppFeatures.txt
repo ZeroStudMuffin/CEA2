@@ -35,6 +35,8 @@ The project is a minimal Android application written in Kotlin. Below are all of
  box heights. **Show Crop** saves the grayscale warped label image used for OCR before
  displaying it, and **Show Log** shows collected debug messages so preprocessing is easy to inspect.
 * A **Tune Pipeline** button in debug mode lets developers adjust OCR pipeline parameters with sliders for the current session only.
+* Entering PIN `8789` shows a **Developer** button instead of the debug checkbox. This launches a screen with the debug toggle and a **Preprocess Debug** tool.
+* **Preprocess Debug** captures an image, applies the preprocessing pipeline and displays the result without running OCR.
 * A **Batch mode** checkbox determines the workflow. When unchecked a full-screen
   bin menu appears automatically once roll and customer are parsed. Selecting a
   value sends the record immediately and the capture and zoom controls are hidden
