@@ -49,6 +49,12 @@ Instrumentation tests require an emulator package, for example:
 sdkmanager "system-images;android-34;google_apis;x86_64" "emulator"
 ```
 
+Accept the SDK licenses so Gradle can build without prompting:
+
+```bash
+yes | sdkmanager --licenses
+```
+
 ## Build and Test
 
 Run the following commands from the project root:
