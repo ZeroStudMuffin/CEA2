@@ -13,13 +13,7 @@ python scripts/decode_gradle_wrapper.py
 
 This step recreates `gradle/wrapper/gradle-wrapper.jar`, which is required for running Gradle tasks.
 
-Download the Android command line tools archive and make `sdkmanager` available:
-
-```bash
-curl -L https://unitedexpresstrucking.com/androidsdk.zip -o androidsdk.zip
-unzip androidsdk.zip -d android-tools
-export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
-```
+The android SDK command line tools are downloaded and extracted during environtment setup.
 
 Next, install the Android SDK:
 
