@@ -193,7 +193,8 @@ class BinLocatorActivity : AppCompatActivity() {
                     crop.height()
                 )
                 dLog("Initial crop ${crop.width()}x${crop.height()}")
-                val warped = LabelCropper.cropLabel(cropped)
+                val fullArea = rotated.width * rotated.height
+                val warped = LabelCropper.cropLabel(cropped, fullArea)
                 dLog("Warped size ${warped.width}x${warped.height}")
                 val processed = ImageUtils.toGrayscale(warped)
                 lastBitmap = processed

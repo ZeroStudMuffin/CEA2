@@ -17,10 +17,12 @@ object LabelCropper {
 
     /**
      * Finds the label rectangle closest to [TuningParams.targetRatio] and
-     * returns a perspective-warped bitmap. If detection fails the
+     * returns a perspective-warped bitmap. [fullImageArea] must be the
+     * width × height of the captured photo so MIN_AREA is based on the
+     * full frame instead of the cropped region. If detection fails the
      * original bitmap is returned.
      */
-    fun cropLabel(bitmap: Bitmap): Bitmap {
+    fun cropLabel(bitmap: Bitmap, fullImageArea: Int): Bitmap {
         if (!OpenCVLoader.initDebug()) return bitmap
 
         val src = Mat()
@@ -62,7 +64,8 @@ object LabelCropper {
             if (poly.total() == 4L && Imgproc.isContourConvex(MatOfPoint(*poly.toArray()))) {
                 val r = Imgproc.boundingRect(c)
                 val ratio = r.width.toFloat() / r.height
-                val areaOk = r.area() > src.width() * src.height() * TuningParams.minAreaRatio
+                val minArea = fullImageArea * TuningParams.minAreaRatio
+                val areaOk = r.area() > minArea
                 if (areaOk && abs(ratio - aspect) < TuningParams.ratioTolerance * aspect) {
                     bestQuad = poly
                     break
