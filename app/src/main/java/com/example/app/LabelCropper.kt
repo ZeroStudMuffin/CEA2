@@ -30,22 +30,32 @@ object LabelCropper {
 
         val gray = Mat()
         Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGBA2GRAY)
-        Imgproc.GaussianBlur(
-            gray,
-            gray,
-            Size(TuningParams.blurKernel.toDouble(), TuningParams.blurKernel.toDouble()),
-            0.0
-        )
+        if (TuningParams.useBlur) {
+            Imgproc.GaussianBlur(
+                gray,
+                gray,
+                Size(
+                    TuningParams.blurKernel.toDouble(),
+                    TuningParams.blurKernel.toDouble()
+                ),
+                0.0
+            )
+        }
         val edges = Mat()
         Imgproc.Canny(gray, edges, TuningParams.cannyLow.toDouble(), TuningParams.cannyHigh.toDouble())
-        Imgproc.dilate(
-            edges,
-            edges,
-            Imgproc.getStructuringElement(
-                Imgproc.MORPH_RECT,
-                Size(TuningParams.dilateKernel.toDouble(), TuningParams.dilateKernel.toDouble())
+        if (TuningParams.useDilate) {
+            Imgproc.dilate(
+                edges,
+                edges,
+                Imgproc.getStructuringElement(
+                    Imgproc.MORPH_RECT,
+                    Size(
+                        TuningParams.dilateKernel.toDouble(),
+                        TuningParams.dilateKernel.toDouble()
+                    )
+                )
             )
-        )
+        }
 
         val contours = mutableListOf<MatOfPoint>()
         Imgproc.findContours(edges, contours, Mat(), Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE)
@@ -58,15 +68,18 @@ object LabelCropper {
             Imgproc.approxPolyDP(
                 MatOfPoint2f(*c.toArray()),
                 poly,
-                TuningParams.epsilon,
+                if (TuningParams.useEpsilon) TuningParams.epsilon else 0.0,
                 true
             )
             if (poly.total() == 4L && Imgproc.isContourConvex(MatOfPoint(*poly.toArray()))) {
                 val r = Imgproc.boundingRect(c)
                 val ratio = r.width.toFloat() / r.height
                 val minArea = fullImageArea * TuningParams.minAreaRatio
-                val areaOk = r.area() > minArea
-                if (areaOk && abs(ratio - aspect) < TuningParams.ratioTolerance * aspect) {
+                val areaOk = if (TuningParams.useMinArea) r.area() > minArea else true
+                val ratioOk = if (TuningParams.useRatio) {
+                    abs(ratio - aspect) < TuningParams.ratioTolerance * aspect
+                } else true
+                if (areaOk && ratioOk) {
                     bestQuad = poly
                     break
                 }
