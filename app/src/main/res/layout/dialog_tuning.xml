@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:valueFrom="3"
             android:valueTo="9"
-            android:stepSize="1" />
+            android:stepSize="2" />
 
         <LinearLayout
             android:layout_width="match_parent"

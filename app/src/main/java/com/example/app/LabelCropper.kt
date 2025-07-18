@@ -31,13 +31,15 @@ object LabelCropper {
         val gray = Mat()
         Imgproc.cvtColor(src, gray, Imgproc.COLOR_RGBA2GRAY)
         if (TuningParams.useBlur) {
+            val kernel = if (TuningParams.blurKernel % 2 == 1) {
+                TuningParams.blurKernel
+            } else {
+                TuningParams.blurKernel + 1
+            }
             Imgproc.GaussianBlur(
                 gray,
                 gray,
-                Size(
-                    TuningParams.blurKernel.toDouble(),
-                    TuningParams.blurKernel.toDouble()
-                ),
+                Size(kernel.toDouble(), kernel.toDouble()),
                 0.0
             )
         }

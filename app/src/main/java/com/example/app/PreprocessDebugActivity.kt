@@ -154,7 +154,9 @@ class PreprocessDebugActivity : AppCompatActivity() {
         view.findViewById<Button>(R.id.applyButton).setOnClickListener {
             TuningParams.useBlur = blurCheck.isChecked
             if (blurCheck.isChecked) {
-                TuningParams.blurKernel = blur.value.toInt()
+                var kernel = blur.value.toInt()
+                if (kernel % 2 == 0) kernel++
+                TuningParams.blurKernel = kernel
             }
             TuningParams.cannyLow = cannyLow.value.toInt()
             TuningParams.cannyHigh = cannyHigh.value.toInt()
