@@ -1,7 +1,7 @@
 name: "Fix Setup Instructions for Android SDK & Gradle Wrapper"
 description: |
   ## Purpose
-  Provide clear, ordered instructions so Codex can set up the Android SDK and Gradle wrapper without errors. The README will be updated to decode the wrapper, pull Git LFS assets, extract the command line tools, then install the SDK. The process confirms files exist at each step and finishes by configuring environment variables.
+  Provide clear, ordered instructions so Codex can set up the Android SDK and Gradle wrapper without errors. The README will be updated to decode the wrapper, extract the command line tools, then install the SDK. The process confirms files exist at each step and finishes by configuring environment variables.
 
   ## Core Principles
   1. **Context is King**: reference official Android docs and existing scripts.
@@ -86,7 +86,7 @@ MODIFY README.md:
   - Clarify step order in Setup section.
   - Add check for androidsdk zip after download.
   - Provide example export of PATH for sdkmanager.
-  - Mention running `scripts/decode_gradle_wrapper.py` before pulling LFS.
+  - Mention running `scripts/decode_gradle_wrapper.py` before extracting the tools archive.
   - Document creating `local.properties` and setting ANDROID_HOME.
 
 Task 2:
@@ -100,12 +100,11 @@ VERIFY scripts/install_android_sdk.sh:
 1. Open README.md
 2. Reorder setup instructions:
    a. python scripts/decode_gradle_wrapper.py
-   b. git lfs pull
-   c. [ -f androidsdk.zip ]
-   d. unzip androidsdk.zip -d android-tools
-   e. export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
-   f. chmod +x scripts/install_android_sdk.sh && ./scripts/install_android_sdk.sh
-   g. echo "sdk.dir=$ANDROID_HOME" > local.properties
+   b. [ -f androidsdk.zip ]
+   c. unzip androidsdk.zip -d android-tools
+   d. export PATH="$PWD/android-tools/cmdline-tools/bin:$PATH"
+   e. chmod +x scripts/install_android_sdk.sh && ./scripts/install_android_sdk.sh
+   f. echo "sdk.dir=$ANDROID_HOME" > local.properties
 3. Save and commit
 ```
 

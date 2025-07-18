@@ -10,3 +10,4 @@ __pycache__
 local.properties
 gradle/wrapper/gradle-wrapper.jar
 android-tools/
+androidsdk.zip
