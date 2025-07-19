@@ -25,7 +25,9 @@ object OcrParser {
         if (lines.isEmpty()) return emptyList()
         val tallest = lines.maxOfOrNull { it.boundingBox?.height() ?: 0 } ?: 0
         if (tallest == 0) return emptyList()
-        val threshold = tallest * TuningParams.lineHeightPercent
+        val threshold = if (TuningParams.useLineHeight) {
+            tallest * TuningParams.lineHeightPercent
+        } else 0f
         val quoteRegex = Regex("[\"'].*?[\"']")
         val bracketRegex = Regex("\\[[^\\]]*\\]|\\([^)]*\\)")
         val cleanRegex = Regex("""[^A-Za-z0-9_%\-]""")

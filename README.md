@@ -49,6 +49,12 @@ Instrumentation tests require an emulator package, for example:
 sdkmanager "system-images;android-34;google_apis;x86_64" "emulator"
 ```
 
+Accept the SDK licenses so Gradle can build without prompting:
+
+```bash
+yes | sdkmanager --licenses
+```
+
 ## Build and Test
 
 Run the following commands from the project root:
@@ -100,7 +106,9 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   with bounding box heights, an exact crop preview showing the warped image
   passed to ML Kit, and a dialog with collected debug logs for troubleshooting.
 - A **Tune Pipeline** button in debug mode opens sliders and fields for
-  adjusting OCR preprocessing values during the current session.
+  adjusting OCR preprocessing values during the current session. Each
+  parameter has a checkbox to enable or disable that step. The `min_area`
+  and `ratio_tolerance` sliders now use a 0–1 range shown as a percentage.
 - Entering PIN **8789** unlocks a Developer screen with the debug toggle and a
   **Preprocess Debug** option. This screen centralises tools only meant for
   developers.

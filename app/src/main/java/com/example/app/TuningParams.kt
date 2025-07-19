@@ -17,5 +17,13 @@ object TuningParams {
     var outputHeight: Int = 200
     /** Percent height of tallest line to keep, 0-1 */
     var lineHeightPercent: Float = 0.75f
+
+    /** Flags controlling which processing steps run. */
+    var useBlur: Boolean = true
+    var useDilate: Boolean = true
+    var useEpsilon: Boolean = true
+    var useMinArea: Boolean = true
+    var useRatio: Boolean = true
+    var useLineHeight: Boolean = true
 }
 

@@ -100,6 +100,13 @@ class PreprocessDebugActivity : AppCompatActivity() {
         val widthEdit = view.findViewById<android.widget.EditText>(R.id.widthEdit)
         val heightEdit = view.findViewById<android.widget.EditText>(R.id.heightEdit)
         val lineHeight = view.findViewById<com.google.android.material.slider.Slider>(R.id.lineHeightSlider)
+        val blurCheck = view.findViewById<android.widget.CheckBox>(R.id.blurCheck)
+        val dilateCheck = view.findViewById<android.widget.CheckBox>(R.id.dilateCheck)
+        val epsilonCheck = view.findViewById<android.widget.CheckBox>(R.id.epsilonCheck)
+        val minAreaCheck = view.findViewById<android.widget.CheckBox>(R.id.minAreaCheck)
+        val ratioCheck = view.findViewById<android.widget.CheckBox>(R.id.ratioCheck)
+        val targetRatioCheck = view.findViewById<android.widget.CheckBox>(R.id.targetRatioCheck)
+        val lineHeightCheck = view.findViewById<android.widget.CheckBox>(R.id.lineHeightCheck)
 
         blur.value = TuningParams.blurKernel.toFloat()
         cannyLow.value = TuningParams.cannyLow.toFloat()
@@ -112,6 +119,32 @@ class PreprocessDebugActivity : AppCompatActivity() {
         widthEdit.setText(TuningParams.outputWidth.toString())
         heightEdit.setText(TuningParams.outputHeight.toString())
         lineHeight.value = TuningParams.lineHeightPercent
+        blurCheck.isChecked = TuningParams.useBlur
+        blur.isEnabled = blurCheck.isChecked
+        dilateCheck.isChecked = TuningParams.useDilate
+        dilate.isEnabled = dilateCheck.isChecked
+        epsilonCheck.isChecked = TuningParams.useEpsilon
+        eps.isEnabled = epsilonCheck.isChecked
+        minAreaCheck.isChecked = TuningParams.useMinArea
+        minArea.isEnabled = minAreaCheck.isChecked
+        ratioCheck.isChecked = TuningParams.useRatio
+        ratioTol.isEnabled = ratioCheck.isChecked
+        targetRatioCheck.isChecked = TuningParams.useRatio
+        targetRatioEdit.isEnabled = ratioCheck.isChecked
+        lineHeightCheck.isChecked = TuningParams.useLineHeight
+        lineHeight.isEnabled = lineHeightCheck.isChecked
+
+        minArea.setLabelFormatter { "${(it * 100).toInt()}%" }
+        ratioTol.setLabelFormatter { "${(it * 100).toInt()}%" }
+
+        val defaultTint = targetRatioCheck.buttonTintList
+        ratioCheck.setOnCheckedChangeListener { _, checked ->
+            ratioTol.isEnabled = checked
+            targetRatioEdit.isEnabled = checked
+            targetRatioCheck.isChecked = checked
+            targetRatioCheck.buttonTintList =
+                if (checked) defaultTint else android.content.res.ColorStateList.valueOf(android.graphics.Color.RED)
+        }
 
         val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle("Tune Pipeline")
@@ -119,17 +152,40 @@ class PreprocessDebugActivity : AppCompatActivity() {
             .create()
 
         view.findViewById<Button>(R.id.applyButton).setOnClickListener {
-            TuningParams.blurKernel = blur.value.toInt()
+            TuningParams.useBlur = blurCheck.isChecked
+            if (blurCheck.isChecked) {
+                var kernel = blur.value.toInt()
+                if (kernel % 2 == 0) kernel++
+                TuningParams.blurKernel = kernel
+            }
             TuningParams.cannyLow = cannyLow.value.toInt()
             TuningParams.cannyHigh = cannyHigh.value.toInt()
-            TuningParams.dilateKernel = dilate.value.toInt()
-            TuningParams.epsilon = eps.value.toDouble()
-            TuningParams.minAreaRatio = minArea.value
-            TuningParams.ratioTolerance = ratioTol.value
-            TuningParams.targetRatio = targetRatioEdit.text.toString().toFloatOrNull() ?: TuningParams.targetRatio
+            TuningParams.useDilate = dilateCheck.isChecked
+            if (dilateCheck.isChecked) {
+                TuningParams.dilateKernel = dilate.value.toInt()
+            }
+            TuningParams.useEpsilon = epsilonCheck.isChecked
+            if (epsilonCheck.isChecked) {
+                TuningParams.epsilon = eps.value.toDouble()
+            }
+            TuningParams.useMinArea = minAreaCheck.isChecked
+            if (minAreaCheck.isChecked) {
+                TuningParams.minAreaRatio = minArea.value
+            }
+            TuningParams.useRatio = ratioCheck.isChecked
+            if (ratioCheck.isChecked) {
+                TuningParams.ratioTolerance = ratioTol.value
+                if (targetRatioCheck.isChecked) {
+                    TuningParams.targetRatio = targetRatioEdit.text.toString().toFloatOrNull()
+                        ?: TuningParams.targetRatio
+                }
+            }
             TuningParams.outputWidth = widthEdit.text.toString().toIntOrNull() ?: TuningParams.outputWidth
             TuningParams.outputHeight = heightEdit.text.toString().toIntOrNull() ?: TuningParams.outputHeight
-            TuningParams.lineHeightPercent = lineHeight.value
+            TuningParams.useLineHeight = lineHeightCheck.isChecked
+            if (lineHeightCheck.isChecked) {
+                TuningParams.lineHeightPercent = lineHeight.value
+            }
             dialog.dismiss()
         }
 

@@ -48,4 +48,4 @@
 ## [2025-07-18] Add target aspect ratio parameter for cropping
 ## [2025-07-19] Create setup script for Codex environment - DONE
 ## [2025-07-20] Generate PRP for Developer Mode and Preprocess Debug - DONE
-## [2025-07-20] Implement Developer Mode and Preprocess Debug
+## [2025-07-20] Implement Developer Mode and Preprocess Debug - DONE
