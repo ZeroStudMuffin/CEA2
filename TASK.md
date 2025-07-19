@@ -51,3 +51,4 @@
 ## [2025-07-20] Implement Developer Mode and Preprocess Debug - DONE
 ## [2025-07-20] Add Live Edge Preview for tuning - DONE
 ## [2025-07-19] Rotate Canny preview to match orientation - DONE
+## [2025-07-19] Add capture button to Live Edge Preview - DONE
