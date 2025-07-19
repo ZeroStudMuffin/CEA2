@@ -61,6 +61,7 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
         tuneButton.setOnClickListener { showTuningDialog() }
         captureButton.setOnClickListener { takePhoto() }
+        captureButton.isEnabled = false
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
         } else {
@@ -84,6 +85,10 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
                 bindToLifecycle(this@LiveEdgePreviewActivity)
             }
             previewView.controller = controller
+            controller.initializationFuture.addListener(
+                { captureButton.isEnabled = true },
+                ContextCompat.getMainExecutor(this)
+            )
         }, ContextCompat.getMainExecutor(this))
     }
 
