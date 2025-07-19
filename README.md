@@ -62,6 +62,8 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - **Preprocess Debug** captures an image and immediately shows the warped
   grayscale result without running ML Kit, letting developers inspect tuning
   effects.
+- **Live Edge Preview** continuously processes preview frames showing the
+  Canny edge output so tuning changes take effect in real time.
 - A **Batch mode** checkbox on the main screen controls whether captures queue
   multiple items or use a single-record flow. When unchecked a full-screen
   **Bins** menu appears once roll and customer are recognised; choosing a bin

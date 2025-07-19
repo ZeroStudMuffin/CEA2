@@ -21,6 +21,9 @@
             android:name=".PreprocessDebugActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".LiveEdgePreviewActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

@@ -49,3 +49,4 @@
 ## [2025-07-19] Create setup script for Codex environment - DONE
 ## [2025-07-20] Generate PRP for Developer Mode and Preprocess Debug - DONE
 ## [2025-07-20] Implement Developer Mode and Preprocess Debug - DONE
+## [2025-07-20] Add Live Edge Preview for tuning - DONE

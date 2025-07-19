@@ -18,6 +18,9 @@ class DeveloperActivity : AppCompatActivity() {
         findViewById<Button>(R.id.preprocessButton).setOnClickListener {
             startActivity(Intent(this, PreprocessDebugActivity::class.java))
         }
+        findViewById<Button>(R.id.livePreviewButton).setOnClickListener {
+            startActivity(Intent(this, LiveEdgePreviewActivity::class.java))
+        }
     }
 
     override fun finish() {
