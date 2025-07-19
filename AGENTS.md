@@ -1,1 +1,2 @@
-Read CODEX.md
+run script/setup.sh
+Then, read CODEX.md
