@@ -12,14 +12,15 @@ object OcrParser {
     }
 
     private fun countDigits(s: String): Int = s.count { it.isDigit() }
+    private fun countLetters(s: String): Int = s.count { it.isLetter() }
 
     /**
      * Returns cleaned text lines and extracts roll number and customer name.
      *
-     * Lines shorter than 75% of the tallest line are ignored. Special
-     * characters are removed except letters, digits, underscore, '-', and '%'.
-     * Spaces are converted to underscores and text within brackets or quotes
-     * is stripped.
+     * Lines shorter than 60% of the tallest line are ignored. Spaces are
+     * converted to underscores. Quoted text and content in brackets are
+     * removed and all characters except letters, digits, underscore, '-', '%'
+     * and '/' are stripped.
      */
     fun parse(lines: List<Text.Line>): List<String> {
         if (lines.isEmpty()) return emptyList()
@@ -30,29 +31,35 @@ object OcrParser {
         } else 0f
         val quoteRegex = Regex("[\"'].*?[\"']")
         val bracketRegex = Regex("\\[[^\\]]*\\]|\\([^)]*\\)")
-        val cleanRegex = Regex("""[^A-Za-z0-9_%\-]""")
+        val cleanRegex = Regex("""[^A-Za-z0-9_%\-/]""")
 
-        val cleanLines = lines.filter { (it.boundingBox?.height() ?: 0) >= threshold }
-            .map { line ->
-                var text = line.text.replace(' ', '_')
-                text = text.replace(quoteRegex, "")
-                text = text.replace(bracketRegex, "")
-                text = text.replace(cleanRegex, "").trim()
-                text
+        val cleanLines = lines
+            .map { it.text to (it.boundingBox?.height() ?: 0) }
+            .filter { (_, h) -> h >= threshold }
+            .map { (text, h) ->
+                var t = text.replace(' ', '_')
+                t = t.replace(quoteRegex, "")
+                t = t.replace(bracketRegex, "")
+                t = t.replace(cleanRegex, "").trim()
+                t to h
             }
+            .filter { it.first.isNotBlank() }
 
         if (cleanLines.isEmpty()) return emptyList()
 
-        val customer = cleanLines.firstOrNull { it.containsKnownWord() }
-        val roll = if (customer != null) {
-            cleanLines.filterNot { it == customer }.maxByOrNull { it.length }
-        } else {
-            cleanLines.maxByOrNull { countDigits(it) }
-        }
-        val name = customer ?: cleanLines.filterNot { it == roll }.maxByOrNull { it.length }
+        val rollPair = cleanLines.maxByOrNull { countDigits(it.first) }
+        val remaining = cleanLines.filterNot { it == rollPair }
 
-        val rollStr = roll?.substringAfter('_', roll) ?: ""
-        val nameStr = name ?: ""
+        val customerPair = remaining
+            .filter { it.first.containsKnownWord() }
+            .maxByOrNull { it.second }
+            ?: remaining.maxByOrNull { countLetters(it.first) }
+
+        var rollStr = rollPair?.first ?: ""
+        if (rollStr.contains('_')) {
+            rollStr = rollStr.substringAfterLast('_')
+        }
+        val nameStr = customerPair?.first ?: ""
         return listOf("Roll#:$rollStr", "Cust:$nameStr")
     }
 }
