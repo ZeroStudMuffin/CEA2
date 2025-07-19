@@ -12,17 +12,20 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import java.io.File
 import org.opencv.android.OpenCVLoader
 import org.opencv.android.Utils
-import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
+import org.opencv.core.Core
 import org.opencv.imgproc.Imgproc
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.ExecutorService
@@ -35,6 +38,8 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
     private lateinit var previewView: PreviewView
     private lateinit var overlay: BoundingBoxOverlay
     private lateinit var edgeView: ImageView
+    private lateinit var processedImage: ImageView
+    private lateinit var captureButton: Button
     private lateinit var tuneButton: Button
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var controller: LifecycleCameraController
@@ -50,9 +55,12 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
         previewView = findViewById(R.id.viewFinder)
         overlay = findViewById(R.id.boundingBox)
         edgeView = findViewById(R.id.edgeView)
+        processedImage = findViewById(R.id.processedImage)
+        captureButton = findViewById(R.id.captureButton)
         tuneButton = findViewById(R.id.tuneButton)
         cameraExecutor = Executors.newSingleThreadExecutor()
         tuneButton.setOnClickListener { showTuningDialog() }
+        captureButton.setOnClickListener { takePhoto() }
         if (ActivityCompat.checkSelfPermission(this, CAMERA_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
             startCamera()
         } else {
@@ -65,7 +73,11 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
         future.addListener({
             cameraProvider = future.get()
             controller = LifecycleCameraController(this).apply {
-                setEnabledUseCases(LifecycleCameraController.IMAGE_ANALYSIS)
+                setEnabledUseCases(
+                    LifecycleCameraController.IMAGE_ANALYSIS or
+                        LifecycleCameraController.IMAGE_CAPTURE
+                )
+                cameraSelector = androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
                 setImageAnalysisAnalyzer(cameraExecutor, ImageAnalysis.Analyzer { image ->
                     processFrame(image)
                 })
@@ -113,6 +125,7 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
                 )
             }
             Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGBA)
+            Core.rotate(mat, mat, Core.ROTATE_90_CLOCKWISE)
             val result = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
             Utils.matToBitmap(mat, result)
             runOnUiThread { edgeView.setImageBitmap(result) }
@@ -134,6 +147,31 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
         super.onDestroy()
         cameraProvider?.unbindAll()
         cameraExecutor.shutdown()
+    }
+
+    private fun takePhoto() {
+        val photoFile = java.io.File.createTempFile("temp", ".jpg", cacheDir)
+        val options = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        controller.takePicture(options, cameraExecutor, object : ImageCapture.OnImageSavedCallback {
+            override fun onError(exception: ImageCaptureException) {
+                Log.e("LiveEdgePreview", "capture failed", exception)
+            }
+
+            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                val rotated = ImageUtils.decodeRotatedBitmap(photoFile)
+                val crop = overlay.mapToBitmapRect(rotated.width, rotated.height)
+                val cropped = android.graphics.Bitmap.createBitmap(
+                    rotated,
+                    crop.left,
+                    crop.top,
+                    crop.width(),
+                    crop.height()
+                )
+                val warped = LabelCropper.cropLabel(cropped, rotated.width * rotated.height)
+                val processed = ImageUtils.toGrayscale(warped)
+                runOnUiThread { processedImage.setImageBitmap(processed) }
+            }
+        })
     }
 
     private fun showTuningDialog() {
