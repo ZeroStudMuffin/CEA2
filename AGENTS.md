@@ -1,2 +1,2 @@
-run script/setup.sh
+run scripts/setup.sh
 Then, read CODEX.md
