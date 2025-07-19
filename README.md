@@ -101,6 +101,12 @@ This app relies on Material Components. A custom theme extending `Theme.Material
   passed to ML Kit, and a dialog with collected debug logs for troubleshooting.
 - A **Tune Pipeline** button in debug mode opens sliders and fields for
   adjusting OCR preprocessing values during the current session.
+- Entering PIN **8789** unlocks a Developer screen with the debug toggle and a
+  **Preprocess Debug** option. This screen centralises tools only meant for
+  developers.
+- **Preprocess Debug** captures an image and immediately shows the warped
+  grayscale result without running ML Kit, letting developers inspect tuning
+  effects.
 - A **Batch mode** checkbox on the main screen controls whether captures queue
   multiple items or use a single-record flow. When unchecked a full-screen
   **Bins** menu appears once roll and customer are recognised; choosing a bin
