@@ -6,7 +6,7 @@
     <!-- Allow install on devices without a camera such as Chromebooks -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
-    <application
+    <application android:name=".CamApp"
         android:label="BasicAndroidApp"
         android:theme="@style/Theme.BasicAndroidApp">
         <activity
