@@ -77,6 +77,7 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
                     LifecycleCameraController.IMAGE_ANALYSIS or
                         LifecycleCameraController.IMAGE_CAPTURE
                 )
+                cameraSelector = androidx.camera.core.CameraSelector.DEFAULT_BACK_CAMERA
                 setImageAnalysisAnalyzer(cameraExecutor, ImageAnalysis.Analyzer { image ->
                     processFrame(image)
                 })
