@@ -23,6 +23,7 @@ import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
+import org.opencv.core.Core
 import org.opencv.imgproc.Imgproc
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.ExecutorService
@@ -113,6 +114,7 @@ class LiveEdgePreviewActivity : AppCompatActivity() {
                 )
             }
             Imgproc.cvtColor(mat, mat, Imgproc.COLOR_GRAY2RGBA)
+            Core.rotate(mat, mat, Core.ROTATE_90_CLOCKWISE)
             val result = Bitmap.createBitmap(mat.cols(), mat.rows(), Bitmap.Config.ARGB_8888)
             Utils.matToBitmap(mat, result)
             runOnUiThread { edgeView.setImageBitmap(result) }
