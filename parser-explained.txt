@@ -7,4 +7,4 @@ OcrParser processes lines from ML Kit OCR results:
 6. Trim whitespace and any character before the whitespace for that line, then return the cleaned strings.
 7. Detect roll# line using the line with the most digits, then the tallest line with a known keyword or the line with the most letters becomes the customer.
 8. In the roll#, if a underscore is present, remove the all characters before the final underscore as well as the final underscore.
-9. Return only `Roll#:<value>` and `Cust-Name:<value>`.
+9. Return only `Roll#:<value>` and `Cust:<value>`.

@@ -88,7 +88,7 @@ This app relies on Material Components. A custom theme extending `Theme.Material
 - The **Show Log** button in debug mode displays any debug messages captured during processing.
  - The parser now outputs only a roll number and customer name on two lines.
   Any prefix before the final underscore in the roll number is removed so users
-  see only the numeric portion. Customer lines use the `Cust-Name:` prefix.
+  see only the numeric portion. Customer lines use the `Cust:` prefix.
 - Once roll, customer and bin are present a **Send Record** button appears when
   batch mode is enabled. In default mode a full-screen bin menu pops up and
   selecting a value uploads immediately. Requests are POSTed with the user's

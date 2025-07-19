@@ -6,7 +6,7 @@ import org.junit.Test
 class CheckoutUtilsTest {
     @Test
     fun buildPayload_includesCurrentAndQueued() {
-        val lines = listOf("Roll#: 1", "Cust-Name: A")
+        val lines = listOf("Roll#: 1", "Cust: A")
         val queued = listOf(BatchRecord("2", "B"))
         val payload = CheckoutUtils.buildPayload(lines, queued)
         assertEquals(2, payload.size)
@@ -17,7 +17,7 @@ class CheckoutUtilsTest {
 
     @Test
     fun buildPayload_missingCurrentReturnsQueued() {
-        val lines = listOf("Cust-Name: A")
+        val lines = listOf("Cust: A")
         val queued = listOf(BatchRecord("2", "B"))
         val payload = CheckoutUtils.buildPayload(lines, queued)
         assertEquals(1, payload.size)

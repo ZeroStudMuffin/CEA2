@@ -158,7 +158,7 @@ class CheckoutActivity : AppCompatActivity() {
     private fun onAddItem() {
         val lines = ocrTextView.text.split("\n")
         val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter(":")?.trim()
-        val cust = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter(":")?.trim()
+        val cust = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter(":")?.trim()
         if (roll != null && cust != null) {
             batchItems += BatchRecord(roll, cust, null)
             ocrTextView.text = ""
@@ -216,7 +216,7 @@ class CheckoutActivity : AppCompatActivity() {
     private fun updateCheckoutButton() {
         val lines = ocrTextView.text.split("\n")
         val hasRoll = lines.any { it.startsWith("Roll#:") }
-        val hasCust = lines.any { it.startsWith("Cust-Name:") }
+        val hasCust = lines.any { it.startsWith("Cust:") }
         val enabled = batchItems.isNotEmpty() || (hasRoll && hasCust)
         checkoutButton.isEnabled = enabled
         checkoutButton.alpha = if (enabled) 1f else 0.5f

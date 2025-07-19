@@ -66,6 +66,6 @@ object OcrParser {
 
         val customer = customerLine.text
 
-        return listOf("Roll#:$roll", "Cust-Name:$customer")
+        return listOf("Roll#:$roll", "Cust:$customer")
     }
 }

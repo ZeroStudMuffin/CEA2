@@ -7,7 +7,7 @@ object CheckoutUtils {
      */
     fun buildPayload(lines: List<String>, queued: List<BatchRecord>): List<BatchRecord> {
         val roll = lines.firstOrNull { it.startsWith("Roll#:") }?.substringAfter(":")?.trim()
-        val cust = lines.firstOrNull { it.startsWith("Cust-Name:") }?.substringAfter(":")?.trim()
+        val cust = lines.firstOrNull { it.startsWith("Cust:") }?.substringAfter(":")?.trim()
         val result = mutableListOf<BatchRecord>()
         if (roll != null && cust != null) {
             result += BatchRecord(roll, cust, null)

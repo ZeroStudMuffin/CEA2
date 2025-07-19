@@ -16,7 +16,7 @@ description: |
 ---
 
 ## Goal
-Output only `Roll#:<num>` and `Cust-Name:<name>` after OCR.
+Output only `Roll#:<num>` and `Cust:<name>` after OCR.
 
 ## Why
 - **Business value**: simplifies screen output for users.
@@ -92,7 +92,7 @@ Task 1:
     - If any line contains a known word, set that as customer name.
       Then choose the longest remaining line as roll.
     - Else choose line with most digits as roll, and next longest line as customer.
-    - Return listOf("Roll#:${roll}", "Cust-Name:${customer}").
+    - Return listOf("Roll#:${roll}", "Cust:${customer}").
 
 Task 2:
   MODIFY app/src/test/java/com/example/app/OcrParserTest.kt:
@@ -119,7 +119,7 @@ val roll = if (customer != null)
   else
     cleanLines.maxByOrNull { countDigits(it) }
 val name = customer ?: cleanLines.filterNot { it == roll }.maxByOrNull { it.length }
-return listOf("Roll#:${roll ?: ""}", "Cust-Name:${name ?: ""}")
+return listOf("Roll#:${roll ?: ""}", "Cust:${name ?: ""}")
 ```
 
 ### Integration Points

@@ -18,7 +18,7 @@ class SendRecordUiTest {
         scenario.onActivity { activity ->
             val method = BinLocatorActivity::class.java.getDeclaredMethod("showResult", List::class.java)
             method.isAccessible = true
-            method.invoke(activity, listOf("Roll#:1", "Cust-Name:ACME", "BIN=19"))
+            method.invoke(activity, listOf("Roll#:1", "Cust:ACME", "BIN=19"))
         }
         InstrumentationRegistry.getInstrumentation().waitForIdleSync()
         onView(withId(R.id.sendRecordButton)).check(matches(isEnabled()))
