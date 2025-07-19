@@ -41,6 +41,7 @@ The project is a minimal Android application written in Kotlin. Below are all of
   detection result so tuning adjustments update instantly.
 * A **Capture** button saves a photo using the same pipeline as OCR and shows the
   processed result beneath the live preview for quick inspection.
+* CameraX is configured via an Application class to use only the back camera, preventing initialization errors on devices without a front camera.
 * A **Batch mode** checkbox determines the workflow. When unchecked a full-screen
   bin menu appears automatically once roll and customer are parsed. Selecting a
   value sends the record immediately and the capture and zoom controls are hidden
